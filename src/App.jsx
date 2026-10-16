@@ -3,10 +3,10 @@ import { patterns } from './data/problems';
 import Sidebar from './components/Sidebar';
 import ProblemDetail from './components/ProblemDetail';
 
-const difficultyColor = {
-  Easy: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  Medium: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  Hard: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+const difficultyStyle = {
+  Easy: 'text-emerald-400',
+  Medium: 'text-amber-400',
+  Hard: 'text-rose-400',
 };
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
   const activePattern = patterns.find(p => p.id === activePatternId);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)]">
       <Sidebar
         patterns={patterns}
         activePattern={activePatternId}
@@ -30,42 +30,38 @@ function App() {
       />
 
       {/* Main Content */}
-      <main className="lg:ml-72 min-h-screen">
+      <main className="lg:ml-64 min-h-screen">
         {/* Top bar */}
-        <header className="sticky top-0 z-20 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60">
-          <div className="flex items-center gap-4 px-6 py-4">
+        <header className="sticky top-0 z-20 bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)]">
+          <div className="flex items-center gap-3 px-6 py-3.5">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-slate-400 hover:text-slate-200 cursor-pointer"
+              className="lg:hidden text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] cursor-pointer"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm">
+            <nav className="flex items-center gap-1.5 text-sm">
               <span
-                className="text-slate-400 hover:text-slate-200 cursor-pointer transition-colors"
+                className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] cursor-pointer transition-colors"
                 onClick={() => setActiveProblem(null)}
               >
-                {activePattern?.icon} {activePattern?.name}
+                {activePattern?.name}
               </span>
               {activeProblem && (
                 <>
-                  <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-slate-200 font-medium">{activeProblem.title}</span>
+                  <span className="text-[var(--color-text-tertiary)]">/</span>
+                  <span className="text-[var(--color-text-primary)] font-medium">{activeProblem.title}</span>
                 </>
               )}
             </nav>
-
-
           </div>
         </header>
 
-        <div className="p-6 max-w-4xl">
+        <div className="p-6 max-w-3xl">
           {activeProblem ? (
             /* Problem Detail View */
             <ProblemDetail
@@ -76,35 +72,33 @@ function App() {
             /* Problem List View */
             <div className="animate-fadeIn">
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-slate-100 mb-1">{activePattern.name}</h2>
-                <p className="text-sm text-slate-500">{activePattern.problems.length} problems</p>
+                <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-0.5">
+                  {activePattern.name}
+                </h2>
+                <p className="text-sm text-[var(--color-text-tertiary)]">
+                  {activePattern.problems.length} problems
+                </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="border border-[var(--color-border)] rounded-lg overflow-hidden divide-y divide-[var(--color-border)]">
                 {activePattern.problems.map((problem, idx) => (
                   <button
                     key={problem.id}
                     onClick={() => setActiveProblem(problem)}
-                    className="w-full text-left group cursor-pointer"
+                    className="w-full text-left group cursor-pointer hover:bg-[var(--color-bg-surface)] transition-colors duration-100"
                   >
-                    <div className="flex items-center gap-4 px-5 py-4 rounded-xl border border-slate-800/60 bg-slate-900/40 hover:bg-slate-800/50 hover:border-slate-700/60 transition-all">
-                      <span className="text-xs text-slate-600 font-mono w-6 text-right shrink-0">
+                    <div className="flex items-center gap-4 px-5 py-3.5">
+                      <span className="text-[11px] text-[var(--color-text-tertiary)] font-mono tabular-nums w-5 text-right shrink-0">
                         {idx + 1}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors truncate">
+                        <p className="text-[13px] font-medium text-[var(--color-text-primary)] group-hover:text-white transition-colors truncate">
                           {problem.title}
                         </p>
-                        <p className="text-xs text-slate-500 mt-0.5 truncate">
-                          {problem.definition}
-                        </p>
                       </div>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border shrink-0 ${difficultyColor[problem.difficulty]}`}>
+                      <span className={`text-[11px] font-medium shrink-0 ${difficultyStyle[problem.difficulty]}`}>
                         {problem.difficulty}
                       </span>
-                      <svg className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
                     </div>
                   </button>
                 ))}

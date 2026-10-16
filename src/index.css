@@ -4,13 +4,25 @@
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --animate-fadeIn: fadeIn 0.2s ease-out;
+  --animate-fadeIn: fadeIn 0.15s ease-out;
+
+  /* Neutral warm palette */
+  --color-bg: #111110;
+  --color-bg-raised: #191918;
+  --color-bg-surface: #1e1e1d;
+  --color-border: #2a2a28;
+  --color-border-hover: #3a3a37;
+  --color-text-primary: #eeeeec;
+  --color-text-secondary: #a1a09e;
+  --color-text-tertiary: #6f6e6a;
+  --color-accent: #e8e5e0;
+  --color-accent-muted: #3a3a37;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -20,7 +32,7 @@
 
 /* Scrollbar styling */
 .sidebar-scroll::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .sidebar-scroll::-webkit-scrollbar-track {
@@ -28,21 +40,33 @@
 }
 
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.3);
+  background: var(--color-border);
   border-radius: 4px;
 }
 
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.5);
+  background: var(--color-border-hover);
 }
 
 /* Base reset */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
 }
 
 code, pre {
   font-family: var(--font-mono);
+}
+
+/* Selection */
+::selection {
+  background: rgba(238, 238, 236, 0.12);
 }

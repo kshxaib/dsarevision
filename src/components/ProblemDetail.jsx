@@ -1,35 +1,35 @@
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const difficultyColor = {
-  Easy: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  Medium: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  Hard: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+const difficultyStyle = {
+  Easy: 'text-emerald-400',
+  Medium: 'text-amber-400',
+  Hard: 'text-rose-400',
 };
 
-function ApproachSection({ label, approach, accentClass }) {
+function ApproachSection({ label, approach }) {
   const isEmpty = !approach.idea && !approach.code;
 
   return (
-    <div className="rounded-xl border border-slate-700/60 bg-slate-800/50 overflow-hidden">
-      <div className={`px-5 py-3 border-b border-slate-700/60 ${accentClass}`}>
-        <h4 className="font-semibold text-sm tracking-wide uppercase">{label}</h4>
+    <div className="border border-[var(--color-border)] rounded-lg overflow-hidden animate-fadeIn">
+      <div className="px-5 py-3 border-b border-[var(--color-border)] bg-[var(--color-bg-surface)]">
+        <h4 className="text-xs font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">{label}</h4>
       </div>
-      <div className="p-5 space-y-4">
+      <div className="p-5 space-y-5">
         {isEmpty ? (
-          <p className="text-slate-500 italic text-sm">Not yet added — fill in the approach details in problems.js</p>
+          <p className="text-[var(--color-text-tertiary)] text-sm italic">Not yet added — fill in the approach details in problems.js</p>
         ) : (
           <>
             {approach.idea && (
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Idea</p>
-                <p className="text-slate-300 text-sm leading-relaxed">{approach.idea}</p>
+                <p className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-1.5">Idea</p>
+                <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">{approach.idea}</p>
               </div>
             )}
             {approach.code && (
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Code</p>
-                <div className="rounded-lg overflow-hidden border border-slate-700/50">
+                <p className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-1.5">Code</p>
+                <div className="rounded-lg overflow-hidden border border-[var(--color-border)]">
                   <Editor
                     height={`${Math.min(Math.max(approach.code.trim().split('\n').length * 20, 80), 400)}px`}
                     language="javascript"
@@ -55,34 +55,22 @@ function ApproachSection({ label, approach, accentClass }) {
               </div>
             )}
             {(approach.time || approach.space) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+              <div className="flex gap-4 pt-1">
                 {approach.time && (
-                  <div className="rounded-xl bg-slate-900/60 border border-slate-700/60 p-3.5 space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Time Complexity:</span>
-                      <span className="text-xs font-mono font-bold text-indigo-400 bg-indigo-500/15 px-2.5 py-0.5 rounded-md border border-indigo-500/30">
-                        {approach.time}
-                      </span>
-                    </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-1">Time</p>
+                    <p className="text-sm font-mono font-medium text-[var(--color-text-primary)]">{approach.time}</p>
                     {approach.timeDesc && (
-                      <p className="text-xs text-slate-300 leading-relaxed">
-                        {approach.timeDesc}
-                      </p>
+                      <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5 leading-relaxed">{approach.timeDesc}</p>
                     )}
                   </div>
                 )}
                 {approach.space && (
-                  <div className="rounded-xl bg-slate-900/60 border border-slate-700/60 p-3.5 space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Space Complexity:</span>
-                      <span className="text-xs font-mono font-bold text-violet-400 bg-violet-500/15 px-2.5 py-0.5 rounded-md border border-violet-500/30">
-                        {approach.space}
-                      </span>
-                    </div>
+                  <div className="flex-1">
+                    <p className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-1">Space</p>
+                    <p className="text-sm font-mono font-medium text-[var(--color-text-primary)]">{approach.space}</p>
                     {approach.spaceDesc && (
-                      <p className="text-xs text-slate-300 leading-relaxed">
-                        {approach.spaceDesc}
-                      </p>
+                      <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5 leading-relaxed">{approach.spaceDesc}</p>
                     )}
                   </div>
                 )}
@@ -99,9 +87,9 @@ export default function ProblemDetail({ problem, onBack }) {
   const [activeTab, setActiveTab] = useState('brute');
 
   const tabs = [
-    { key: 'brute', label: 'Brute Force', accent: 'bg-rose-500/10 text-rose-400' },
-    { key: 'better', label: 'Better', accent: 'bg-amber-500/10 text-amber-400' },
-    { key: 'optimal', label: 'Optimal', accent: 'bg-emerald-500/10 text-emerald-400' },
+    { key: 'brute', label: 'Brute Force' },
+    { key: 'better', label: 'Better' },
+    { key: 'optimal', label: 'Optimal' },
   ];
 
   const hasExamples = problem.examples.some(e => e.input || e.output);
@@ -111,42 +99,40 @@ export default function ProblemDetail({ problem, onBack }) {
       {/* Back button */}
       <button
         onClick={onBack}
-        className="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors mb-6 group cursor-pointer"
+        className="flex items-center gap-1.5 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors mb-6 cursor-pointer text-sm"
       >
-        <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span className="text-sm font-medium">Back to problems</span>
+        <span>←</span>
+        <span>Back</span>
       </button>
 
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-3">
-          <h2 className="text-2xl font-bold text-slate-100">{problem.title}</h2>
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${difficultyColor[problem.difficulty]}`}>
+        <div className="flex items-center gap-3 mb-2">
+          <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">{problem.title}</h2>
+          <span className={`text-xs font-medium ${difficultyStyle[problem.difficulty]}`}>
             {problem.difficulty}
           </span>
         </div>
-        <p className="text-slate-400 leading-relaxed">{problem.definition}</p>
+        <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">{problem.definition}</p>
       </div>
 
       {/* Examples */}
       {hasExamples && (
         <div className="mb-8 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">Examples</h3>
+          <h3 className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider">Examples</h3>
           {problem.examples.map((ex, i) => (
             ex.input || ex.output ? (
-              <div key={i} className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
-                <p className="text-xs font-semibold text-slate-500 mb-2">Example {i + 1}</p>
+              <div key={i} className="bg-[var(--color-bg-surface)] border border-[var(--color-border)] rounded-lg p-4">
+                <p className="text-[11px] text-[var(--color-text-tertiary)] mb-2">Example {i + 1}</p>
                 {ex.input && (
                   <div className="flex gap-2 mb-1">
-                    <span className="text-xs font-semibold text-slate-400 shrink-0 mt-0.5">Input:</span>
-                    <code className="text-sm font-mono text-slate-300">{ex.input}</code>
+                    <span className="text-[11px] font-medium text-[var(--color-text-tertiary)] shrink-0 mt-0.5">Input:</span>
+                    <code className="text-sm font-mono text-[var(--color-text-secondary)]">{ex.input}</code>
                   </div>
                 )}
                 {ex.output && (
                   <div className="flex gap-2">
-                    <span className="text-xs font-semibold text-slate-400 shrink-0 mt-0.5">Output:</span>
+                    <span className="text-[11px] font-medium text-[var(--color-text-tertiary)] shrink-0 mt-0.5">Output:</span>
                     <code className="text-sm font-mono text-emerald-400">{ex.output}</code>
                   </div>
                 )}
@@ -158,16 +144,18 @@ export default function ProblemDetail({ problem, onBack }) {
 
       {/* Approach Tabs */}
       <div className="mb-4">
-        <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3">Approaches</h3>
-        <div className="flex gap-1 bg-slate-800/50 p-1 rounded-lg border border-slate-700/50 w-fit">
-          {tabs.map(tab => (
+        <h3 className="text-[11px] font-semibold text-[var(--color-text-tertiary)] uppercase tracking-wider mb-3">Approaches</h3>
+        <div className="flex gap-0 border border-[var(--color-border)] rounded-lg overflow-hidden w-fit">
+          {tabs.map((tab, i) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all cursor-pointer ${
+              className={`px-4 py-2 text-[13px] font-medium transition-colors duration-100 cursor-pointer ${
+                i > 0 ? 'border-l border-[var(--color-border)]' : ''
+              } ${
                 activeTab === tab.key
-                  ? 'bg-slate-700 text-slate-100 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-300'
+                  ? 'bg-[var(--color-bg-surface)] text-[var(--color-text-primary)]'
+                  : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-raised)]'
               }`}
             >
               {tab.label}
@@ -183,7 +171,6 @@ export default function ProblemDetail({ problem, onBack }) {
             key={tab.key}
             label={tab.label}
             approach={problem[tab.key]}
-            accentClass={tab.accent}
           />
         )
       ))}
