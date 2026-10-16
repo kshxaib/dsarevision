@@ -1,0 +1,370 @@
+// Helper to create a template problem entry
+const p = (title, difficulty, definition) => ({
+  id: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+  title,
+  difficulty,
+  definition,
+  examples: [
+    { input: '', output: '' },
+    { input: '', output: '' }
+  ],
+  brute: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
+  better: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
+  optimal: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' }
+});
+
+export const patterns = [
+  {
+    id: 'arrays-hashing',
+    name: 'Arrays & Hashing',
+    icon: '📦',
+    timestamp: '0:02:09',
+    problems: [
+      {
+        id: 'two-sum',
+        title: 'Two Sum',
+        difficulty: 'Easy',
+        definition: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.',
+        examples: [
+          { input: 'nums = [2,7,11,15], target = 9', output: '[0,1]' },
+          { input: 'nums = [3,2,4], target = 6', output: '[1,2]' }
+        ],
+        brute: {
+          idea: 'Use two nested loops to check every pair of numbers.',
+          code: `function twoSum(nums, target) {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] + nums[j] === target) {
+        return [i, j];
+      }
+    }
+  }
+}`,
+          time: 'O(n²)',
+          timeDesc: 'Two nested loops check every pair of elements.',
+          space: 'O(1)',
+          spaceDesc: 'No extra memory used; only two pointer indices.'
+        },
+        better: {
+          idea: 'Sort the array and use two pointers. Need to track original indices.',
+          code: `function twoSum(nums, target) {
+  const sorted = nums.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
+  let l = 0, r = sorted.length - 1;
+  while (l < r) {
+    const sum = sorted[l][0] + sorted[r][0];
+    if (sum === target) return [sorted[l][1], sorted[r][1]];
+    else if (sum < target) l++;
+    else r--;
+  }
+}`,
+          time: 'O(n log n)',
+          timeDesc: 'Sorting takes O(n log n), then two pointers scan in O(n).',
+          space: 'O(n)',
+          spaceDesc: 'Extra array to store pairs of [value, originalIndex].'
+        },
+        optimal: {
+          idea: 'Use a hash map to store each number and its index. For each element, check if (target - current) exists in the map.',
+          code: `function twoSum(nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (map.has(complement)) {
+      return [map.get(complement), i];
+    }
+    map.set(nums[i], i);
+  }
+}`,
+          time: 'O(n)',
+          timeDesc: 'Single pass through array with O(1) average hash map lookups.',
+          space: 'O(n)',
+          spaceDesc: 'Hash map stores up to n elements and their indices.'
+        }
+      },
+      p('Contains Duplicate', 'Easy', 'Check if any value appears at least twice in the array.'),
+      p('Valid Anagram', 'Easy', 'Check if two strings are anagrams of each other.'),
+      p('Group Anagrams', 'Medium', 'Group strings that are anagrams of each other.'),
+      p('Top K Frequent Elements', 'Medium', 'Find the k most frequent elements in an array.'),
+      p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
+      p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
+      p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
+      p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),
+    ]
+  },
+  {
+    id: 'two-pointers',
+    name: 'Two Pointers',
+    icon: '👆',
+    timestamp: '1:35:31',
+    problems: [
+      p('Valid Palindrome', 'Easy', 'Check if a string is a palindrome, considering only alphanumeric characters.'),
+      p('Two Sum II', 'Medium', 'Find two numbers in a sorted array that add up to target.'),
+      p('3Sum', 'Medium', 'Find all unique triplets in the array that sum to zero.'),
+      p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
+      p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
+    ]
+  },
+  {
+    id: 'sliding-window',
+    name: 'Sliding Window',
+    icon: '🪟',
+    timestamp: '3:22:29',
+    problems: [
+      p('Best Time to Buy And Sell Stock', 'Easy', 'Find maximum profit from buying and selling a stock once.'),
+      p('Longest Substring Without Repeating Characters', 'Medium', 'Find the length of the longest substring without repeating characters.'),
+      p('Longest Repeating Character Replacement', 'Medium', 'Find longest substring with at most k character replacements.'),
+      p('Permutation In String', 'Medium', 'Check if one string\'s permutation is a substring of another.'),
+      p('Minimum Window Substring', 'Hard', 'Find minimum window in s that contains all characters of t.'),
+      p('Sliding Window Maximum', 'Hard', 'Find the maximum in each sliding window of size k.'),
+    ]
+  },
+  {
+    id: 'stack',
+    name: 'Stack',
+    icon: '📚',
+    timestamp: '4:59:44',
+    problems: [
+      p('Valid Parentheses', 'Easy', 'Check if the input string has valid and properly closed brackets.'),
+      p('Min Stack', 'Medium', 'Design a stack that supports push, pop, top, and getMin in O(1).'),
+      p('Evaluate Reverse Polish Notation', 'Medium', 'Evaluate an arithmetic expression in Reverse Polish Notation.'),
+      p('Generate Parentheses', 'Medium', 'Generate all valid combinations of n pairs of parentheses.'),
+      p('Daily Temperatures', 'Medium', 'Find number of days until a warmer temperature for each day.'),
+      p('Car Fleet', 'Medium', 'Determine the number of car fleets that arrive at the destination.'),
+      p('Largest Rectangle In Histogram', 'Hard', 'Find the largest rectangular area in a histogram.'),
+    ]
+  },
+  {
+    id: 'binary-search',
+    name: 'Binary Search',
+    icon: '🔍',
+    timestamp: '6:19:22',
+    problems: [
+      p('Binary Search', 'Easy', 'Find target value in a sorted array.'),
+      p('Search a 2D Matrix', 'Medium', 'Search for a target in a row-column sorted matrix.'),
+      p('Koko Eating Bananas', 'Medium', 'Find minimum eating speed to finish all bananas in h hours.'),
+      p('Find Minimum In Rotated Sorted Array', 'Medium', 'Find the minimum element in a rotated sorted array.'),
+      p('Search In Rotated Sorted Array', 'Medium', 'Search for target in a rotated sorted array.'),
+      p('Time Based Key Value Store', 'Medium', 'Design key-value store with timestamp-based retrieval.'),
+      p('Median of Two Sorted Arrays', 'Hard', 'Find the median of two sorted arrays in O(log(m+n)).'),
+    ]
+  },
+  {
+    id: 'linked-list',
+    name: 'Linked List',
+    icon: '🔗',
+    timestamp: '8:22:13',
+    problems: [
+      p('Reverse Linked List', 'Easy', 'Reverse a singly linked list.'),
+      p('Merge Two Sorted Lists', 'Easy', 'Merge two sorted linked lists into one sorted list.'),
+      p('Reorder List', 'Medium', 'Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2→...'),
+      p('Remove Nth Node From End of List', 'Medium', 'Remove the nth node from the end of a linked list.'),
+      p('Copy List With Random Pointer', 'Medium', 'Deep copy a linked list with next and random pointers.'),
+      p('Add Two Numbers', 'Medium', 'Add two numbers represented as reversed linked lists.'),
+      p('Linked List Cycle', 'Easy', 'Detect if a linked list has a cycle.'),
+      p('Find The Duplicate Number', 'Medium', 'Find the duplicate in an array of n+1 integers in range [1, n].'),
+      p('LRU Cache', 'Medium', 'Design a Least Recently Used (LRU) cache.'),
+      p('Merge K Sorted Lists', 'Hard', 'Merge k sorted linked lists into one sorted list.'),
+      p('Reverse Nodes In K Group', 'Hard', 'Reverse linked list nodes in groups of k.'),
+    ]
+  },
+  {
+    id: 'trees',
+    name: 'Trees',
+    icon: '🌲',
+    timestamp: '10:33:35',
+    problems: [
+      p('Invert Binary Tree', 'Easy', 'Mirror/invert a binary tree.'),
+      p('Maximum Depth of Binary Tree', 'Easy', 'Find the maximum depth of a binary tree.'),
+      p('Diameter of Binary Tree', 'Easy', 'Find the longest path between any two nodes in a tree.'),
+      p('Balanced Binary Tree', 'Easy', 'Check if a binary tree is height-balanced.'),
+      p('Same Tree', 'Easy', 'Check if two binary trees are structurally identical.'),
+      p('Subtree of Another Tree', 'Easy', 'Check if a tree is a subtree of another tree.'),
+      p('Lowest Common Ancestor of a BST', 'Medium', 'Find the lowest common ancestor of two nodes in a BST.'),
+      p('Binary Tree Level Order Traversal', 'Medium', 'Traverse the tree level by level (BFS).'),
+      p('Binary Tree Right Side View', 'Medium', 'Return the values visible from the right side of the tree.'),
+      p('Count Good Nodes in Binary Tree', 'Medium', 'Count nodes where the path from root has no greater value.'),
+      p('Validate Binary Search Tree', 'Medium', 'Check if a binary tree is a valid BST.'),
+      p('Kth Smallest Element in a BST', 'Medium', 'Find the kth smallest element in a BST.'),
+      p('Construct Binary Tree from Preorder and Inorder', 'Medium', 'Build a tree from preorder and inorder traversal arrays.'),
+      p('Binary Tree Maximum Path Sum', 'Hard', 'Find the maximum path sum in a binary tree.'),
+      p('Serialize and Deserialize Binary Tree', 'Hard', 'Convert a tree to a string and reconstruct it back.'),
+    ]
+  },
+  {
+    id: 'tries',
+    name: 'Tries',
+    icon: '🔤',
+    timestamp: '13:20:24',
+    problems: [
+      p('Implement Trie Prefix Tree', 'Medium', 'Implement a trie with insert, search, and startsWith methods.'),
+      p('Design Add and Search Words Data Structure', 'Medium', 'Trie supporting wildcard "." character search.'),
+      p('Word Search II', 'Hard', 'Find all words from a dictionary that exist in a 2D board.'),
+    ]
+  },
+  {
+    id: 'heap-priority-queue',
+    name: 'Heap / Priority Queue',
+    icon: '⏫',
+    timestamp: '14:01:28',
+    problems: [
+      p('Kth Largest Element in a Stream', 'Easy', 'Design a class to find the kth largest element in a stream.'),
+      p('Last Stone Weight', 'Easy', 'Simulate stone smashing and return the last stone weight.'),
+      p('K Closest Points to Origin', 'Medium', 'Find the k closest points to the origin.'),
+      p('Kth Largest Element in an Array', 'Medium', 'Find the kth largest element in an unsorted array.'),
+      p('Task Scheduler', 'Medium', 'Find minimum intervals to execute all tasks with cooldown.'),
+      p('Design Twitter', 'Medium', 'Design a simplified Twitter with follow, unfollow, post, and feed.'),
+      p('Find Median from Data Stream', 'Hard', 'Find the median from continuously arriving numbers.'),
+    ]
+  },
+  {
+    id: 'backtracking',
+    name: 'Backtracking',
+    icon: '🔙',
+    timestamp: '16:15:43',
+    problems: [
+      p('Subsets', 'Medium', 'Generate all possible subsets of a set of distinct integers.'),
+      p('Combination Sum', 'Medium', 'Find all combinations that sum to target (elements reusable).'),
+      p('Permutations', 'Medium', 'Generate all permutations of an array of distinct integers.'),
+      p('Subsets II', 'Medium', 'Generate all subsets, handling duplicate elements.'),
+      p('Combination Sum II', 'Medium', 'Find combinations that sum to target (each element used once).'),
+      p('Word Search', 'Medium', 'Search for a word in a 2D board of characters.'),
+      p('Palindrome Partitioning', 'Medium', 'Partition a string into all possible palindrome substrings.'),
+      p('Letter Combinations of a Phone Number', 'Medium', 'Generate all letter combinations from phone keypad digits.'),
+      p('N Queens', 'Hard', 'Place n queens on an n×n chessboard with no conflicts.'),
+    ]
+  },
+  {
+    id: 'graphs',
+    name: 'Graphs',
+    icon: '🕸️',
+    timestamp: '17:44:08',
+    problems: [
+      p('Number of Islands', 'Medium', 'Count the number of islands in a 2D grid.'),
+      p('Clone Graph', 'Medium', 'Deep copy an undirected graph.'),
+      p('Max Area of Island', 'Medium', 'Find the island with the maximum area.'),
+      p('Pacific Atlantic Water Flow', 'Medium', 'Find cells that can flow water to both Pacific and Atlantic oceans.'),
+      p('Surrounded Regions', 'Medium', 'Capture all surrounded regions on a board.'),
+      p('Rotting Oranges', 'Medium', 'Find minimum time for all oranges to become rotten.'),
+      p('Walls and Gates', 'Medium', 'Fill each empty room with distance to its nearest gate.'),
+      p('Course Schedule', 'Medium', 'Determine if all courses can be finished (cycle detection).'),
+      p('Course Schedule II', 'Medium', 'Find a valid order to take all courses (topological sort).'),
+      p('Redundant Connection', 'Medium', 'Find the edge that creates a cycle in an undirected graph.'),
+      p('Number of Connected Components in an Undirected Graph', 'Medium', 'Count connected components in an undirected graph.'),
+      p('Graph Valid Tree', 'Medium', 'Check if an undirected graph forms a valid tree.'),
+      p('Word Ladder', 'Hard', 'Find shortest transformation sequence from begin to end word.'),
+    ]
+  },
+  {
+    id: 'advanced-graphs',
+    name: 'Advanced Graphs',
+    icon: '🗺️',
+    timestamp: '21:42:50',
+    problems: [
+      p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
+      p('Min Cost to Connect All Points', 'Medium', 'Find minimum cost to connect all points (MST).'),
+      p('Network Delay Time', 'Medium', 'Find time for signal to reach all nodes (Dijkstra).'),
+      p('Swim in Rising Water', 'Hard', 'Find minimum time to swim from top-left to bottom-right.'),
+      p('Alien Dictionary', 'Hard', 'Derive character order from a sorted alien dictionary.'),
+      p('Cheapest Flights Within K Stops', 'Medium', 'Find cheapest flight path with at most k stops.'),
+    ]
+  },
+  {
+    id: '1d-dynamic-programming',
+    name: '1D Dynamic Programming',
+    icon: '📈',
+    timestamp: '23:46:50',
+    problems: [
+      p('Climbing Stairs', 'Easy', 'Count the number of ways to climb n stairs (1 or 2 steps at a time).'),
+      p('Min Cost Climbing Stairs', 'Easy', 'Find the minimum cost to reach the top of the stairs.'),
+      p('House Robber', 'Medium', 'Find maximum money robbing non-adjacent houses.'),
+      p('House Robber II', 'Medium', 'House robber problem but houses are in a circle.'),
+      p('Longest Palindromic Substring', 'Medium', 'Find the longest palindromic substring.'),
+      p('Palindromic Substrings', 'Medium', 'Count the total number of palindromic substrings.'),
+      p('Decode Ways', 'Medium', 'Count ways to decode a digit string into letters (A=1...Z=26).'),
+      p('Coin Change', 'Medium', 'Find the fewest coins needed to make up a given amount.'),
+      p('Maximum Product Subarray', 'Medium', 'Find the contiguous subarray with the largest product.'),
+      p('Word Break', 'Medium', 'Check if a string can be segmented into dictionary words.'),
+      p('Longest Increasing Subsequence', 'Medium', 'Find the length of the longest strictly increasing subsequence.'),
+      p('Partition Equal Subset Sum', 'Medium', 'Check if an array can be partitioned into two equal-sum subsets.'),
+    ]
+  },
+  {
+    id: '2d-dynamic-programming',
+    name: '2D Dynamic Programming',
+    icon: '📊',
+    timestamp: '28:45:52',
+    problems: [
+      p('Unique Paths', 'Medium', 'Count unique paths from top-left to bottom-right in a grid.'),
+      p('Longest Common Subsequence', 'Medium', 'Find the length of the longest common subsequence of two strings.'),
+      p('Best Time to Buy and Sell Stock with Cooldown', 'Medium', 'Maximum profit with a cooldown period after selling.'),
+      p('Coin Change II', 'Medium', 'Count the number of ways to make an amount with given coins.'),
+      p('Target Sum', 'Medium', 'Count ways to assign +/- signs to elements to reach a target sum.'),
+      p('Interleaving String', 'Medium', 'Check if s3 is formed by interleaving s1 and s2.'),
+      p('Longest Increasing Path in a Matrix', 'Hard', 'Find the longest increasing path in a 2D matrix.'),
+      p('Distinct Subsequences', 'Hard', 'Count distinct subsequences of s that equal t.'),
+      p('Edit Distance', 'Medium', 'Find minimum operations to convert one string to another.'),
+      p('Burst Balloons', 'Hard', 'Find maximum coins collected by strategically bursting balloons.'),
+      p('Regular Expression Matching', 'Hard', 'Implement regex matching with "." and "*" support.'),
+    ]
+  },
+  {
+    id: 'greedy',
+    name: 'Greedy',
+    icon: '🤑',
+    timestamp: '31:54:37',
+    problems: [
+      p('Maximum Subarray', 'Medium', 'Find the contiguous subarray with the largest sum (Kadane\'s algorithm).'),
+      p('Jump Game', 'Medium', 'Determine if you can reach the last index by jumping.'),
+      p('Jump Game II', 'Medium', 'Find the minimum number of jumps to reach the last index.'),
+      p('Gas Station', 'Medium', 'Find the starting gas station index for a complete circuit.'),
+      p('Hand of Straights', 'Medium', 'Check if a hand can be rearranged into groups of consecutive cards.'),
+      p('Merge Triplets to Form Target Triplet', 'Medium', 'Check if target triplet can be formed by merging given triplets.'),
+      p('Partition Labels', 'Medium', 'Partition string into maximum parts where each letter appears in one part.'),
+      p('Valid Parenthesis String', 'Medium', 'Check if string with wildcards "*" has valid parentheses.'),
+    ]
+  },
+  {
+    id: 'intervals',
+    name: 'Intervals',
+    icon: '📐',
+    timestamp: '33:55:28',
+    problems: [
+      p('Insert Interval', 'Medium', 'Insert a new interval and merge overlapping intervals.'),
+      p('Merge Intervals', 'Medium', 'Merge all overlapping intervals.'),
+      p('Non Overlapping Intervals', 'Medium', 'Find minimum interval removals for a non-overlapping set.'),
+      p('Meeting Rooms', 'Easy', 'Check if a person can attend all meetings without overlap.'),
+      p('Meeting Rooms II', 'Medium', 'Find the minimum number of conference rooms required.'),
+      p('Minimum Interval to Include Each Query', 'Hard', 'Find the smallest interval containing each query value.'),
+    ]
+  },
+  {
+    id: 'math-geometry',
+    name: 'Math & Geometry',
+    icon: '📐',
+    timestamp: '35:26:18',
+    problems: [
+      p('Rotate Image', 'Medium', 'Rotate an n×n matrix 90 degrees clockwise in-place.'),
+      p('Spiral Matrix', 'Medium', 'Return all elements of a matrix in spiral order.'),
+      p('Set Matrix Zeroes', 'Medium', 'Set entire row and column to zero if any element is zero.'),
+      p('Happy Number', 'Easy', 'Determine if a number eventually reaches 1 by summing squares of digits.'),
+      p('Plus One', 'Easy', 'Add one to a number represented as an array of digits.'),
+      p('Pow(x, n)', 'Medium', 'Implement the power function efficiently.'),
+      p('Multiply Strings', 'Medium', 'Multiply two numbers represented as strings.'),
+      p('Detect Squares', 'Medium', 'Design a data structure to count axis-aligned squares from points.'),
+    ]
+  },
+  {
+    id: 'bit-manipulation',
+    name: 'Bit Manipulation',
+    icon: '⚡',
+    timestamp: '37:11:53',
+    problems: [
+      p('Single Number', 'Easy', 'Find the element that appears only once (all others appear twice).'),
+      p('Number of 1 Bits', 'Easy', 'Count the number of set bits (1s) in a 32-bit integer.'),
+      p('Counting Bits', 'Easy', 'Return an array of the count of 1-bits for every number from 0 to n.'),
+      p('Reverse Bits', 'Easy', 'Reverse the bits of a given 32-bit unsigned integer.'),
+      p('Missing Number', 'Easy', 'Find the missing number in range [0, n] from an array of n distinct numbers.'),
+      p('Sum of Two Integers', 'Medium', 'Calculate sum of two integers without using + or - operators.'),
+      p('Reverse Integer', 'Medium', 'Reverse digits of a 32-bit signed integer.'),
+    ]
+  }
+];
