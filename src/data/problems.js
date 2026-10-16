@@ -21,6 +21,115 @@ export const patterns = [
     timestamp: '0:02:09',
     problems: [
       {
+        id: 'contains-duplicate',
+        title: 'Contains Duplicate',
+        difficulty: 'Easy',
+        definition: 'Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.',
+        examples: [
+          { input: 'nums = [1,2,3,1]', output: 'true' },
+          { input: 'nums = [1,2,3,4]', output: 'false' },
+          { input: 'nums = [1,1,1,3,3,4,3,2,4,2]', output: 'true' }
+        ],
+        brute: {
+          idea: 'Compare every pair of elements using nested loops. If any two elements at different indices are equal, return true.',
+          code: `class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        int n = nums.length;
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if(i == j){
+                    continue;
+                }
+                if(nums[i] == nums[j]){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: 'Nested loops compare each element with every other element.',
+          space: 'O(1)',
+          spaceDesc: 'No extra space used.',
+          walkthrough: [
+            "Initialize n = nums.length.",
+            "Iterate outer loop with pointer i from 0 to n-1.",
+            "Iterate inner loop with pointer j from 0 to n-1. If i == j, continue to avoid comparing the element with itself.",
+            "Check if nums[i] == nums[j]: if equal, a duplicate exists, return true.",
+            "If both loops finish without finding any duplicate, return false."
+          ]
+        },
+        better: {
+          idea: 'Sort the array first. If there are duplicates, they will end up adjacent to each other.',
+          code: `import java.util.Arrays;
+
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        int n = nums.length;
+
+        Arrays.sort(nums);
+
+        for(int i=0; i<n-1; i++){
+            if(nums[i] == nums[i+1]){
+                return true;
+            }
+        }
+
+        return false;
+    }
+}`,
+          time: 'O(n log n)',
+          timeDesc: 'Arrays.sort takes O(n log n) time, followed by a linear scan O(n).',
+          space: 'O(1)',
+          spaceDesc: 'In-place sorting with O(log n) recursion stack space.',
+          walkthrough: [
+            "Initialize n = nums.length.",
+            "Sort the array nums in ascending order using Arrays.sort(nums).",
+            "After sorting, any duplicate elements must be adjacent to each other.",
+            "Iterate i from 0 to n-2: check if nums[i] == nums[i+1].",
+            "If any adjacent pair is equal, return true.",
+            "If loop finishes without finding adjacent equals, return false."
+          ]
+        },
+        optimal: {
+          idea: 'Use a HashSet to store seen elements. As soon as an element is seen again, return true immediately.',
+          code: `import java.util.HashSet;
+
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        int n = nums.length;
+
+        HashSet<Integer> hash = new HashSet<>();
+
+        for(int i=0; i<n; i++){
+            if(hash.contains(nums[i])){
+                return true;
+            } else {
+                hash.add(nums[i]);
+            }
+        }
+
+        return false;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: 'Single pass through array with O(1) average HashSet lookups and inserts.',
+          space: 'O(n)',
+          spaceDesc: 'HashSet stores up to n elements in worst case.',
+          walkthrough: [
+            "Initialize n = nums.length and an empty HashSet<Integer> hash = new HashSet<>().",
+            "Iterate through the array with index i from 0 to n-1.",
+            "Check if hash.contains(nums[i]).",
+            "If the set already contains nums[i], it is a duplicate, return true.",
+            "Otherwise, add the element into the set: hash.add(nums[i]).",
+            "If the loop finishes without finding any duplicate, return false."
+          ]
+        }
+      },
+      {
         id: 'two-sum',
         title: 'Two Sum',
         difficulty: 'Easy',
@@ -31,56 +140,101 @@ export const patterns = [
         ],
         brute: {
           idea: 'Use two nested loops to check every pair of numbers.',
-          code: `function twoSum(nums, target) {
-  for (let i = 0; i < nums.length; i++) {
-    for (let j = i + 1; j < nums.length; j++) {
-      if (nums[i] + nums[j] === target) {
-        return [i, j];
-      }
+          code: `class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    return new int[] { i, j };
+                }
+            }
+        }
+        return new int[] {};
     }
-  }
 }`,
           time: 'O(n²)',
           timeDesc: 'Two nested loops check every pair of elements.',
           space: 'O(1)',
-          spaceDesc: 'No extra memory used; only two pointer indices.'
+          spaceDesc: 'No extra memory used; only two pointer indices.',
+          walkthrough: [
+            "Run two nested loops: outer loop i from 0 to n-1, inner loop j from i+1 to n-1.",
+            "For each pair, check if nums[i] + nums[j] == target.",
+            "If sum matches target, return new int[] { i, j } immediately.",
+            "If loop finishes without finding any pair, return new int[] {}."
+          ]
         },
         better: {
-          idea: 'Sort the array and use two pointers. Need to track original indices.',
-          code: `function twoSum(nums, target) {
-  const sorted = nums.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
-  let l = 0, r = sorted.length - 1;
-  while (l < r) {
-    const sum = sorted[l][0] + sorted[r][0];
-    if (sum === target) return [sorted[l][1], sorted[r][1]];
-    else if (sum < target) l++;
-    else r--;
-  }
+          idea: 'Sort the array with indices and use two pointers.',
+          code: `import java.util.Arrays;
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int[][] sorted = new int[nums.length][2];
+        for (int i = 0; i < nums.length; i++) {
+            sorted[i] = new int[] { nums[i], i };
+        }
+        Arrays.sort(sorted, (a, b) -> Integer.compare(a[0], b[0]));
+
+        int l = 0, r = sorted.length - 1;
+        while (l < r) {
+            int sum = sorted[l][0] + sorted[r][0];
+            if (sum == target) {
+                return new int[] { sorted[l][1], sorted[r][1] };
+            } else if (sum < target) {
+                l++;
+            } else {
+                r--;
+            }
+        }
+        return new int[] {};
+    }
 }`,
           time: 'O(n log n)',
           timeDesc: 'Sorting takes O(n log n), then two pointers scan in O(n).',
           space: 'O(n)',
-          spaceDesc: 'Extra array to store pairs of [value, originalIndex].'
+          spaceDesc: 'Extra 2D array to store pairs of [value, originalIndex].',
+          walkthrough: [
+            "Store each element with its original index in a 2D array and sort in ascending order.",
+            "Initialize two pointers: left = 0 and right = n - 1.",
+            "While left < right: compute sum = sorted[left][0] + sorted[right][0].",
+            "If sum == target, return original indices new int[] { sorted[left][1], sorted[right][1] }.",
+            "If sum < target, increment left pointer (left++) to increase the sum.",
+            "If sum > target, decrement right pointer (right--) to decrease the sum.",
+            "If no pair sums to target, return new int[] {}."
+          ]
         },
         optimal: {
-          idea: 'Use a hash map to store each number and its index. For each element, check if (target - current) exists in the map.',
-          code: `function twoSum(nums, target) {
-  const map = new Map();
-  for (let i = 0; i < nums.length; i++) {
-    const complement = target - nums[i];
-    if (map.has(complement)) {
-      return [map.get(complement), i];
+          idea: 'Use a HashMap to store each number and its index. For each element, check if (target - current) exists in the map.',
+          code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[] {};
     }
-    map.set(nums[i], i);
-  }
 }`,
           time: 'O(n)',
-          timeDesc: 'Single pass through array with O(1) average hash map lookups.',
+          timeDesc: 'Single pass through array with O(1) average HashMap lookups.',
           space: 'O(n)',
-          spaceDesc: 'Hash map stores up to n elements and their indices.'
+          spaceDesc: 'HashMap stores up to n elements and their indices.',
+          walkthrough: [
+            "Initialize an empty HashMap: Map<Integer, Integer> map = new HashMap<>().",
+            "Iterate through nums with index i from 0 to n - 1.",
+            "Compute required complement: complement = target - nums[i].",
+            "Check if map.containsKey(complement): if yes, return new int[] { map.get(complement), i }.",
+            "Otherwise, store the current number in the map: map.put(nums[i], i).",
+            "If loop finishes without finding a pair, return new int[] {}."
+          ]
         }
       },
-      p('Contains Duplicate', 'Easy', 'Check if any value appears at least twice in the array.'),
       p('Valid Anagram', 'Easy', 'Check if two strings are anagrams of each other.'),
       p('Group Anagrams', 'Medium', 'Group strings that are anagrams of each other.'),
       p('Top K Frequent Elements', 'Medium', 'Find the k most frequent elements in an array.'),

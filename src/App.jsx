@@ -1,23 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { patterns } from './data/problems';
 import Sidebar from './components/Sidebar';
+import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
+import CommandPalette from './components/CommandPalette';
+import { Menu } from 'lucide-react';
 
-const difficultyStyle = {
-  Easy: 'text-emerald-400',
-  Medium: 'text-amber-400',
-  Hard: 'text-rose-400',
-};
-
-function App() {
+export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activePatternId, setActivePatternId] = useState(patterns[0].id);
+  const [collapsed, setCollapsed] = useState(false);
+  const [activePatternId, setActivePatternId] = useState(patterns[0]?.id || '');
   const [activeProblem, setActiveProblem] = useState(null);
+  const [commandOpen, setCommandOpen] = useState(false);
 
-  const activePattern = patterns.find(p => p.id === activePatternId);
+  // Load revised problems from localStorage
+  const [revisedProblems, setRevisedProblems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dsa_revised_problems');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
+  // Persist revised problems
+  const handleToggleRevised = (problemId) => {
+    setRevisedProblems(prev => {
+      const next = new Set(prev);
+      if (next.has(problemId)) {
+        next.delete(problemId);
+      } else {
+        next.add(problemId);
+      }
+      try {
+        localStorage.setItem('dsa_revised_problems', JSON.stringify([...next]));
+      } catch (e) {
+        console.error('Failed to save to localStorage', e);
+      }
+      return next;
+    });
+  };
+
+  // URL Hash listener on load / change
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (!hash) return;
+
+      for (const pat of patterns) {
+        const found = pat.problems.find(p => p.id === hash);
+        if (found) {
+          setActivePatternId(pat.id);
+          setActiveProblem(found);
+          break;
+        }
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const activePattern = patterns.find(p => p.id === activePatternId) || patterns[0];
+  const totalProblems = patterns.reduce((s, p) => s + p.problems.length, 0);
+
+  const handleSelectProblemFromSearch = (patternId, problem) => {
+    setActivePatternId(patternId);
+    setActiveProblem(problem);
+  };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)]">
+    <div className="min-h-screen bg-ink-bg text-ink-text flex">
+      {/* Sidebar */}
       <Sidebar
         patterns={patterns}
         activePattern={activePatternId}
@@ -25,90 +80,57 @@ function App() {
           setActivePatternId(id);
           setActiveProblem(null);
         }}
+        onOpenCommand={() => setCommandOpen(true)}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed(!collapsed)}
       />
 
-      {/* Main Content */}
-      <main className="lg:ml-64 min-h-screen">
-        {/* Top bar */}
-        <header className="sticky top-0 z-20 bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)]">
-          <div className="flex items-center gap-3 px-6 py-3.5">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] cursor-pointer"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+      {/* Mobile sidebar trigger */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 rounded-lg bg-ink-surface border border-ink-border text-ink-subtle hover:text-ink-text shadow-lg cursor-pointer"
+        aria-label="Open sidebar"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
 
-            {/* Breadcrumb */}
-            <nav className="flex items-center gap-1.5 text-sm">
-              <span
-                className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] cursor-pointer transition-colors"
-                onClick={() => setActiveProblem(null)}
-              >
-                {activePattern?.name}
-              </span>
-              {activeProblem && (
-                <>
-                  <span className="text-[var(--color-text-tertiary)]">/</span>
-                  <span className="text-[var(--color-text-primary)] font-medium">{activeProblem.title}</span>
-                </>
-              )}
-            </nav>
-          </div>
-        </header>
+      {/* Main Content Area */}
+      <div className={`flex-1 flex flex-col min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.2,0,0,1)] ${
+        collapsed ? 'lg:pl-16' : 'lg:pl-64'
+      }`}>
 
-        <div className="p-6 max-w-3xl">
+
+        {/* Main page content - clean ~880px max-width */}
+        <main className="flex-1 w-full max-w-[880px] mx-auto px-4 sm:px-6 py-8">
           {activeProblem ? (
-            /* Problem Detail View */
             <ProblemDetail
               problem={activeProblem}
+              patternName={activePattern?.name || ''}
               onBack={() => setActiveProblem(null)}
+              allProblems={activePattern?.problems || []}
+              onSelectProblem={(prob) => setActiveProblem(prob)}
+              isRevised={revisedProblems.has(activeProblem.id)}
+              onToggleRevised={() => handleToggleRevised(activeProblem.id)}
             />
-          ) : activePattern ? (
-            /* Problem List View */
-            <div className="animate-fadeIn">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-[var(--color-text-primary)] mb-0.5">
-                  {activePattern.name}
-                </h2>
-                <p className="text-sm text-[var(--color-text-tertiary)]">
-                  {activePattern.problems.length} problems
-                </p>
-              </div>
+          ) : (
+            <ProblemList
+              pattern={activePattern}
+              onSelectProblem={(prob) => setActiveProblem(prob)}
+              revisedProblems={revisedProblems}
+            />
+          )}
+        </main>
+      </div>
 
-              <div className="border border-[var(--color-border)] rounded-lg overflow-hidden divide-y divide-[var(--color-border)]">
-                {activePattern.problems.map((problem, idx) => (
-                  <button
-                    key={problem.id}
-                    onClick={() => setActiveProblem(problem)}
-                    className="w-full text-left group cursor-pointer hover:bg-[var(--color-bg-surface)] transition-colors duration-100"
-                  >
-                    <div className="flex items-center gap-4 px-5 py-3.5">
-                      <span className="text-[11px] text-[var(--color-text-tertiary)] font-mono tabular-nums w-5 text-right shrink-0">
-                        {idx + 1}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-medium text-[var(--color-text-primary)] group-hover:text-white transition-colors truncate">
-                          {problem.title}
-                        </p>
-                      </div>
-                      <span className={`text-[11px] font-medium shrink-0 ${difficultyStyle[problem.difficulty]}`}>
-                        {problem.difficulty}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </main>
+      {/* ⌘K Command Dialog */}
+      <CommandPalette
+        open={commandOpen}
+        onOpenChange={setCommandOpen}
+        patterns={patterns}
+        onSelectProblem={handleSelectProblemFromSearch}
+      />
     </div>
   );
 }
-
-export default App;
