@@ -119,7 +119,7 @@ function ApproachContent({ approach }) {
                 <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Time Complexity</p>
                 <p className="text-base font-mono font-bold text-ink-text">{approach.time}</p>
                 {approach.timeDesc && (
-                  <p className="text-xs text-ink-subtle mt-1 leading-relaxed">{approach.timeDesc}</p>
+                  <p className="text-xs text-ink-subtle mt-1.5 leading-relaxed whitespace-pre-line">{approach.timeDesc}</p>
                 )}
               </CardContent>
             </Card>
@@ -130,7 +130,7 @@ function ApproachContent({ approach }) {
                 <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Space Complexity</p>
                 <p className="text-base font-mono font-bold text-ink-text">{approach.space}</p>
                 {approach.spaceDesc && (
-                  <p className="text-xs text-ink-subtle mt-1 leading-relaxed">{approach.spaceDesc}</p>
+                  <p className="text-xs text-ink-subtle mt-1.5 leading-relaxed whitespace-pre-line">{approach.spaceDesc}</p>
                 )}
               </CardContent>
             </Card>

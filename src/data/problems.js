@@ -41,12 +41,12 @@ export const patterns = [
     public boolean containsDuplicate(int[] nums) {
         int n = nums.length;
 
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
+        for(int i=0; i<n; i++){                            // Outer loop: O(n)
+            for(int j=0; j<n; j++){                        // Inner loop: O(n)
                 if(i == j){
                     continue;
                 }
-                if(nums[i] == nums[j]){
+                if(nums[i] == nums[j]){                    // Comparison: O(1)
                     return true;
                 }
             }
@@ -56,7 +56,7 @@ export const patterns = [
     }
 }`,
           time: 'O(n²)',
-          timeDesc: 'Nested loops compare each element with every other element.',
+          timeDesc: '• Outer loop: O(n)\n• Inner loop: O(n)\n• Comparison: O(1)\n• Total Time: O(n · n) = O(n²)',
           space: 'O(1)',
           spaceDesc: 'No extra space used.',
           walkthrough: [
@@ -69,16 +69,14 @@ export const patterns = [
         },
         better: {
           idea: 'Sort the array first. If there are duplicates, they will end up adjacent to each other.',
-          code: `import java.util.Arrays;
-
-class Solution {
+          code: `class Solution {
     public boolean containsDuplicate(int[] nums) {
         int n = nums.length;
 
-        Arrays.sort(nums);
+        Arrays.sort(nums);                                 // Sorting: O(n log n)
 
-        for(int i=0; i<n-1; i++){
-            if(nums[i] == nums[i+1]){
+        for(int i=0; i<n-1; i++){                          // Loop: O(n)
+            if(nums[i] == nums[i+1]){                      // Comparison: O(1)
                 return true;
             }
         }
@@ -87,7 +85,7 @@ class Solution {
     }
 }`,
           time: 'O(n log n)',
-          timeDesc: 'Arrays.sort takes O(n log n) time, followed by a linear scan O(n).',
+          timeDesc: '• Sorting: O(n log n)\n• Linear scan loop: O(n)\n• Total Time: O(n log n)',
           space: 'O(1)',
           spaceDesc: 'In-place sorting with O(log n) recursion stack space.',
           walkthrough: [
@@ -101,19 +99,17 @@ class Solution {
         },
         optimal: {
           idea: 'Use a HashSet to store seen elements. As soon as an element is seen again, return true immediately.',
-          code: `import java.util.HashSet;
-
-class Solution {
+          code: `class Solution {
     public boolean containsDuplicate(int[] nums) {
         int n = nums.length;
 
         HashSet<Integer> hash = new HashSet<>();
 
-        for(int i=0; i<n; i++){
-            if(hash.contains(nums[i])){
+        for(int i=0; i<n; i++){                            // Loop: O(n)
+            if(hash.contains(nums[i])){                    // Lookup: O(1) avg
                 return true;
             } else {
-                hash.add(nums[i]);
+                hash.add(nums[i]);                         // Insert: O(1) avg
             }
         }
 
@@ -121,7 +117,7 @@ class Solution {
     }
 }`,
           time: 'O(n)',
-          timeDesc: 'Single pass through array with O(1) average HashSet lookups and inserts.',
+          timeDesc: '• Single pass loop: O(n)\n• HashSet lookup & insert: O(1) average\n• Total Time: O(n)',
           space: 'O(n)',
           spaceDesc: 'HashSet stores up to n elements in worst case.',
           walkthrough: [
@@ -148,18 +144,18 @@ class Solution {
           idea: 'For each character in s, search for a match in t and mark it as visited (using "#") to avoid duplicate counting.',
           code: `class Solution {
     public boolean isAnagram(String s, String t) {
-        if(s.length() != t.length()){
+        if(s.length() != t.length()){                      // O(1) length check
             return false;
         }
 
         char arr[] = t.toCharArray();
 
-        for(int i=0; i<s.length(); i++){
+        for(int i=0; i<s.length(); i++){                   // Outer loop: n times
             boolean found = false;
 
-            for(int j=0; j<t.length(); j++){
+            for(int j=0; j<t.length(); j++){               // Inner loop: n times
                 if(s.charAt(i) == arr[j]){
-                    arr[j] = '#';
+                    arr[j] = '#';                          // Mark visited: O(1)
                     found = true;
                     break;
                 }
@@ -174,7 +170,7 @@ class Solution {
     }
 }`,
           time: 'O(n²)',
-          timeDesc: 'Nested loop compares each character of s against all characters of t.',
+          timeDesc: '• Outer loop iterates through all n characters of s: O(n)\n• Inner loop scans up to n characters of t: O(n)\n• Total Time: O(n · n) = O(n²)',
           space: 'O(n)',
           spaceDesc: 'Character array created for mutable marking of visited characters.',
           walkthrough: [
@@ -190,18 +186,18 @@ class Solution {
           idea: 'Count character frequencies using a fixed-size integer array of length 26. Increment for s and decrement for t.',
           code: `class Solution {
     public boolean isAnagram(String s, String t) {
-        if(s.length() != t.length()){
+        if(s.length() != t.length()){                      // O(1) length check
             return false;
         }
 
         int freq[] = new int[26];
 
-        for(int i=0; i<s.length(); i++){
+        for(int i=0; i<s.length(); i++){                   // Single pass: O(n)
             freq[s.charAt(i) - 'a']++;
             freq[t.charAt(i) - 'a']--;
         }
 
-        for(int count : freq){
+        for(int count : freq){                             // Fixed 26 counts: O(1)
             if(count != 0){
                 return false;
             }
@@ -211,7 +207,7 @@ class Solution {
     }
 }`,
           time: 'O(n)',
-          timeDesc: 'Single pass of length n through both strings, followed by checking 26 counts.',
+          timeDesc: '• Single loop through strings of length n: O(n)\n• Checking fixed 26 element array: O(26) ≈ O(1)\n• Total Time: O(n + 26) = O(n)',
           space: 'O(1)',
           spaceDesc: 'Constant space: fixed 26-element integer array for English letters.',
           walkthrough: [
@@ -239,9 +235,9 @@ class Solution {
     public int[] twoSum(int[] nums, int target) {
         int n = nums.length;
 
-        for(int i=0; i<n; i++){
-            for(int j=i+1; j<n; j++){
-                if(nums[i] + nums[j] == target){
+        for(int i=0; i<n; i++){                            // Outer loop: O(n)
+            for(int j=i+1; j<n; j++){                      // Inner loop: O(n)
+                if(nums[i] + nums[j] == target){           // Comparison: O(1)
                     return new int[] {i, j};
                 }
             }
@@ -251,7 +247,7 @@ class Solution {
     }
 }`,
           time: 'O(n²)',
-          timeDesc: 'Nested loops compare each pair of elements in the array.',
+          timeDesc: '• Outer loop: O(n)\n• Inner loop: O(n)\n• Comparison: O(1)\n• Total Time: O(n · n) = O(n²)',
           space: 'O(1)',
           spaceDesc: 'No extra memory used; only integer loop indices.',
           walkthrough: [
@@ -265,29 +261,27 @@ class Solution {
         },
         optimal: {
           idea: 'Use a HashMap to store each visited number and its index. For each element, check if the required complement (need = target - nums[i]) already exists in the map.',
-          code: `import java.util.HashMap;
-
-class Solution {
+          code: `class Solution {
     public int[] twoSum(int[] nums, int target) {
         int n = nums.length;
 
         HashMap<Integer, Integer> map = new HashMap<>();
 
-        for(int i=0; i<n; i++){
-            int need = target - nums[i];
+        for(int i=0; i<n; i++){                            // Loop: O(n)
+            int need = target - nums[i];                   // Operation: O(1)
 
-            if(map.containsKey(need)){
+            if(map.containsKey(need)){                     // Lookup: O(1) avg
                 return new int[] {map.get(need), i};
             }
 
-            map.put(nums[i], i);
+            map.put(nums[i], i);                           // Insert: O(1) avg
         }
 
         return new int[] {-1, -1};
     }
 }`,
           time: 'O(n)',
-          timeDesc: 'Single pass through array of length n with O(1) average HashMap lookup and insert.',
+          timeDesc: '• Loop: O(n)\n• Lookup (containsKey) & Insert (put): O(1) avg\n• Total Time: O(n)',
           space: 'O(n)',
           spaceDesc: 'HashMap stores up to n elements and their corresponding indices.',
           walkthrough: [
@@ -300,7 +294,151 @@ class Solution {
           ]
         }
       },
-      p('Group Anagrams', 'Medium', 'Group strings that are anagrams of each other.'),
+      {
+        id: 'group-anagrams',
+        title: 'Group Anagrams',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/group-anagrams/description/',
+        definition: 'Given an array of strings strs, group the anagrams together. You can return the answer in any order.',
+        examples: [
+          { input: 'strs = ["eat","tea","tan","ate","nat","bat"]', output: '[["bat"],["nat","tan"],["ate","eat","tea"]]' },
+          { input: 'strs = [""]', output: '[[""]]' }
+        ],
+        brute: {
+          idea: 'Iterate through all strings. For each unvisited string, form a new group and scan the remaining array to find all anagrams using a helper function, marking visited strings along the way.',
+          code: `class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> result = new ArrayList<>();
+        boolean visited[] = new boolean[strs.length];
+
+        for(int i=0; i<strs.length; i++){                  // Outer loop: O(n)
+            if(visited[i]){
+                continue;
+            }
+
+            List<String> group = new ArrayList<>();
+            group.add(strs[i]);
+            visited[i] = true;
+
+            for(int j=i+1; j<strs.length; j++){            // Inner loop: O(n)
+                if(!visited[j] && isAnagram(strs[i], strs[j])){ // Helper isAnagram: O(k)
+                    group.add(strs[j]);
+                    visited[j] = true;
+                }
+            }
+
+            result.add(group);
+        }
+
+        return result;
+    }
+
+    public boolean isAnagram(String s, String t){
+        if(s.length() != t.length()){                      // Check: O(1)
+            return false;
+        }
+
+        int freq[] = new int[26];
+
+        for (int i = 0; i < s.length(); i++) {             // Loop: O(k)
+            freq[s.charAt(i) - 'a']++;
+            freq[t.charAt(i) - 'a']--;
+        }
+
+        for (int count : freq) {                           // Fixed loop: O(26) ≈ O(1)
+            if (count != 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n² · k)',
+          timeDesc: '• Outer loop: O(n)\n• Inner loop: O(n)\n• Helper isAnagram: O(k)\n• Total Time: O(n · n · k) = O(n² · k)',
+          space: 'O(n)',
+          spaceDesc: 'Boolean visited array of size n to track processed strings.',
+          walkthrough: [
+            "Initialize result list and a boolean visited[] array of size strs.length.",
+            "Iterate through strs with index i. If visited[i] is true, skip using continue.",
+            "Create a new list group, add strs[i], and mark visited[i] = true.",
+            "Inner loop j from i+1 to strs.length - 1: if not visited and isAnagram(strs[i], strs[j]) is true, add strs[j] to group and mark visited[j] = true.",
+            "Add group to result and repeat until all strings are visited.",
+            "Return result."
+          ]
+        },
+        better: {
+          idea: 'Sort each string alphabetically to form a canonical key. All anagrams will produce the same sorted key, which can be grouped using a HashMap.',
+          code: `class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for(String s: strs){                               // Loop: O(n)
+            char arr[] = s.toCharArray();
+            Arrays.sort(arr);                              // Sorting: O(k log k)
+
+            String key = new String(arr);
+
+            map.putIfAbsent(key, new ArrayList<>());
+            map.get(key).add(s);                           // Insert: O(1) avg
+        } 
+
+        return new ArrayList<>(map.values());
+    }
+}`,
+          time: 'O(n · k log k)',
+          timeDesc: '• Loop over all n strings: O(n)\n• Sorting each string: O(k log k)\n• Total Time: O(n · k log k)',
+          space: 'O(n · k)',
+          spaceDesc: 'HashMap stores all strings and their sorted keys.',
+          walkthrough: [
+            "Initialize a HashMap<String, List<String>> map = new HashMap<>().",
+            "Loop through each string s in strs.",
+            "Convert s to character array arr = s.toCharArray() and sort it using Arrays.sort(arr).",
+            "Construct the sorted key: String key = new String(arr).",
+            "Add s to the group in map using map.putIfAbsent(key, new ArrayList<>()) and map.get(key).add(s).",
+            "Return new ArrayList<>(map.values())."
+          ]
+        },
+        optimal: {
+          idea: 'Instead of sorting, build a character count frequency array (size 26) for each string and serialize it as a delimiter-separated key (e.g., "1#0#...#") for the HashMap.',
+          code: `class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+
+        for(String s: strs){                               // Outer loop: O(n)
+            int freq[] = new int[26];
+
+            for(int i=0; i<s.length(); i++){               // Inner loop: O(k)
+                freq[s.charAt(i) - 'a']++;
+            }
+
+            StringBuilder key = new StringBuilder();
+
+            for(int count : freq){                         // Fixed loop: O(26) ≈ O(1)
+                key.append(count).append("#");
+            }
+
+            map.putIfAbsent(key.toString(), new ArrayList<>());
+            map.get(key.toString()).add(s);                // Insert: O(1) avg
+        } 
+
+        return new ArrayList<>(map.values());
+    }
+}`,
+          time: 'O(n · k)',
+          timeDesc: '• Outer loop: O(n)\n• Inner loop (frequency counting): O(k)\n• Fixed loop (serializing 26 counts): O(26) ≈ O(1)\n• Total Time: O(n · (k + 26)) = O(n · k)',
+          space: 'O(n · k)',
+          spaceDesc: 'HashMap stores all strings grouped by their 26-count frequency signature key.',
+          walkthrough: [
+            "Initialize HashMap<String, List<String>> map = new HashMap<>().",
+            "Loop through each string s in strs.",
+            "Count the frequency of each lowercase character using an integer array freq of size 26.",
+            "Serialize the frequency counts into a unique key string using StringBuilder with '#' delimiter.",
+            "Add string s into the corresponding bucket in map using map.putIfAbsent(key.toString(), ...) and map.get(key.toString()).add(s).",
+            "Return new ArrayList<>(map.values())."
+          ]
+        }
+      },
       p('Top K Frequent Elements', 'Medium', 'Find the k most frequent elements in an array.'),
       p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
       p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
