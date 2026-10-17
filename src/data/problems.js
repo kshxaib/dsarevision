@@ -943,7 +943,7 @@ export const patterns = [
     timestamp: '1:35:31',
     problems: [
       p('Valid Palindrome', 'Easy', 'Check if a string is a palindrome, considering only alphanumeric characters.'),
-      p('Two Sum II', 'Medium', 'Find two numbers in a sorted array that add up to target.'),
+      p('Two Sum II Input Array Is Sorted', 'Medium', 'Find two numbers in a 1-indexed sorted array that add up to target.', 'two-sum-ii-input-array-is-sorted'),
       p('3Sum', 'Medium', 'Find all unique triplets in the array that sum to zero.'),
       p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
       p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
