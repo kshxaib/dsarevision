@@ -1099,7 +1099,111 @@ export const patterns = [
           ]
         }
       },
-      p('3Sum', 'Medium', 'Find all unique triplets in the array that sum to zero.'),
+      {
+        id: '3sum',
+        title: '3Sum',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/3sum/description/',
+        definition: 'Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0. Notice that the solution set must not contain duplicate triplets.',
+        examples: [
+          { input: 'nums = [-1,0,1,2,-1,-4]', output: '[[-1,-1,2],[-1,0,1]]' },
+          { input: 'nums = [0,1,1]', output: '[]' }
+        ],
+        brute: {
+          idea: 'Check all triplets (i, j, k) using three nested loops. When a triplet sums to zero, sort the three numbers and add it to a HashSet to filter out duplicates.',
+          code: `class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        Set<List<Integer>> set = new HashSet<>();
+
+        for (int i = 0; i < nums.length; i++) {            // Outer loop: O(n)
+            for (int j = i + 1; j < nums.length; j++) {    // Inner loop: O(n)
+                for (int k = j + 1; k < nums.length; k++) {// Inner-most loop: O(n)
+
+                    if (nums[i] + nums[j] + nums[k] == 0) {// Sum check: O(1)
+                        List<Integer> triplet = Arrays.asList(nums[i], nums[j], nums[k]);
+                        Collections.sort(triplet);         // Sort 3 elements: O(1)
+                        set.add(triplet);                  // Insert: O(1) avg
+                    }
+                }
+            }
+        }
+
+        result.addAll(set);
+        return result;
+    }
+}`,
+          time: 'O(n³)',
+          timeDesc: '• Three nested loops iterating through triplets: O(n³)\n• Sorting triplet of 3 elements: O(1)\n• HashSet operations: O(1) avg\n• Total Time: O(n³)',
+          space: 'O(u)',
+          spaceDesc: 'O(u) auxiliary space to store unique triplets in the HashSet (where u ≤ n²).',
+          walkthrough: [
+            "Initialize a HashSet set to store unique sorted triplets.",
+            "Iterate i from 0 to nums.length - 1 using outer loop.",
+            "Iterate j from i + 1 to nums.length - 1 using middle loop.",
+            "Iterate k from j + 1 to nums.length - 1 using inner-most loop.",
+            "If nums[i] + nums[j] + nums[k] == 0, create a list of the 3 numbers, sort it, and add it to set.",
+            "Add all unique triplets from set into result list and return it."
+          ]
+        },
+        optimal: {
+          idea: 'Sort the array first. Iterate through each number as the anchor, and use two pointers (left and right) on the remaining elements. Skip duplicate values at each step to prevent duplicate triplets.',
+          code: `class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+
+        Arrays.sort(nums);                                 // Sorting: O(n log n)
+
+        for(int i=0; i<nums.length; i++){                  // Loop: O(n)
+            if (i > 0 && nums[i] == nums[i - 1]) {         // Skip duplicates
+                continue;
+            }
+
+            int left = i+1;
+            int right = nums.length -1;
+
+            while(left < right){                           // Two pointers: O(n)
+                int sum = nums[i] + nums[left] + nums[right];
+
+                if(sum == 0){                              // Triplet found: O(1)
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+
+                    while(left < right && nums[left] == nums[left -1]){
+                        left++;                            // Skip duplicate lefts
+                    }
+
+                    while(left < right && nums[right] == nums[right +1]){
+                        right--;                           // Skip duplicate rights
+                    }
+                    
+                } else if(sum < 0){
+                    left++;                                // Need larger sum
+                } else {
+                    right--;                               // Need smaller sum
+                }
+            }
+        }
+
+        return result;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Sorting the array: O(n log n)\n• Outer loop fixing anchor element i: O(n)\n• Inner two-pointer traversal: O(n)\n• Total Time: O(n log n + n²) = O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (output list does not count as extra memory; O(log n) sorting stack space).',
+          walkthrough: [
+            "Sort the array nums in ascending order using Arrays.sort(nums).",
+            "Iterate i from 0 to nums.length - 1. If i > 0 and nums[i] == nums[i - 1], skip duplicate anchor.",
+            "Initialize two pointers: left = i + 1 and right = nums.length - 1.",
+            "While left < right, calculate sum = nums[i] + nums[left] + nums[right].",
+            "If sum == 0, add triplet to result, advance left and right, and skip duplicate elements for both pointers.",
+            "If sum < 0, increment left to increase sum; if sum > 0, decrement right to decrease sum.",
+            "Return result."
+          ]
+        }
+      },
       p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
       p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
     ]
