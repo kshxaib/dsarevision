@@ -1204,7 +1204,87 @@ export const patterns = [
           ]
         }
       },
-      p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
+      {
+        id: 'container-with-most-water',
+        title: 'Container With Most Water',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/container-with-most-water/description/',
+        definition: 'You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]). Find two lines that together with the x-axis form a container, such that the container contains the most water. Return the maximum amount of water a container can store.',
+        examples: [
+          { input: 'height = [1,8,6,2,5,4,8,3,7]', output: '49' },
+          { input: 'height = [1,1]', output: '1' }
+        ],
+        brute: {
+          idea: 'Check every pair of vertical lines (i, j) using two nested loops. The water contained between them is the width (j - i) multiplied by the shorter height (min(height[i], height[j])). Keep track of the maximum water found.',
+          code: `class Solution {
+    public int maxArea(int[] height) {
+        int maxWtr = 0;
+
+        for(int i=0; i<height.length; i++){                // Outer loop: O(n)
+            for(int j=i+1; j<height.length; j++){          // Inner loop: O(n)
+                int wtrLvl = Math.min(height[i], height[j]);
+                int widht = j-i;
+                int wtr = wtrLvl * widht;
+
+                maxWtr = Math.max(maxWtr, wtr);
+            }
+        }
+
+        return maxWtr;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop iterating through each line i: O(n)\n• Inner loop evaluating pair line j: O(n)\n• Area calculation: O(1)\n• Total Time: O(n · n) = O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (only a few primitive variables used).',
+          walkthrough: [
+            "Initialize maxWtr = 0.",
+            "Iterate through height array with outer loop index i from 0 to height.length - 1.",
+            "Iterate through subsequent lines with inner loop index j from i + 1 to height.length - 1.",
+            "Calculate width = j - i and water level wtrLvl = Math.min(height[i], height[j]).",
+            "Calculate water area wtr = wtrLvl * width and update maxWtr = Math.max(maxWtr, wtr).",
+            "Return maxWtr."
+          ]
+        },
+        optimal: {
+          idea: 'Use two pointers at the widest boundaries (left at start, right at end). Calculate the area at each step, and greedily move inward the pointer that has the shorter line to potentially discover a taller container.',
+          code: `class Solution {
+    public int maxArea(int[] height) {
+        int maxWtr = 0;
+       
+        int left = 0;
+        int right = height.length -1;
+
+        while(left < right){                               // Two pointers: O(n)
+            int wtrLvl = Math.min(height[left], height[right]);
+            int widht = right - left;
+            int wtr = widht * wtrLvl;
+
+            maxWtr = Math.max(maxWtr, wtr);
+
+            if(height[left] < height[right]){
+                left++;                                    // Move pointer with smaller height
+            } else {
+                right--;                                   // Move pointer with smaller height
+            }
+        }
+
+        return maxWtr;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Pointers move toward each other, visiting each vertical line at most once: O(n)\n• Area computation and comparisons: O(1)\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space using two pointers in-place.',
+          walkthrough: [
+            "Initialize left = 0, right = height.length - 1, and maxWtr = 0.",
+            "While left < right, calculate the width (right - left) and water level Math.min(height[left], height[right]).",
+            "Compute current water area and update maxWtr = Math.max(maxWtr, wtr).",
+            "If height[left] < height[right], increment left; otherwise decrement right.",
+            "Return maxWtr."
+          ]
+        }
+      },
       p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
     ]
   },
