@@ -150,10 +150,10 @@ export const patterns = [
 
         char arr[] = t.toCharArray();
 
-        for(int i=0; i<s.length(); i++){                   // Outer loop: n times
+        for(int i=0; i<s.length(); i++){                   // Outer loop: O(n)
             boolean found = false;
 
-            for(int j=0; j<t.length(); j++){               // Inner loop: n times
+            for(int j=0; j<t.length(); j++){               // Inner loop: O(n)
                 if(s.charAt(i) == arr[j]){
                     arr[j] = '#';                          // Mark visited: O(1)
                     found = true;
@@ -439,7 +439,95 @@ export const patterns = [
           ]
         }
       },
-      p('Top K Frequent Elements', 'Medium', 'Find the k most frequent elements in an array.'),
+      {
+        id: 'top-k-frequent-elements',
+        title: 'Top K Frequent Elements',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/top-k-frequent-elements/description/',
+        definition: 'Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.',
+        examples: [
+          { input: 'nums = [1,1,1,2,2,3], k = 2', output: '[1,2]' },
+          { input: 'nums = [1], k = 1', output: '[1]' }
+        ],
+        brute: {
+          idea: 'Count the frequency of each element using a HashMap. Extract all unique elements into a list, sort them descending by frequency, and pick the first k elements.',
+          code: `class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i=0; i<nums.length; i++){                  // Loop: O(n)
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1); // Insert / Update: O(1) avg
+        }
+
+        List<Integer> list = new ArrayList<>(map.keySet());
+
+        list.sort((a, b) -> map.get(b) - map.get(a));     // Sorting: O(d log d)
+
+        int ans[] = new int[k];
+        for(int i=0; i<k; i++){                            // Loop: O(k)
+            ans[i] = list.get(i);
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n + d log d)',
+          timeDesc: '• Frequency map loop: O(n)\n• Sorting distinct elements list (d elements): O(d log d)\n• Extracting top k elements: O(k)\n• Total Time: O(n + d log d)',
+          space: 'O(d)',
+          spaceDesc: 'HashMap and list store up to d distinct elements (where d ≤ n).',
+          walkthrough: [
+            "Create a HashMap<Integer, Integer> map to count the frequency of each number in nums.",
+            "Loop through nums and update counts using map.put(nums[i], map.getOrDefault(nums[i], 0) + 1).",
+            "Extract all unique numbers into a list: new ArrayList<>(map.keySet()).",
+            "Sort the list in descending order of frequency using list.sort((a, b) -> map.get(b) - map.get(a)).",
+            "Initialize an integer array ans of size k and copy the first k numbers from the sorted list.",
+            "Return ans."
+          ]
+        },
+        optimal: {
+          idea: 'Count frequencies in a HashMap, then maintain a Min-Heap (PriorityQueue) of size k. For each unique number, push into the heap; if size exceeds k, pop the minimum element so only the top k frequent elements remain.',
+          code: `class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i=0; i<nums.length; i++){                  // Loop: O(n)
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1); // Insert / Update: O(1) avg
+        }
+
+        Queue<Integer> heap = new PriorityQueue<>(
+            (a, b) -> map.get(a) - map.get(b)
+        );
+
+        for(int key : map.keySet()){                       // Loop: O(d)
+            heap.add(key);                                 // Heap push: O(log k)
+
+            if(heap.size() > k){
+                heap.poll();                               // Heap pop: O(log k)
+            }
+        }
+
+        int ans[] = new int[k];
+        for(int i=0; i<k; i++){                            // Loop: O(k)
+            ans[i] = heap.poll();                          // Heap pop: O(log k)
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n + d log k)',
+          timeDesc: '• Frequency map loop: O(n)\n• Min-Heap operations for d elements (size k): O(d log k)\n• Extracting k elements from heap: O(k log k)\n• Total Time: O(n + d log k)',
+          space: 'O(d + k)',
+          spaceDesc: 'HashMap stores d distinct elements, PriorityQueue stores at most k + 1 elements.',
+          walkthrough: [
+            "Count the frequency of each element in nums using a HashMap.",
+            "Initialize a Min-Heap (PriorityQueue) ordered by frequency: (a, b) -> map.get(a) - map.get(b).",
+            "Iterate through each unique key in map.keySet() and add it to heap.",
+            "If heap size exceeds k, remove the lowest frequency element using heap.poll().",
+            "After all keys are processed, the heap contains exactly the top k frequent numbers.",
+            "Extract elements into result array ans and return it."
+          ]
+        }
+      },
       p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
       p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
       p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
