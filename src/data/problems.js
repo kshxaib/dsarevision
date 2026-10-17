@@ -1027,7 +1027,78 @@ export const patterns = [
           ]
         }
       },
-      p('Two Sum II Input Array Is Sorted', 'Medium', 'Find two numbers in a 1-indexed sorted array that add up to target.', 'two-sum-ii-input-array-is-sorted'),
+      {
+        id: 'two-sum-ii-input-array-is-sorted',
+        title: 'Two Sum II Input Array Is Sorted',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/',
+        definition: 'Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number. Return the indices of the two numbers, index1 and index2, added by one as an integer array [index1, index2] of length 2.',
+        examples: [
+          { input: 'numbers = [2,7,11,15], target = 9', output: '[1,2]' },
+          { input: 'numbers = [2,3,4], target = 6', output: '[1,3]' }
+        ],
+        brute: {
+          idea: 'Check every pair of elements using nested loops. When a pair adds up to target, return their 1-indexed positions [i+1, j+1].',
+          code: `class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        for(int i=0; i<numbers.length; i++){               // Outer loop: O(n)
+            for(int j=i+1; j<numbers.length; j++){         // Inner loop: O(n)
+                if(numbers[i] + numbers[j] == target){     // Comparison: O(1)
+                    return new int[] {i+1, j+1};
+                }
+            }
+        }
+
+        return new int[] {-1, -1};
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop: O(n)\n• Inner loop: O(n)\n• Comparison: O(1)\n• Total Time: O(n · n) = O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (no extra data structures used).',
+          walkthrough: [
+            "Iterate through numbers array using outer loop pointer i from 0 to numbers.length - 1.",
+            "Iterate through subsequent numbers using inner loop pointer j from i + 1 to numbers.length - 1.",
+            "If numbers[i] + numbers[j] == target, return new int[]{i + 1, j + 1} for 1-based indexing.",
+            "If no matching pair is found after both loops complete, return {-1, -1}."
+          ]
+        },
+        optimal: {
+          idea: 'Since the array is sorted, use two pointers at opposite ends (left and right). Adjust pointers inward based on whether the sum is less than or greater than the target.',
+          code: `class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length - 1;
+
+        while(left < right){                               // Two pointers: O(n)
+            int sum = numbers[left] + numbers[right];
+
+            if(sum == target){                             // Match found: O(1)
+                return new int[] {left+1, right+1};
+            } else if(sum < target){
+                left++;                                    // Need larger sum
+            } else {
+                right--;                                   // Need smaller sum
+            }
+        }
+
+        return new int[] {-1, -1};
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Two pointers traverse array from both ends in a single pass: O(n)\n• Sum calculation and pointer moves: O(1)\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space using two pointer variables in-place.',
+          walkthrough: [
+            "Initialize left pointer at 0 and right pointer at numbers.length - 1.",
+            "While left < right, calculate sum = numbers[left] + numbers[right].",
+            "If sum == target, return new int[]{left + 1, right + 1} (1-indexed).",
+            "If sum < target, increment left to increase the sum.",
+            "If sum > target, decrement right to decrease the sum.",
+            "If no pair sums to target, return {-1, -1}."
+          ]
+        }
+      },
       p('3Sum', 'Medium', 'Find all unique triplets in the array that sum to zero.'),
       p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
       p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
