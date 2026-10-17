@@ -788,7 +788,152 @@ export const patterns = [
           ]
         }
       },
-      p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),
+      {
+        id: 'longest-consecutive-sequence',
+        title: 'Longest Consecutive Sequence',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/longest-consecutive-sequence/description/',
+        definition: 'Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence. You must write an algorithm that runs in O(n) time.',
+        examples: [
+          { input: 'nums = [100,4,200,1,3,2]', output: '4' },
+          { input: 'nums = [0,3,7,2,5,8,4,6,0,1]', output: '9' }
+        ],
+        brute: {
+          idea: 'For each number in the array, attempt to build a consecutive chain by repeatedly scanning the entire array for val + 1.',
+          code: `class Solution {
+    public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+        if(n == 0) return 0;
+
+        int longest = 1;
+
+        for(int i=0; i<n; i++){                            // Outer loop: O(n)
+            int val = nums[i];
+
+            int currLongest = 1;
+
+            while(true){                                   // Sequence loop: up to O(n)
+                boolean found = false;
+
+                for(int j=0; j<n; j++){                    // Inner scan: O(n)
+                    if(nums[j] == (val+1)){
+                        currLongest++;
+                        val++;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(!found){
+                    break;
+                }
+            }
+
+            longest = Math.max(longest, currLongest);
+        }
+
+        return longest;
+    }
+}`,
+          time: 'O(n³)',
+          timeDesc: '• Outer loop: O(n)\n• Sequence loop: up to O(n)\n• Inner array scan for val + 1: O(n)\n• Total Time: O(n) × O(n) × O(n) = O(n³)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space used.',
+          walkthrough: [
+            "If array is empty (n == 0), return 0.",
+            "Iterate through each number nums[i] with outer pointer i as the potential sequence start.",
+            "In while loop, search the entire array using pointer j for val + 1.",
+            "If found, increment currLongest and val, and repeat.",
+            "If not found, break out of while loop and update longest = Math.max(longest, currLongest).",
+            "Return longest."
+          ]
+        },
+        better: {
+          idea: 'Sort the array first so consecutive elements become adjacent. Iterate through the sorted array, skipping duplicate values and tracking the length of consecutive sequences.',
+          code: `class Solution {
+    public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+        if(n == 0) return 0;
+
+        Arrays.sort(nums);                                 // Sorting: O(n log n)
+        int longest = 1;
+        int currLongest = 1;
+
+        for (int i = 1; i < nums.length; i++) {            // Loop: O(n)
+            if (nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            if (nums[i] == nums[i - 1] + 1) {
+                currLongest++;
+            } else {
+                currLongest = 1;
+            }
+
+            longest = Math.max(longest, currLongest);
+        }
+
+        return longest;
+    }
+}`,
+          time: 'O(n log n)',
+          timeDesc: '• Sorting the array: O(n log n)\n• Single pass scan: O(n)\n• Total Time: O(n log n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (or O(log n) recursion stack space for sorting).',
+          walkthrough: [
+            "If array is empty, return 0.",
+            "Sort the array nums in ascending order using Arrays.sort(nums).",
+            "Initialize longest = 1 and currLongest = 1.",
+            "Iterate from index 1 to n - 1.",
+            "If nums[i] == nums[i - 1], skip duplicate using continue.",
+            "If nums[i] == nums[i - 1] + 1, increment currLongest; otherwise reset currLongest = 1.",
+            "Update longest = Math.max(longest, currLongest) at each step.",
+            "Return longest."
+          ]
+        },
+        optimal: {
+          idea: 'Insert all numbers into a HashSet for O(1) lookups. For each number, check if it is the start of a sequence (!set.contains(num - 1)). If it is, count consecutively upwards using while(set.contains(num + 1)).',
+          code: `class Solution {
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+
+        for(int i=0; i<nums.length; i++){                  // Loop: O(n)
+            set.add(nums[i]);                              // Insert: O(1) avg
+        }
+
+        int longest = 0;
+
+        for(int num : set){                                // Loop: O(n)
+            if(!set.contains(num - 1)){                    // Lookup: O(1) avg
+                int currLongest = 1;
+
+                while(set.contains(num + 1)){              // Lookup: O(1) avg
+                    currLongest++;
+                    num++;
+                }
+
+                longest = Math.max(longest, currLongest);
+            }
+        }
+
+        return longest;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Building HashSet: O(n)\n• Traversing set and expanding sequences: O(n) (each number visited at most twice)\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store elements in the HashSet.',
+          walkthrough: [
+            "Insert all elements from nums into a HashSet for O(1) lookups.",
+            "Initialize longest = 0.",
+            "Iterate through each number num in the set.",
+            "Check if !set.contains(num - 1): only begin counting if num is the start of a consecutive sequence.",
+            "While set.contains(num + 1), increment currLongest and advance num.",
+            "Update longest = Math.max(longest, currLongest).",
+            "Return longest."
+          ]
+        }
+      },
     ]
   },
   {
