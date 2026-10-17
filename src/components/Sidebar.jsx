@@ -86,9 +86,8 @@ export default function AppSidebar({
 
       {/* Fixed Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#0F0F11] border-r border-ink-border z-50 flex flex-col overflow-hidden transition-transform duration-200 ${
-          isMobile ? (isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full') : 'translate-x-0'
-        }`}
+        className={`fixed top-0 left-0 h-full w-64 bg-[#0F0F11] border-r border-ink-border z-50 flex flex-col overflow-hidden transition-transform duration-200 ${isMobile ? (isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full') : 'translate-x-0'
+          }`}
       >
         {/* Search Bar at the Very Top */}
         <div className="p-3 border-b border-ink-border shrink-0">
@@ -124,11 +123,10 @@ export default function AppSidebar({
                   key={pattern.id}
                   data-active={isActive ? 'true' : 'false'}
                   onClick={() => handleSelect(pattern.id)}
-                  className={`w-full h-9 flex items-center rounded-lg px-2.5 transition-colors relative group cursor-pointer ${
-                    isActive
+                  className={`w-full h-9 flex items-center rounded-lg px-2.5 transition-colors relative group cursor-pointer ${isActive
                       ? 'bg-amber-accent-muted text-ink-text font-medium'
                       : 'text-ink-muted hover:text-ink-text hover:bg-ink-surface'
-                  }`}
+                    }`}
                 >
                   {/* Amber active indicator bar */}
                   {isActive && (

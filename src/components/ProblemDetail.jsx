@@ -234,11 +234,10 @@ export default function ProblemDetail({
           <Button
             size="sm"
             onClick={onToggleRevised}
-            className={`h-8 text-xs font-semibold transition-colors ${
-              isRevised
+            className={`h-8 text-xs font-semibold transition-colors ${isRevised
                 ? 'bg-easy/20 text-easy border border-easy/40 hover:bg-easy/30'
                 : 'bg-amber-accent text-ink-bg hover:bg-amber-accent-hover font-bold'
-            }`}
+              }`}
           >
             {isRevised ? (
               <>

@@ -109,6 +109,7 @@
     opacity: 0;
     transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -116,7 +117,9 @@
 }
 
 @keyframes progressFill {
-  from { width: 0; }
+  from {
+    width: 0;
+  }
 }
 
 /* Scrollbar styling */
@@ -129,13 +132,16 @@
   width: 4px;
   height: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #3F3F46;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #52525B;
 }
@@ -145,16 +151,20 @@
   scrollbar-width: thin;
   scrollbar-color: #3F3F46 transparent;
 }
+
 .sidebar-scroll::-webkit-scrollbar {
   width: 5px;
 }
+
 .sidebar-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .sidebar-scroll::-webkit-scrollbar-thumb {
   background: #3F3F46;
   border-radius: 9999px;
 }
+
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: #52525B;
 }
@@ -163,28 +173,41 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
   }
 
-  /* Amber focus ring for accessibility */
-  :focus-visible {
+  /* Amber focus ring for accessibility - exclude text inputs */
+  :focus-visible:not(input):not(textarea) {
     @apply ring-2 ring-amber-accent ring-offset-2 ring-offset-background outline-none;
+  }
+  input, textarea {
+    outline: none !important;
   }
 
   ::selection {
     background: rgba(245, 165, 36, 0.2);
   }
 
-  code, pre {
+  code,
+  pre {
     font-family: var(--font-mono);
   }
 }

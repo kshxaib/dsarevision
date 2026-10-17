@@ -237,6 +237,7 @@ export default function App() {
               pattern={activePattern}
               onSelectProblem={handleSelectProblem}
               revisedProblems={revisedProblems}
+              onToggleRevised={handleToggleRevised}
             />
           )}
         </main>
@@ -248,6 +249,7 @@ export default function App() {
         onOpenChange={setCommandOpen}
         patterns={patterns}
         onSelectProblem={handleSelectProblemFromSearch}
+        revisedProblems={revisedProblems}
       />
     </div>
   );
