@@ -528,7 +528,66 @@ export const patterns = [
           ]
         }
       },
-      p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
+      {
+        id: 'encode-and-decode-strings',
+        title: 'Encode and Decode Strings',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://neetcode.io/problems/string-encode-and-decode/question',
+        definition: 'Design an algorithm to encode a list of strings to a single string. The encoded string is then decoded back to the original list of strings.',
+        examples: [
+          { input: 'strs = ["neet","code","love","you"]', output: '["neet","code","love","you"]' },
+          { input: 'strs = ["we","say",":","yes"]', output: '["we","say",":","yes"]' }
+        ],
+        optimal: {
+          idea: 'Use length-prefix encoding. Prepend each string with its length followed by a ":" delimiter (e.g., "4:neet"). During decoding, scan for ":" to read the length prefix, allowing reliable substring slicing regardless of special characters inside strings.',
+          code: `class Solution {
+
+    public String encode(List<String> strs) {
+        StringBuilder sb = new StringBuilder();
+
+        for (String s : strs) {                            // Loop: O(n)
+            sb.append(s.length()).append(':').append(s);
+        }
+
+        return sb.toString();
+    }
+
+    public List<String> decode(String str) {
+        List<String> result = new ArrayList<>();
+        int i=0;
+
+        while(i < str.length()){                           // Outer loop: O(N)
+            int j = i;
+
+            while(str.charAt(j) != ':'){                   // Inner scan: O(length digits)
+                j++;
+            }
+
+            int len = Integer.parseInt(str.substring(i, j));
+            i = j+1;
+
+            result.add(str.substring(i, i+len));           // Substring extraction: O(len)
+            i = i+len;
+        }
+
+        return result;
+    }
+}`,
+          time: 'O(N)',
+          timeDesc: '• encode: iterates through all strings and appends characters: O(N)\n• decode: scans length digits and extracts substrings: O(N)\n• Total Time: O(N) where N is total characters',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (excluding the output string and list).',
+          walkthrough: [
+            "In encode, iterate through each string s in strs and append its length, ':' delimiter, and the string itself.",
+            "In decode, initialize pointer i = 0 and an empty result list.",
+            "While i < str.length(), find the next ':' delimiter using inner scan pointer j.",
+            "Parse the length integer from str.substring(i, j) and update i = j + 1.",
+            "Extract the exact string of length len using str.substring(i, i + len) and add to result.",
+            "Advance pointer i by len and continue until the entire string is decoded.",
+            "Return result."
+          ]
+        }
+      },
       p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
       p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
       p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),

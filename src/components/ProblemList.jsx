@@ -60,7 +60,7 @@ export default function ProblemList({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        title="Open on LeetCode"
+                        title={problem.leetcodeUrl.includes('neetcode.io') ? 'Open on NeetCode' : 'Open on LeetCode'}
                         className="text-ink-subtle hover:text-amber-accent p-0.5 rounded transition-colors inline-flex items-center"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />

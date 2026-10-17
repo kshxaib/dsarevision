@@ -209,10 +209,10 @@ export default function ProblemDetail({
                   className="inline-flex items-center h-8 px-2.5 text-xs font-medium rounded-md bg-ink-surface border border-ink-border text-ink-muted hover:text-amber-accent hover:border-amber-accent/40 hover:bg-ink-elevated transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5 mr-1.5 text-amber-accent" />
-                  LeetCode
+                  {problem.leetcodeUrl.includes('neetcode.io') ? 'NeetCode' : 'LeetCode'}
                 </a>
               </TooltipTrigger>
-              <TooltipContent>Open on LeetCode</TooltipContent>
+              <TooltipContent>{problem.leetcodeUrl.includes('neetcode.io') ? 'Open on NeetCode' : 'Open on LeetCode'}</TooltipContent>
             </Tooltip>
           )}
 
