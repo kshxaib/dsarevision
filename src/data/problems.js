@@ -942,7 +942,91 @@ export const patterns = [
     icon: '👆',
     timestamp: '1:35:31',
     problems: [
-      p('Valid Palindrome', 'Easy', 'Check if a string is a palindrome, considering only alphanumeric characters.'),
+      {
+        id: 'valid-palindrome',
+        title: 'Valid Palindrome',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/valid-palindrome/description/',
+        definition: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers. Given a string s, return true if it is a palindrome, or false otherwise.',
+        examples: [
+          { input: 's = "A man, a plan, a canal: Panama"', output: 'true' },
+          { input: 's = "race a car"', output: 'false' }
+        ],
+        brute: {
+          idea: 'Filter out non-alphanumeric characters and convert each valid character to lowercase using a StringBuilder. Reverse the filtered string and check if it equals the original filtered string.',
+          code: `class Solution {
+    public boolean isPalindrome(String s) {
+        StringBuilder sb = new StringBuilder();
+
+        for(int i=0; i<s.length(); i++){                   // Loop: O(n)
+            char ch = s.charAt(i);
+
+            if(Character.isLetterOrDigit(ch)){             // Filter alphanumeric: O(1)
+                sb.append(Character.toLowerCase(ch));      // Append: O(1)
+            }
+        }
+
+        String str = sb.toString();                        // Convert to string: O(n)
+        String rev = sb.reverse().toString();              // Reverse & convert: O(n)
+
+        return str.equals(rev);                            // Comparison: O(n)
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Filter loop traversing string: O(n)\n• Reverse string: O(n)\n• String equality comparison: O(n)\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store the filtered and reversed strings.',
+          walkthrough: [
+            "Initialize a StringBuilder sb to store filtered characters.",
+            "Iterate through each character of string s from index 0 to s.length() - 1.",
+            "If character is alphanumeric (Character.isLetterOrDigit), append its lowercase form to sb.",
+            "Convert sb to string str, then reverse sb and convert to string rev.",
+            "Return str.equals(rev)."
+          ]
+        },
+        optimal: {
+          idea: 'Use two pointers starting from both ends (left and right). Move inward while skipping non-alphanumeric characters, and compare characters in lowercase.',
+          code: `class Solution {
+    public boolean isPalindrome(String s) {
+        StringBuilder sb = new StringBuilder();
+
+        int left=0, right=s.length() -1;
+
+        while(left < right){                               // Two pointers: O(n)
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+                left++;                                    // Skip non-alphanumeric
+            }
+
+            while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+                right--;                                   // Skip non-alphanumeric
+            }
+
+            if (Character.toLowerCase(s.charAt(left)) !=
+                Character.toLowerCase(s.charAt(right))) {  // Comparison: O(1)
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Pointers left and right meet in the middle, visiting each character at most once: O(n)\n• Character checks and comparisons: O(1)\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space using two pointers in-place.',
+          walkthrough: [
+            "Initialize two pointers: left = 0 and right = s.length() - 1.",
+            "While left < right, advance left forward until an alphanumeric character is found.",
+            "Decrement right backward until an alphanumeric character is found.",
+            "Compare lowercase characters at left and right: if they do not match, return false.",
+            "Increment left and decrement right.",
+            "If pointers meet without mismatch, return true."
+          ]
+        }
+      },
       p('Two Sum II Input Array Is Sorted', 'Medium', 'Find two numbers in a 1-indexed sorted array that add up to target.', 'two-sum-ii-input-array-is-sorted'),
       p('3Sum', 'Medium', 'Find all unique triplets in the array that sum to zero.'),
       p('Container With Most Water', 'Medium', 'Find two lines that together with x-axis form a container holding the most water.'),
