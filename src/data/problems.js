@@ -588,7 +588,129 @@ export const patterns = [
           ]
         }
       },
-      p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
+      {
+        id: 'product-of-array-except-self',
+        title: 'Product of Array Except Self',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/product-of-array-except-self/description/',
+        definition: 'Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i]. The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.',
+        examples: [
+          { input: 'nums = [1,2,3,4]', output: '[24,12,8,6]' },
+          { input: 'nums = [-1,1,0,-3,3]', output: '[0,0,9,0,0]' }
+        ],
+        brute: {
+          idea: 'For each index i, iterate through the entire array using a helper function to compute the product of all elements except the one at index i.',
+          code: `class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int result[] = new int[nums.length];
+
+        for(int i=0; i<nums.length; i++){                  // Outer loop: O(n)
+            result[i] = PES(nums, i);                      // Helper call: O(n)
+        }
+
+        return result;
+    }
+
+    public int PES(int nums[], int i){
+        int product = 1;
+
+        for(int j=0; j<nums.length; j++){                  // Inner loop: O(n)
+            if(j == i){
+                continue;
+            }
+
+            product = product * nums[j];
+        }
+
+        return product;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop: O(n)\n• Inner helper loop: O(n)\n• Total Time: O(n · n) = O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (excluding the returned result array).',
+          walkthrough: [
+            "Initialize an integer array result of length nums.length.",
+            "Iterate through nums with outer loop index i from 0 to nums.length - 1.",
+            "For each index i, call helper PES(nums, i) which initializes product = 1.",
+            "In PES, inner loop j multiplies all elements nums[j] where j != i.",
+            "Store the resulting product at result[i].",
+            "Return result."
+          ]
+        },
+        better: {
+          idea: 'Precompute prefix products and suffix products using two separate arrays. For each index i, the product except itself is simply prefix[i] * suffix[i].',
+          code: `class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+
+        int[] prefix = new int[n];
+        int[] suffix = new int[n];
+        int[] result = new int[n];
+
+        prefix[0] = 1;
+        for(int i=1; i<n; i++){                            // Loop: O(n)
+            prefix[i] = prefix[i-1] * nums[i-1];
+        }
+
+        suffix[n-1] = 1;
+        for(int i=n-2; i>=0; i--){                         // Loop: O(n)
+            suffix[i] = suffix[i+1] * nums[i+1];
+        }
+
+        for(int i=0; i<n; i++){                            // Loop: O(n)
+            result[i] = prefix[i] * suffix[i];
+        }
+
+        return result;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Prefix array build pass: O(n)\n• Suffix array build pass: O(n)\n• Combined product pass: O(n)\n• Total Time: O(3n) = O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for prefix and suffix arrays of length n.',
+          walkthrough: [
+            "Initialize two arrays prefix and suffix of size n.",
+            "Build prefix array: prefix[0] = 1, and for each i from 1 to n-1, prefix[i] = prefix[i-1] * nums[i-1].",
+            "Build suffix array: suffix[n-1] = 1, and for each i from n-2 down to 0, suffix[i] = suffix[i+1] * nums[i+1].",
+            "Compute result array: for each index i, result[i] = prefix[i] * suffix[i].",
+            "Return result."
+          ]
+        },
+        optimal: {
+          idea: 'Optimize space to O(1) by directly storing prefix products in the result array, then traversing backward with a single running suffix product variable.',
+          code: `class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] result = new int[n];
+
+        result[0] = 1;
+        for(int i=1; i<n; i++){                            // Loop: O(n)
+            result[i] = result[i-1] * nums[i-1];
+        }
+
+        int suffix = 1;
+        for(int i=n-1; i>=0; i--){                         // Loop: O(n)
+            result[i] = result[i] * suffix;
+            suffix = suffix * nums[i];
+        }
+
+        return result;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Forward pass building prefix products in result: O(n)\n• Backward pass multiplying running suffix: O(n)\n• Total Time: O(2n) = O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (output array does not count as extra memory).',
+          walkthrough: [
+            "Initialize result array of size n with result[0] = 1.",
+            "Forward pass (i from 1 to n-1): calculate prefix products directly in result[i] = result[i-1] * nums[i-1].",
+            "Initialize variable suffix = 1.",
+            "Backward pass (i from n-1 down to 0): multiply result[i] by suffix, then update suffix = suffix * nums[i].",
+            "Return result."
+          ]
+        }
+      },
       p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
       p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),
     ]
