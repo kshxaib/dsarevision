@@ -1285,7 +1285,100 @@ export const patterns = [
           ]
         }
       },
-      p('Trapping Rain Water', 'Hard', 'Calculate how much water can be trapped between elevation bars after raining.'),
+      {
+        id: 'trapping-rain-water',
+        title: 'Trapping Rain Water',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/trapping-rain-water/description/',
+        definition: 'Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.',
+        examples: [
+          { input: 'height = [0,1,0,2,1,0,1,3,2,1,2,1]', output: '6' },
+          { input: 'height = [4,2,0,3,2,5]', output: '9' }
+        ],
+        brute: {
+          idea: 'For every element, find the maximum height to its left and right. The water trapped above that bar is the minimum of those two maximums minus the bar\'s height.',
+          code: `class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int totalTrappedWtr = 0;
+
+        for(int i=0; i<n; i++){                            // Outer loop: O(n)
+            int leftMax = 0;
+            int rightMax = 0;
+
+            for(int j=0; j<=i; j++){                       // Scan left: O(n)
+                leftMax = Math.max(leftMax, height[j]);
+            }
+
+            for (int j = i; j < n; j++) {                  // Scan right: O(n)
+                rightMax = Math.max(rightMax, height[j]);
+            }
+
+            totalTrappedWtr += Math.min(leftMax, rightMax) - height[i];
+        }
+
+        return totalTrappedWtr;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop iterating through each bar i: O(n)\n• Scanning left for leftMax: O(n)\n• Scanning right for rightMax: O(n)\n• Total Time: O(n · (n + n)) = O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (no extra arrays allocated).',
+          walkthrough: [
+            "Initialize totalTrappedWtr = 0.",
+            "Iterate through each bar i from 0 to n - 1.",
+            "Scan left from 0 to i to find leftMax.",
+            "Scan right from i to n - 1 to find rightMax.",
+            "Calculate water trapped above bar i as Math.min(leftMax, rightMax) - height[i], and add it to totalTrappedWtr.",
+            "Return totalTrappedWtr."
+          ]
+        },
+        optimal: {
+          idea: 'Use two pointers from left and right maintaining leftMax and rightMax. Water trapped is limited by the shorter boundary, allowing us to compute trapped water and move the smaller pointer inward in a single pass.',
+          code: `class Solution {
+    public int trap(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+
+        int leftMax = 0;
+        int rightMax = 0;
+        int totalTrappedWtr = 0;
+
+        while(left < right){                               // Two pointers: O(n)
+            if(height[left] < height[right]){
+                if(height[left] >= leftMax){
+                    leftMax = height[left];                // Update left boundary
+                } else {
+                    totalTrappedWtr += leftMax - height[left]; // Trap water on left
+                }
+                left++;
+
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];              // Update right boundary
+                } else {
+                    totalTrappedWtr += rightMax - height[right]; // Trap water on right
+                }
+                right--;
+            }
+        }
+
+        return totalTrappedWtr;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Two pointers move inward until they meet, processing each bar once: O(n)\n• Constant-time comparisons and pointer updates: O(1)\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space using two pointers and variables in-place.',
+          walkthrough: [
+            "Initialize left = 0, right = height.length - 1, leftMax = 0, rightMax = 0, and totalTrappedWtr = 0.",
+            "While left < right, compare height[left] with height[right].",
+            "If height[left] < height[right]: update leftMax if height[left] >= leftMax, else add (leftMax - height[left]) to totalTrappedWtr. Increment left.",
+            "Otherwise: update rightMax if height[right] >= rightMax, else add (rightMax - height[right]) to totalTrappedWtr. Decrement right.",
+            "Return totalTrappedWtr."
+          ]
+        }
+      },
     ]
   },
   {

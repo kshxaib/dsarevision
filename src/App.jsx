@@ -6,10 +6,50 @@ import ProblemDetail from './components/ProblemDetail';
 import CommandPalette from './components/CommandPalette';
 import { Menu } from 'lucide-react';
 
+function resolveInitialState() {
+  const hash = window.location.hash.replace('#', '').trim();
+
+  if (hash) {
+    // 1. Check if hash matches a problem
+    for (const pat of patterns) {
+      const found = pat.problems.find(p => p.id === hash);
+      if (found) {
+        return { patternId: pat.id, problem: found };
+      }
+    }
+    // 2. Check if hash matches a pattern
+    const foundPat = patterns.find(p => p.id === hash);
+    if (foundPat) {
+      return { patternId: foundPat.id, problem: null };
+    }
+  }
+
+  // 3. Fallback to localStorage
+  try {
+    const savedPatternId = localStorage.getItem('dsa_active_pattern');
+    const savedProblemId = localStorage.getItem('dsa_active_problem');
+
+    const pat = patterns.find(p => p.id === savedPatternId) || patterns[0];
+    let prob = null;
+    if (savedProblemId && pat) {
+      prob = pat.problems.find(p => p.id === savedProblemId) || null;
+    }
+    return {
+      patternId: pat?.id || patterns[0]?.id || '',
+      problem: prob,
+    };
+  } catch {
+    return {
+      patternId: patterns[0]?.id || '',
+      problem: null,
+    };
+  }
+}
+
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activePatternId, setActivePatternId] = useState(patterns[0]?.id || '');
-  const [activeProblem, setActiveProblem] = useState(null);
+  const [activePatternId, setActivePatternId] = useState(() => resolveInitialState().patternId);
+  const [activeProblem, setActiveProblem] = useState(() => resolveInitialState().problem);
   const [commandOpen, setCommandOpen] = useState(false);
 
   // Load revised problems from localStorage
@@ -40,34 +80,122 @@ export default function App() {
     });
   };
 
-  // URL Hash listener on load / change
+  // Change Pattern
+  const handleSelectPattern = (id) => {
+    setActivePatternId(id);
+    setActiveProblem(null);
+    try {
+      localStorage.setItem('dsa_active_pattern', id);
+      localStorage.removeItem('dsa_active_problem');
+    } catch {}
+    window.location.hash = '#' + id;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Change Problem
+  const handleSelectProblem = (prob) => {
+    setActiveProblem(prob);
+    try {
+      localStorage.setItem('dsa_active_pattern', activePatternId);
+      localStorage.setItem('dsa_active_problem', prob.id);
+    } catch {}
+    window.location.hash = '#' + prob.id;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Back from problem to pattern list
+  const handleBackToPattern = () => {
+    setActiveProblem(null);
+    try {
+      localStorage.removeItem('dsa_active_problem');
+    } catch {}
+    window.location.hash = '#' + activePatternId;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Select problem from Command Palette
+  const handleSelectProblemFromSearch = (patternId, problem) => {
+    setActivePatternId(patternId);
+    setActiveProblem(problem);
+    try {
+      localStorage.setItem('dsa_active_pattern', patternId);
+      localStorage.setItem('dsa_active_problem', problem.id);
+    } catch {}
+    window.location.hash = '#' + problem.id;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // Sync URL hash and handle browser back/forward buttons
   useEffect(() => {
+    const currentHash = window.location.hash.replace('#', '').trim();
+    if (!currentHash) {
+      const targetHash = activeProblem ? activeProblem.id : activePatternId;
+      if (targetHash) {
+        window.history.replaceState(null, '', '#' + targetHash);
+      }
+    }
+
     const handleHash = () => {
-      const hash = window.location.hash.replace('#', '');
+      const hash = window.location.hash.replace('#', '').trim();
       if (!hash) return;
 
+      // Check if hash matches a problem
       for (const pat of patterns) {
         const found = pat.problems.find(p => p.id === hash);
         if (found) {
           setActivePatternId(pat.id);
           setActiveProblem(found);
-          break;
+          try {
+            localStorage.setItem('dsa_active_pattern', pat.id);
+            localStorage.setItem('dsa_active_problem', found.id);
+          } catch {}
+          return;
         }
+      }
+
+      // Check if hash matches a pattern
+      const foundPat = patterns.find(p => p.id === hash);
+      if (foundPat) {
+        setActivePatternId(foundPat.id);
+        setActiveProblem(null);
+        try {
+          localStorage.setItem('dsa_active_pattern', foundPat.id);
+          localStorage.removeItem('dsa_active_problem');
+        } catch {}
       }
     };
 
-    handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
+  }, [activePatternId, activeProblem]);
+
+  // Save scroll position for refresh restoration
+  useEffect(() => {
+    const handleScroll = () => {
+      try {
+        sessionStorage.setItem('dsa_scroll_y', window.scrollY.toString());
+      } catch {}
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Restore scroll position on initial load
+  useEffect(() => {
+    try {
+      const savedY = sessionStorage.getItem('dsa_scroll_y');
+      if (savedY) {
+        const y = parseInt(savedY, 10);
+        if (!isNaN(y) && y > 0) {
+          requestAnimationFrame(() => {
+            window.scrollTo({ top: y, behavior: 'instant' });
+          });
+        }
+      }
+    } catch {}
   }, []);
 
   const activePattern = patterns.find(p => p.id === activePatternId) || patterns[0];
-  const totalProblems = patterns.reduce((s, p) => s + p.problems.length, 0);
-
-  const handleSelectProblemFromSearch = (patternId, problem) => {
-    setActivePatternId(patternId);
-    setActiveProblem(problem);
-  };
 
   return (
     <div className="min-h-screen bg-ink-bg text-ink-text flex">
@@ -75,10 +203,7 @@ export default function App() {
       <Sidebar
         patterns={patterns}
         activePattern={activePatternId}
-        onSelectPattern={(id) => {
-          setActivePatternId(id);
-          setActiveProblem(null);
-        }}
+        onSelectPattern={handleSelectPattern}
         onOpenCommand={() => setCommandOpen(true)}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -95,24 +220,22 @@ export default function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen lg:pl-64">
-
-
         {/* Main page content - clean ~880px max-width */}
         <main className="flex-1 w-full max-w-[880px] mx-auto px-4 sm:px-6 py-8">
           {activeProblem ? (
             <ProblemDetail
               problem={activeProblem}
               patternName={activePattern?.name || ''}
-              onBack={() => setActiveProblem(null)}
+              onBack={handleBackToPattern}
               allProblems={activePattern?.problems || []}
-              onSelectProblem={(prob) => setActiveProblem(prob)}
+              onSelectProblem={handleSelectProblem}
               isRevised={revisedProblems.has(activeProblem.id)}
               onToggleRevised={() => handleToggleRevised(activeProblem.id)}
             />
           ) : (
             <ProblemList
               pattern={activePattern}
-              onSelectProblem={(prob) => setActiveProblem(prob)}
+              onSelectProblem={handleSelectProblem}
               revisedProblems={revisedProblems}
             />
           )}

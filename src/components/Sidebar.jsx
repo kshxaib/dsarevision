@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Hash, GitBranch, Layers, BookOpen, Search,
   Link2, TreePine, Type, ArrowUpCircle, Undo2, Network,
@@ -48,6 +48,7 @@ export default function AppSidebar({
   onClose,
 }) {
   const [isMobile, setIsMobile] = useState(false);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -55,6 +56,16 @@ export default function AppSidebar({
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  // Auto-scroll active pattern into view in sidebar
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const activeEl = scrollContainerRef.current.querySelector('[data-active="true"]');
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [activePattern]);
 
   const totalProblems = patterns.reduce((s, p) => s + p.problems.length, 0);
 
@@ -102,7 +113,7 @@ export default function AppSidebar({
         </div>
 
         {/* Patterns List with Dedicated Scrollbar */}
-        <div className="flex-1 overflow-y-auto px-2 py-1 sidebar-scroll">
+        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-2 py-1 sidebar-scroll">
           <nav className="space-y-0.5">
             {patterns.map((pattern) => {
               const isActive = activePattern === pattern.id;
@@ -111,6 +122,7 @@ export default function AppSidebar({
               return (
                 <button
                   key={pattern.id}
+                  data-active={isActive ? 'true' : 'false'}
                   onClick={() => handleSelect(pattern.id)}
                   className={`w-full h-9 flex items-center rounded-lg px-2.5 transition-colors relative group cursor-pointer ${
                     isActive
