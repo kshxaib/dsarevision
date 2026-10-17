@@ -10,17 +10,18 @@ function resolveInitialState() {
   const hash = window.location.hash.replace('#', '').trim();
 
   if (hash) {
-    // 1. Check if hash matches a problem
+    // 1. Check if hash matches a pattern (e.g. #binary-search, #arrays-hashing)
+    const foundPat = patterns.find(p => p.id === hash);
+    if (foundPat) {
+      return { patternId: foundPat.id, problem: null };
+    }
+
+    // 2. Check if hash matches a problem
     for (const pat of patterns) {
       const found = pat.problems.find(p => p.id === hash);
       if (found) {
         return { patternId: pat.id, problem: found };
       }
-    }
-    // 2. Check if hash matches a pattern
-    const foundPat = patterns.find(p => p.id === hash);
-    if (foundPat) {
-      return { patternId: foundPat.id, problem: null };
     }
   }
 
@@ -31,7 +32,7 @@ function resolveInitialState() {
 
     const pat = patterns.find(p => p.id === savedPatternId) || patterns[0];
     let prob = null;
-    if (savedProblemId && pat) {
+    if (savedProblemId && savedProblemId !== savedPatternId && pat) {
       prob = pat.problems.find(p => p.id === savedProblemId) || null;
     }
     return {
@@ -139,7 +140,19 @@ export default function App() {
       const hash = window.location.hash.replace('#', '').trim();
       if (!hash) return;
 
-      // Check if hash matches a problem
+      // 1. Check if hash matches a pattern
+      const foundPat = patterns.find(p => p.id === hash);
+      if (foundPat) {
+        setActivePatternId(foundPat.id);
+        setActiveProblem(null);
+        try {
+          localStorage.setItem('dsa_active_pattern', foundPat.id);
+          localStorage.removeItem('dsa_active_problem');
+        } catch {}
+        return;
+      }
+
+      // 2. Check if hash matches a problem
       for (const pat of patterns) {
         const found = pat.problems.find(p => p.id === hash);
         if (found) {
@@ -151,17 +164,6 @@ export default function App() {
           } catch {}
           return;
         }
-      }
-
-      // Check if hash matches a pattern
-      const foundPat = patterns.find(p => p.id === hash);
-      if (foundPat) {
-        setActivePatternId(foundPat.id);
-        setActiveProblem(null);
-        try {
-          localStorage.setItem('dsa_active_pattern', foundPat.id);
-          localStorage.removeItem('dsa_active_problem');
-        } catch {}
       }
     };
 

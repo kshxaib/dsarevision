@@ -1,8 +1,8 @@
 // Helper to create a template problem entry
-const p = (title, difficulty, definition, leetcodeSlug) => {
+const p = (title, difficulty, definition, leetcodeSlug, customId) => {
   const slug = leetcodeSlug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   return {
-    id: slug,
+    id: customId || slug,
     title,
     difficulty,
     definition,
@@ -1416,7 +1416,7 @@ export const patterns = [
     icon: '🔍',
     timestamp: '6:19:22',
     problems: [
-      p('Binary Search', 'Easy', 'Find target value in a sorted array.'),
+      p('Binary Search', 'Easy', 'Find target value in a sorted array.', 'binary-search', 'binary-search-problem'),
       p('Search a 2D Matrix', 'Medium', 'Search for a target in a row-column sorted matrix.'),
       p('Koko Eating Bananas', 'Medium', 'Find minimum eating speed to finish all bananas in h hours.'),
       p('Find Minimum In Rotated Sorted Array', 'Medium', 'Find the minimum element in a rotated sorted array.'),
