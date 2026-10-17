@@ -711,7 +711,83 @@ export const patterns = [
           ]
         }
       },
-      p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
+      {
+        id: 'valid-sudoku',
+        title: 'Valid Sudoku',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/valid-sudoku/description/',
+        definition: 'Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the rules: each row, each column, and each of the nine 3 x 3 sub-boxes must contain the digits 1-9 without repetition.',
+        examples: [
+          {
+            input: 'board = [["5","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]',
+            output: 'true'
+          },
+          {
+            input: 'board = [["8","3",".",".","7",".",".",".","."],["6",".",".","1","9","5",".",".","."],[".","9","8",".",".",".",".","6","."],["8",".",".",".","6",".",".",".","3"],["4",".",".","8",".","3",".",".","1"],["7",".",".",".","2",".",".",".","6"],[".","6",".",".",".",".","2","8","."],[".",".",".","4","1","9",".",".","5"],[".",".",".",".","8",".",".","7","9"]]',
+            output: 'false'
+          }
+        ],
+        optimal: {
+          idea: 'Use arrays of HashSets to keep track of seen characters for each of the 9 rows, 9 columns, and 9 sub-boxes (indexed by (i/3)*3 + (j/3)). Traverse the 81 cells once; if any filled digit is seen again in its row, column, or 3x3 box, return false.',
+          code: `class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        int N = 9;
+
+        HashSet<Character>[] rows = new HashSet[N];
+        HashSet<Character>[] cols = new HashSet[N];
+        HashSet<Character>[] subBoxes = new HashSet[N];
+
+        for(int i=0; i<N; i++){                            // Loop: O(9) ≈ O(1)
+            rows[i] = new HashSet<Character>();
+            cols[i] = new HashSet<Character>();
+            subBoxes[i] = new HashSet<Character>();
+        }
+
+        for(int i=0; i<N; i++){                            // Outer loop: O(9) ≈ O(1)
+            for(int j=0; j<N; j++){                        // Inner loop: O(9) ≈ O(1)
+                char val = board[i][j];
+
+                if(val == '.'){
+                    continue;
+                }
+
+                if(rows[i].contains(val)){                 // Lookup: O(1) avg
+                    return false;
+                }
+                rows[i].add(val);                          // Insert: O(1) avg
+
+                if(cols[j].contains(val)){                 // Lookup: O(1) avg
+                    return false;
+                }
+                cols[j].add(val);                          // Insert: O(1) avg
+
+                int box = (i/3) * 3 + (j/3);
+                if(subBoxes[box].contains(val)){           // Lookup: O(1) avg
+                    return false;
+                }
+                subBoxes[box].add(val);                    // Insert: O(1) avg
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(1)',
+          timeDesc: '• Set initialization: 9 iterations: O(1)\n• Grid traversal: fixed 9 × 9 = 81 cells: O(1)\n• HashSet lookups & inserts: O(1) avg\n• Total Time: O(1) (fixed 9×9 board)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space: 3 arrays of 9 HashSets storing at most 81 characters.',
+          walkthrough: [
+            "Initialize three arrays of HashSets of size 9: rows, cols, and subBoxes.",
+            "Iterate through each cell (i, j) on the 9×9 board.",
+            "If board[i][j] == '.', skip to the next cell using continue.",
+            "Check if rows[i] already contains val: if true, duplicate in row, return false.",
+            "Check if cols[j] already contains val: if true, duplicate in column, return false.",
+            "Compute 3×3 sub-box index box = (i / 3) * 3 + (j / 3): check if subBoxes[box] contains val, if true return false.",
+            "Insert val into rows[i], cols[j], and subBoxes[box].",
+            "If all cells are valid without duplicates, return true."
+          ]
+        }
+      },
       p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),
     ]
   },

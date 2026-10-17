@@ -8,7 +8,6 @@ import { Menu } from 'lucide-react';
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
   const [activePatternId, setActivePatternId] = useState(patterns[0]?.id || '');
   const [activeProblem, setActiveProblem] = useState(null);
   const [commandOpen, setCommandOpen] = useState(false);
@@ -82,9 +81,7 @@ export default function App() {
         }}
         onOpenCommand={() => setCommandOpen(true)}
         isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
+        onClose={() => setSidebarOpen(false)}
       />
 
       {/* Mobile sidebar trigger */}
@@ -97,9 +94,7 @@ export default function App() {
       </button>
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.2,0,0,1)] ${
-        collapsed ? 'lg:pl-16' : 'lg:pl-64'
-      }`}>
+      <div className="flex-1 flex flex-col min-h-screen lg:pl-64">
 
 
         {/* Main page content - clean ~880px max-width */}
