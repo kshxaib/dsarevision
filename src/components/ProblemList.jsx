@@ -1,4 +1,4 @@
-import { ChevronRight, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, CheckCircle2, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const diffBadgeClass = {
@@ -54,6 +54,18 @@ export default function ProblemList({
                     <p className="text-[13px] font-medium text-ink-text group-hover:text-white transition-colors truncate">
                       {problem.title}
                     </p>
+                    {problem.leetcodeUrl && (
+                      <a
+                        href={problem.leetcodeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        title="Open on LeetCode"
+                        className="text-ink-subtle hover:text-amber-accent p-0.5 rounded transition-colors inline-flex items-center"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                     {isRevised && (
                       <CheckCircle2 className="w-3.5 h-3.5 text-easy shrink-0" />
                     )}

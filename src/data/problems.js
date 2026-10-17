@@ -1,17 +1,21 @@
 // Helper to create a template problem entry
-const p = (title, difficulty, definition) => ({
-  id: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-  title,
-  difficulty,
-  definition,
-  examples: [
-    { input: '', output: '' },
-    { input: '', output: '' }
-  ],
-  brute: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
-  better: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
-  optimal: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' }
-});
+const p = (title, difficulty, definition, leetcodeSlug) => {
+  const slug = leetcodeSlug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return {
+    id: slug,
+    title,
+    difficulty,
+    definition,
+    leetcodeUrl: `https://leetcode.com/problems/${slug}/description/`,
+    examples: [
+      { input: '', output: '' },
+      { input: '', output: '' }
+    ],
+    brute: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
+    better: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' },
+    optimal: { idea: '', code: '', time: '', space: '', timeDesc: '', spaceDesc: '' }
+  };
+};
 
 export const patterns = [
   {
@@ -24,6 +28,7 @@ export const patterns = [
         id: 'contains-duplicate',
         title: 'Contains Duplicate',
         difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/contains-duplicate/description/',
         definition: 'Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.',
         examples: [
           { input: 'nums = [1,2,3,1]', output: 'true' },
@@ -130,117 +135,176 @@ class Solution {
         }
       },
       {
+        id: 'valid-anagram',
+        title: 'Valid Anagram',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/valid-anagram/description/',
+        definition: 'Given two strings s and t, return true if t is an anagram of s, and false otherwise.',
+        examples: [
+          { input: 's = "anagram", t = "nagaram"', output: 'true' },
+          { input: 's = "rat", t = "car"', output: 'false' }
+        ],
+        brute: {
+          idea: 'For each character in s, search for a match in t and mark it as visited (using "#") to avoid duplicate counting.',
+          code: `class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length() != t.length()){
+            return false;
+        }
+
+        char arr[] = t.toCharArray();
+
+        for(int i=0; i<s.length(); i++){
+            boolean found = false;
+
+            for(int j=0; j<t.length(); j++){
+                if(s.charAt(i) == arr[j]){
+                    arr[j] = '#';
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                return false;
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: 'Nested loop compares each character of s against all characters of t.',
+          space: 'O(n)',
+          spaceDesc: 'Character array created for mutable marking of visited characters.',
+          walkthrough: [
+            "Check if lengths of s and t are equal: if s.length() != t.length(), return false immediately.",
+            "Convert string t into a character array arr = t.toCharArray() to allow marking used characters.",
+            "Iterate through each character of string s using outer loop pointer i.",
+            "Search for matching character in arr using inner loop j. When found, mark arr[j] = '#' (to prevent reusing) and set found = true.",
+            "If found is false (character not found in t), return false.",
+            "If all characters are matched successfully, return true."
+          ]
+        },
+        optimal: {
+          idea: 'Count character frequencies using a fixed-size integer array of length 26. Increment for s and decrement for t.',
+          code: `class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length() != t.length()){
+            return false;
+        }
+
+        int freq[] = new int[26];
+
+        for(int i=0; i<s.length(); i++){
+            freq[s.charAt(i) - 'a']++;
+            freq[t.charAt(i) - 'a']--;
+        }
+
+        for(int count : freq){
+            if(count != 0){
+                return false;
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: 'Single pass of length n through both strings, followed by checking 26 counts.',
+          space: 'O(1)',
+          spaceDesc: 'Constant space: fixed 26-element integer array for English letters.',
+          walkthrough: [
+            "Check if s.length() != t.length(): if not equal, return false.",
+            "Initialize a fixed-size frequency array freq of size 26 for lowercase English letters.",
+            "Iterate through string indices: increment count for s.charAt(i) and decrement count for t.charAt(i).",
+            "Check the frequency array: if any character count is not 0, characters don't match, return false.",
+            "If all 26 counts are 0, return true."
+          ]
+        }
+      },
+      {
         id: 'two-sum',
         title: 'Two Sum',
         difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/two-sum/description/',
         definition: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.',
         examples: [
           { input: 'nums = [2,7,11,15], target = 9', output: '[0,1]' },
           { input: 'nums = [3,2,4], target = 6', output: '[1,2]' }
         ],
         brute: {
-          idea: 'Use two nested loops to check every pair of numbers.',
+          idea: 'Check every pair of elements using nested loops. If the sum of any two elements equals target, return their indices.',
           code: `class Solution {
     public int[] twoSum(int[] nums, int target) {
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[i] + nums[j] == target) {
-                    return new int[] { i, j };
+        int n = nums.length;
+
+        for(int i=0; i<n; i++){
+            for(int j=i+1; j<n; j++){
+                if(nums[i] + nums[j] == target){
+                    return new int[] {i, j};
                 }
             }
         }
-        return new int[] {};
+
+        return new int[] {-1, -1};
     }
 }`,
           time: 'O(n²)',
-          timeDesc: 'Two nested loops check every pair of elements.',
+          timeDesc: 'Nested loops compare each pair of elements in the array.',
           space: 'O(1)',
-          spaceDesc: 'No extra memory used; only two pointer indices.',
+          spaceDesc: 'No extra memory used; only integer loop indices.',
           walkthrough: [
-            "Run two nested loops: outer loop i from 0 to n-1, inner loop j from i+1 to n-1.",
-            "For each pair, check if nums[i] + nums[j] == target.",
-            "If sum matches target, return new int[] { i, j } immediately.",
-            "If loop finishes without finding any pair, return new int[] {}."
-          ]
-        },
-        better: {
-          idea: 'Sort the array with indices and use two pointers.',
-          code: `import java.util.Arrays;
-
-class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        int[][] sorted = new int[nums.length][2];
-        for (int i = 0; i < nums.length; i++) {
-            sorted[i] = new int[] { nums[i], i };
-        }
-        Arrays.sort(sorted, (a, b) -> Integer.compare(a[0], b[0]));
-
-        int l = 0, r = sorted.length - 1;
-        while (l < r) {
-            int sum = sorted[l][0] + sorted[r][0];
-            if (sum == target) {
-                return new int[] { sorted[l][1], sorted[r][1] };
-            } else if (sum < target) {
-                l++;
-            } else {
-                r--;
-            }
-        }
-        return new int[] {};
-    }
-}`,
-          time: 'O(n log n)',
-          timeDesc: 'Sorting takes O(n log n), then two pointers scan in O(n).',
-          space: 'O(n)',
-          spaceDesc: 'Extra 2D array to store pairs of [value, originalIndex].',
-          walkthrough: [
-            "Store each element with its original index in a 2D array and sort in ascending order.",
-            "Initialize two pointers: left = 0 and right = n - 1.",
-            "While left < right: compute sum = sorted[left][0] + sorted[right][0].",
-            "If sum == target, return original indices new int[] { sorted[left][1], sorted[right][1] }.",
-            "If sum < target, increment left pointer (left++) to increase the sum.",
-            "If sum > target, decrement right pointer (right--) to decrease the sum.",
-            "If no pair sums to target, return new int[] {}."
+            "Initialize n = nums.length.",
+            "Run outer loop pointer i from 0 to n - 1.",
+            "Run inner loop pointer j from i + 1 to n - 1 to check all subsequent elements.",
+            "Check if nums[i] + nums[j] == target.",
+            "If sum matches target, return new int[] {i, j} immediately.",
+            "If both loops finish without finding any pair, return new int[] {-1, -1}."
           ]
         },
         optimal: {
-          idea: 'Use a HashMap to store each number and its index. For each element, check if (target - current) exists in the map.',
+          idea: 'Use a HashMap to store each visited number and its index. For each element, check if the required complement (need = target - nums[i]) already exists in the map.',
           code: `import java.util.HashMap;
-import java.util.Map;
 
 class Solution {
     public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if (map.containsKey(complement)) {
-                return new int[] { map.get(complement), i };
+        int n = nums.length;
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i=0; i<n; i++){
+            int need = target - nums[i];
+
+            if(map.containsKey(need)){
+                return new int[] {map.get(need), i};
             }
+
             map.put(nums[i], i);
         }
-        return new int[] {};
+
+        return new int[] {-1, -1};
     }
 }`,
           time: 'O(n)',
-          timeDesc: 'Single pass through array with O(1) average HashMap lookups.',
+          timeDesc: 'Single pass through array of length n with O(1) average HashMap lookup and insert.',
           space: 'O(n)',
-          spaceDesc: 'HashMap stores up to n elements and their indices.',
+          spaceDesc: 'HashMap stores up to n elements and their corresponding indices.',
           walkthrough: [
-            "Initialize an empty HashMap: Map<Integer, Integer> map = new HashMap<>().",
-            "Iterate through nums with index i from 0 to n - 1.",
-            "Compute required complement: complement = target - nums[i].",
-            "Check if map.containsKey(complement): if yes, return new int[] { map.get(complement), i }.",
-            "Otherwise, store the current number in the map: map.put(nums[i], i).",
-            "If loop finishes without finding a pair, return new int[] {}."
+            "Initialize n = nums.length and an empty HashMap<Integer, Integer> map = new HashMap<>().",
+            "Iterate through the array with index i from 0 to n - 1.",
+            "Compute the required complement: int need = target - nums[i].",
+            "Check if map.containsKey(need): if found, return new int[] {map.get(need), i}.",
+            "Otherwise, record the current element and its index in the map: map.put(nums[i], i).",
+            "If loop finishes without finding a pair, return new int[] {-1, -1}."
           ]
         }
       },
-      p('Valid Anagram', 'Easy', 'Check if two strings are anagrams of each other.'),
       p('Group Anagrams', 'Medium', 'Group strings that are anagrams of each other.'),
       p('Top K Frequent Elements', 'Medium', 'Find the k most frequent elements in an array.'),
+      p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
       p('Product of Array Except Self', 'Medium', 'Return an array where each element is the product of all other elements.'),
       p('Valid Sudoku', 'Medium', 'Determine if a 9×9 Sudoku board is valid.'),
-      p('Encode and Decode Strings', 'Medium', 'Design an algorithm to encode/decode a list of strings.'),
       p('Longest Consecutive Sequence', 'Medium', 'Find the length of the longest consecutive elements sequence.'),
     ]
   },

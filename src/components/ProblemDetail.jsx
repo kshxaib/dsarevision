@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Copy, CheckCircle2, Link as LinkIcon, Check } from 'lucide-react';
+import { ArrowLeft, Copy, CheckCircle2, Link as LinkIcon, Check, ExternalLink } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,14 +16,26 @@ const diffBadgeClass = {
 
 function CodeBlock({ code }) {
   const [copied, setCopied] = useState(false);
+  const trimmed = (code || '').trim();
+  const lineCount = trimmed ? trimmed.split('\n').length : 1;
+  const [editorHeight, setEditorHeight] = useState(Math.max(lineCount * 22 + 28, 90));
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(code.trim());
+    navigator.clipboard.writeText(trimmed);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const lines = code.trim().split('\n').length;
+  const handleEditorMount = (editor) => {
+    const updateHeight = () => {
+      const contentHeight = editor.getContentHeight();
+      if (contentHeight > 40) {
+        setEditorHeight(contentHeight + 8);
+      }
+    };
+    updateHeight();
+    editor.onDidContentSizeChange(updateHeight);
+  };
 
   return (
     <div className="rounded-lg overflow-hidden border border-ink-border my-3">
@@ -42,26 +54,30 @@ function CodeBlock({ code }) {
           <TooltipContent>{copied ? 'Copied!' : 'Copy code'}</TooltipContent>
         </Tooltip>
       </div>
-      <div className="bg-code-bg">
+      <div className="bg-[#1e1e1e]">
         <Editor
-          height={`${Math.min(Math.max(lines * 21, 90), 420)}px`}
+          height={`${editorHeight}px`}
           language="java"
-          value={code.trim()}
+          value={trimmed}
           theme="vs-dark"
+          onMount={handleEditorMount}
           options={{
             readOnly: true,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
             fontSize: 13,
+            lineHeight: 22,
             lineNumbers: 'on',
+            lineNumbersMinChars: 3,
             renderLineHighlight: 'none',
             overviewRulerLanes: 0,
             hideCursorInOverviewRuler: true,
             overviewRulerBorder: false,
-            scrollbar: { vertical: 'hidden', horizontal: 'auto' },
+            scrollbar: { vertical: 'hidden', horizontal: 'auto', alwaysConsumeMouseWheel: false },
             padding: { top: 12, bottom: 12 },
             domReadOnly: true,
             contextmenu: false,
+            automaticLayout: true,
           }}
         />
       </div>
@@ -145,6 +161,17 @@ export default function ProblemDetail({
     setTimeout(() => setLinkCopied(false), 2000);
   };
 
+  // Only render tabs for approaches that actually exist and are defined for this problem
+  const candidateApproaches = [
+    { id: 'brute', label: 'Brute Force', data: problem.brute },
+    { id: 'better', label: 'Better', data: problem.better },
+    { id: 'optimal', label: 'Optimal', data: problem.optimal },
+  ];
+  const populated = candidateApproaches.filter(
+    app => app.data && (Boolean(app.data.code?.trim()) || Boolean(app.data.idea?.trim()))
+  );
+  const approachList = populated.length > 0 ? populated : candidateApproaches.filter(app => Boolean(app.data));
+
   // Find next problems in the list for "Up next"
   const currentIdx = allProblems?.findIndex(p => p.id === problem.id) ?? -1;
   const upNext = allProblems?.slice(currentIdx + 1, currentIdx + 4) ?? [];
@@ -172,6 +199,23 @@ export default function ProblemDetail({
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          {problem.leetcodeUrl && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  href={problem.leetcodeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center h-8 px-2.5 text-xs font-medium rounded-md bg-ink-surface border border-ink-border text-ink-muted hover:text-amber-accent hover:border-amber-accent/40 hover:bg-ink-elevated transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 mr-1.5 text-amber-accent" />
+                  LeetCode
+                </a>
+              </TooltipTrigger>
+              <TooltipContent>Open on LeetCode</TooltipContent>
+            </Tooltip>
+          )}
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -241,43 +285,32 @@ export default function ProblemDetail({
         </div>
       )}
 
-      {/* Approaches Tabs */}
-      <div className="mb-8">
-        <h3 className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-3">Approaches</h3>
-        <Tabs defaultValue="brute" className="w-full">
-          <TabsList className="bg-ink-surface border border-ink-border rounded-lg p-1 h-auto w-fit flex gap-1">
-            <TabsTrigger
-              value="brute"
-              className="text-[13px] px-4 py-1.5 rounded-md text-ink-subtle data-[state=active]:bg-ink-elevated data-[state=active]:text-ink-text data-[state=active]:font-medium transition-all"
-            >
-              Brute Force
-            </TabsTrigger>
-            <TabsTrigger
-              value="better"
-              className="text-[13px] px-4 py-1.5 rounded-md text-ink-subtle data-[state=active]:bg-ink-elevated data-[state=active]:text-ink-text data-[state=active]:font-medium transition-all"
-            >
-              Better
-            </TabsTrigger>
-            <TabsTrigger
-              value="optimal"
-              className="text-[13px] px-4 py-1.5 rounded-md text-ink-subtle data-[state=active]:bg-ink-elevated data-[state=active]:text-ink-text data-[state=active]:font-medium transition-all"
-            >
-              Optimal
-            </TabsTrigger>
-          </TabsList>
-          <div className="mt-4">
-            <TabsContent value="brute" className="mt-0">
-              <ApproachContent approach={problem.brute} />
-            </TabsContent>
-            <TabsContent value="better" className="mt-0">
-              <ApproachContent approach={problem.better} />
-            </TabsContent>
-            <TabsContent value="optimal" className="mt-0">
-              <ApproachContent approach={problem.optimal} />
-            </TabsContent>
-          </div>
-        </Tabs>
-      </div>
+      {/* Approaches Tabs - Dynamically render only existing approaches */}
+      {approachList.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-3">Approaches</h3>
+          <Tabs key={`${problem.id}-${approachList.map(a => a.id).join('-')}`} defaultValue={approachList[0].id} className="w-full">
+            <TabsList className="bg-ink-surface border border-ink-border rounded-lg p-1 h-auto w-fit flex gap-1">
+              {approachList.map(app => (
+                <TabsTrigger
+                  key={app.id}
+                  value={app.id}
+                  className="text-[13px] px-4 py-1.5 rounded-md text-ink-subtle data-[state=active]:bg-ink-elevated data-[state=active]:text-ink-text data-[state=active]:font-medium transition-all"
+                >
+                  {app.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <div className="mt-4">
+              {approachList.map(app => (
+                <TabsContent key={app.id} value={app.id} className="mt-0">
+                  <ApproachContent approach={app.data} />
+                </TabsContent>
+              ))}
+            </div>
+          </Tabs>
+        </div>
+      )}
 
       {/* Up Next Section */}
       {upNext.length > 0 && (
