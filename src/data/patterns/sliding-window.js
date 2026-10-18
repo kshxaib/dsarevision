@@ -522,6 +522,100 @@ export const slidingWindow = {
           ]
         }
       },
-      p('Sliding Window Maximum', 'Hard', 'Find the maximum in each sliding window of size k.'),
+      {
+        id: 'sliding-window-maximum',
+        title: 'Sliding Window Maximum',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/sliding-window-maximum/description/',
+        definition: 'You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position. Return the max sliding window.',
+        examples: [
+          { input: 'nums = [1,3,-1,-3,5,3,6,7], k = 3', output: '[3,3,5,5,6,7]', explanation: 'Window positions and max:\n[1  3  -1] -3  5  3  6  7 -> 3\n 1 [3  -1  -3] 5  3  6  7 -> 3\n 1  3 [-1  -3  5] 3  6  7 -> 5\n 1  3  -1 [-3  5  3] 6  7 -> 5\n 1  3  -1  -3 [5  3  6] 7 -> 6\n 1  3  -1  -3  5 [3  6  7] -> 7' },
+          { input: 'nums = [1], k = 1', output: '[1]' }
+        ],
+        brute: {
+          idea: 'For every starting index i from 0 to n - k, iterate through the window of size k (from index i to i + k - 1) and find the maximum element. Store the maximum in ans[i].',
+          code: `class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int ans[] = new int[n - k + 1];
+
+        for(int i=0; i <= n-k; i++){                       // Each window position
+            int max = Integer.MIN_VALUE;
+
+            for(int j=i; j < i+k; j++){                    // Scan all k elements in window
+                max = Math.max(max, nums[j]);
+            }
+
+            ans[i] = max;
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O((n - k + 1) * k)',
+          timeDesc: '• Total of (n - k + 1) sliding windows.\n• In each window, scanning k elements takes O(k) time.\n• Total Time: O((n - k + 1) * k) = O(n * k)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (excluding the output array ans of size n - k + 1).',
+          walkthrough: [
+            "Initialize n = nums.length and allocate result array ans of size n - k + 1.",
+            "Outer loop iterates start index i from 0 to n - k.",
+            "Initialize max = Integer.MIN_VALUE.",
+            "Inner loop iterates j from i to i + k - 1 to inspect each element in the current window of size k.",
+            "Update max = Math.max(max, nums[j]).",
+            "Set ans[i] = max.",
+            "After all windows are processed, return ans."
+          ]
+        },
+        optimal: {
+          idea: 'Use a monotonic decreasing Deque storing indices. Elements in the deque are kept in strictly decreasing order of their values: smaller elements at the back are popped before adding nums[i]. For sliding: discard indices that fall outside the current window (deque.peekFirst() <= i - k). The maximum of the current window is always at the front: nums[deque.peekFirst()].',
+          code: `class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        Deque<Integer> deque = new ArrayDeque<>();
+        int ans[] = new int[n - k + 1];
+
+        // Process the first window of size k
+        for(int i=0; i<k; i++){
+            while(!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]){
+                deque.pollLast();                          // Remove smaller elements from back
+            }
+            deque.offerLast(i);
+        }
+        ans[0] = nums[deque.peekFirst()];                  // Front element is max of first window
+
+        // Process the remaining windows from index k to n - 1
+        for(int i=k; i<n; i++){
+            if(deque.peekFirst() <= i - k){                // Remove index outside the sliding window
+                deque.pollFirst();
+            }
+
+            while(!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]){
+                deque.pollLast();                          // Maintain decreasing monotonic deque
+            }
+            deque.offerLast(i);
+
+            ans[i - k + 1] = nums[deque.peekFirst()];      // Front of deque is max of current window
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Each element index is added to the deque exactly once and removed from the deque at most once (via pollFirst or pollLast).\n• Total deque operations across all iterations are at most 2n: O(n).\n• Total Time: O(n)',
+          space: 'O(k)',
+          spaceDesc: 'O(k) auxiliary space for the deque storing at most k indices at any time.',
+          walkthrough: [
+            "Initialize n = nums.length, ArrayDeque<Integer> deque to store indices, and ans[] of size n - k + 1.",
+            "Process first window (i from 0 to k - 1): pop from back while nums[deque.peekLast()] <= nums[i], then offerLast(i).",
+            "Set ans[0] = nums[deque.peekFirst()] (the largest element in the first window).",
+            "Loop through remaining elements i from k to n - 1:",
+            "If the front index deque.peekFirst() <= i - k, it is out of the current window; remove it via deque.pollFirst().",
+            "While deque is not empty and nums[deque.peekLast()] <= nums[i], pop from back (deque.pollLast()) to maintain monotonic decreasing order.",
+            "Add current index i to the back (deque.offerLast(i)).",
+            "Record current window maximum at ans[i - k + 1] = nums[deque.peekFirst()].",
+            "Return result array ans."
+          ]
+        }
+      }
     ]
   };
