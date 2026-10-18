@@ -172,7 +172,106 @@ export const slidingWindow = {
           ]
         }
       },
-      p('Longest Repeating Character Replacement', 'Medium', 'Find longest substring with at most k character replacements.'),
+      {
+        id: 'longest-repeating-character-replacement',
+        title: 'Longest Repeating Character Replacement',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/longest-repeating-character-replacement/description/',
+        definition: 'You are given a string s and an integer k. You can choose any character of the string and change it to any other uppercase English character at most k times. Return the length of the longest substring containing the same letter you can get after performing the above operations.',
+        examples: [
+          { input: 's = "ABAB", k = 2', output: '4', explanation: 'Replace the two \'A\'s with \'B\'s or vice versa to get "BBBB" or "AAAA".' },
+          { input: 's = "AABABBA", k = 1', output: '4', explanation: 'Replace the one \'B\' in the middle to form "AABA" or "ABBB". The substring "AABA" has length 4.' }
+        ],
+        brute: {
+          idea: 'For every starting index i, expand the substring to index j. Maintain a frequency array of size 26 and track the count of the most frequent character (maxFreq). The number of characters to replace is (windowLen - maxFreq). If replacementsRequired <= k, update maxLen.',
+          code: `class Solution {
+    public int characterReplacement(String s, int k) {
+        int n = s.length();
+        int maxLen = 0;
+        
+        for(int i=0; i<n; i++){
+            int freq[] = new int[26];                          // Frequency array for current substring
+            int maxFreq = 0;
+
+            for(int j=i; j<n; j++){
+                char ch = s.charAt(j);
+                freq[ch - 'A']++;
+
+                maxFreq = Math.max(maxFreq, freq[ch - 'A']); // Most frequent char in substring
+
+                int windowLen = j - i + 1;
+                int replacementsRequired = windowLen - maxFreq;
+
+                if(replacementsRequired <= k){                 // Valid substring with at most k replacements
+                    maxLen = Math.max(maxLen, windowLen);
+                }
+            }
+        }
+
+        return maxLen;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop starts at each index i: O(n)\n• Inner loop runs up to n times with O(1) character updates and checks: O(n)\n• Total Time: O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space using a fixed 26-length frequency array.',
+          walkthrough: [
+            "Initialize n = s.length() and maxLen = 0.",
+            "Iterate outer loop with pointer i from 0 to n - 1 (start of substring).",
+            "Initialize freq array of size 26 and maxFreq = 0 for the current starting index.",
+            "Iterate inner loop with pointer j from i to n - 1 (end of substring).",
+            "Increment frequency of character s.charAt(j) and update maxFreq.",
+            "Calculate windowLen = j - i + 1 and replacementsRequired = windowLen - maxFreq.",
+            "If replacementsRequired <= k, the substring can be converted into identical characters with <= k replacements, so update maxLen = Math.max(maxLen, windowLen).",
+            "Return maxLen after evaluating all substrings."
+          ]
+        },
+        optimal: {
+          idea: 'Use sliding window with two pointers (left and right) and a frequency array. Expand right pointer and update maxFreq (the count of the most frequent character in the current window). If (windowLen - maxFreq) > k, the window has more than k non-dominant characters, so shrink from the left until valid. Maintain maxLen.',
+          code: `class Solution {
+    public int characterReplacement(String s, int k) {
+        int n = s.length();
+        int freq[] = new int[26];                          // Frequency of uppercase characters in window
+        
+        int left = 0;
+        int right = 0;
+
+        int maxFreq = 0;
+        int maxLen = 0;
+
+        while(right < n){
+            int currChar = s.charAt(right);
+            freq[currChar - 'A']++;
+
+            maxFreq = Math.max(maxFreq, freq[currChar - 'A']); // Track maximum frequency of any character
+
+            while((right - left + 1) - maxFreq > k){       // Invalid window: more than k replacements needed
+                freq[s.charAt(left) - 'A']--;
+                left++;                                    // Shrink window from left
+            }
+
+            maxLen = Math.max(maxLen, right - left + 1);   // Valid window size
+            right++;
+        }
+
+        return maxLen;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Both right and left pointers traverse the string at most once: O(2n) = O(n)\n• Frequency updates and array operations run in O(1) constant time.\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space since frequency array is fixed to 26 uppercase English letters.',
+          walkthrough: [
+            "Initialize n = s.length(), freq array of size 26, left = 0, right = 0, maxFreq = 0, and maxLen = 0.",
+            "While right < n, fetch currChar = s.charAt(right) and increment freq[currChar - 'A'].",
+            "Update maxFreq = Math.max(maxFreq, freq[currChar - 'A']).",
+            "Check if window is invalid: (right - left + 1) - maxFreq > k. If so, decrement freq[s.charAt(left) - 'A'] and increment left until valid.",
+            "Update maxLen = Math.max(maxLen, right - left + 1).",
+            "Increment right pointer to continue expanding window.",
+            "Return maxLen after right reaches end of string."
+          ]
+        }
+      },
       p('Permutation In String', 'Medium', 'Check if one string\'s permutation is a substring of another.'),
       p('Minimum Window Substring', 'Hard', 'Find minimum window in s that contains all characters of t.'),
       p('Sliding Window Maximum', 'Hard', 'Find the maximum in each sliding window of size k.'),
