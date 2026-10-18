@@ -380,7 +380,148 @@ export const slidingWindow = {
           ]
         }
       },
-      p('Minimum Window Substring', 'Hard', 'Find minimum window in s that contains all characters of t.'),
+      {
+        id: 'minimum-window-substring',
+        title: 'Minimum Window Substring',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/minimum-window-substring/description/',
+        definition: 'Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".',
+        examples: [
+          { input: 's = "ADOBECODEBANC", t = "ABC"', output: '"BANC"', explanation: 'The minimum window substring "BANC" includes \'A\', \'B\', and \'C\' from string t.' },
+          { input: 's = "a", t = "a"', output: '"a"', explanation: 'The entire string s is the minimum window.' },
+          { input: 's = "a", t = "aa"', output: '""', explanation: 'Both \'a\'s from t must be included in the window. Since the largest window of s only has one \'a\', return empty string.' }
+        ],
+        brute: {
+          idea: 'Generate all possible substrings of s using nested loops. For each substring sub, check if it contains all characters of t (accounting for frequencies) using a 256-size ASCII frequency array. Keep track of the substring with minimum length.',
+          code: `class Solution {
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        int minLen = Integer.MAX_VALUE;
+        String result = "";
+
+        for(int i=0; i<n; i++){
+            for(int j=i; j<n; j++){
+
+                String sub = s.substring(i, j+1);
+
+                if(containsAll(sub, t)){
+                    int len = j - i + 1;
+
+                    if(len < minLen){
+                        minLen = len;
+                        result = sub;
+                    }
+
+                    break;                         // Substrings starting at i beyond j will only be longer
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private boolean containsAll(String sub, String t){
+        int freq[] = new int[256];
+
+        for(int i=0; i<t.length(); i++){
+            freq[t.charAt(i)]++;                   // Count required characters in t
+        }
+
+        for(int i=0; i<sub.length(); i++){
+            freq[sub.charAt(i)]--;                 // Consume characters from sub
+        }
+
+        for(int count : freq){
+            if(count > 0){                         // Missing required character
+                return false;
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n³)',
+          timeDesc: '• Outer loops generate O(n²) substrings.\n• For each substring, substring extraction and containsAll check take O(n + |t|) time.\n• Total Time: O(n³ + n² * |t|)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store candidate substring sub and fixed 256-size frequency array.',
+          walkthrough: [
+            "Initialize n = s.length(), minLen = Integer.MAX_VALUE, and result = \"\".",
+            "Outer loop iterates with start index i from 0 to n - 1.",
+            "Inner loop iterates with end index j from i to n - 1, creating substring sub = s.substring(i, j + 1).",
+            "Helper containsAll counts frequencies of characters in t and decrements using sub. If all required counts in freq <= 0, sub contains all characters of t.",
+            "If containsAll(sub, t) is true: calculate len = j - i + 1. If len < minLen, update minLen = len and result = sub.",
+            "Break inner loop since extending j further will only yield longer substrings starting at i.",
+            "After all substrings are tested, return result."
+          ]
+        },
+        optimal: {
+          idea: 'Use sliding window with two pointers (left and right) and a 256-size frequency map hash[]. Prepopulate hash[] with characters of t. Expand right: decrement hash[rightChar] and increment count if rightChar was needed (> 0). When count == t.length(), all characters are matched: update minLen and startingIdx, then shrink window from left by incrementing hash[leftChar] and decrementing count if an essential character leaves.',
+          code: `class Solution {
+    public String minWindow(String s, String t) {
+        int n = s.length();
+        int minLen = Integer.MAX_VALUE;
+        int startingIdx = -1;
+
+        int hash[] = new int[256];                         // Frequency of characters needed from t
+        int count = 0;                                     // Count of matched characters
+
+        int left = 0;
+        int right = 0;
+
+        for (int i = 0; i < t.length(); i++) {
+            hash[t.charAt(i)]++;
+        }
+
+        while(right < n){
+            char rightChar = s.charAt(right);
+
+            if(hash[rightChar] > 0){                       // Character is needed from t
+                count++;
+            }
+            hash[rightChar]--;
+
+            while(count == t.length()){                    // Valid window: contains all characters of t
+                int len = right - left + 1;
+                if(len < minLen){
+                    minLen = len;
+                    startingIdx = left;
+                }
+
+                char leftChar = s.charAt(left);
+                hash[leftChar]++;
+
+                if(hash[leftChar] > 0){                    // Removing an essential character from window
+                    count--;
+                }
+
+                left++;                                    // Shrink window from left
+            }
+
+            right++;
+        }
+
+        if(startingIdx == -1) return "";
+        return s.substring(startingIdx, startingIdx + minLen);
+    }
+}`,
+          time: 'O(m + n)',
+          timeDesc: '• Counting characters in t takes O(|t|).\n• Both left and right pointers traverse s at most once, and each character is processed at most twice: O(2 * |s|).\n• Total Time: O(|s| + |t|)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space for fixed 256-size ASCII frequency array.',
+          walkthrough: [
+            "Initialize n = s.length(), minLen = Integer.MAX_VALUE, startingIdx = -1, and hash[] of size 256.",
+            "Populate hash[] with character frequencies of t.",
+            "Initialize count = 0, left = 0, and right = 0.",
+            "While right < n: if hash[s.charAt(right)] > 0, increment count. Decrement hash[s.charAt(right)].",
+            "While count == t.length() (valid window containing all chars of t):",
+            "Calculate current window length right - left + 1. If smaller than minLen, update minLen and startingIdx = left.",
+            "Contract window from left: increment hash[s.charAt(left)]. If hash[s.charAt(left)] > 0, decrement count as a required character is no longer satisfied.",
+            "Increment left to continue shrinking window.",
+            "Increment right to continue expanding window.",
+            "Return empty string if startingIdx == -1, else return s.substring(startingIdx, startingIdx + minLen)."
+          ]
+        }
+      },
       p('Sliding Window Maximum', 'Hard', 'Find the maximum in each sliding window of size k.'),
     ]
   };
