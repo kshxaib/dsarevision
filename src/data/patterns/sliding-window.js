@@ -82,7 +82,96 @@ export const slidingWindow = {
           ]
         }
       },
-      p('Longest Substring Without Repeating Characters', 'Medium', 'Find the length of the longest substring without repeating characters.'),
+      {
+        id: 'longest-substring-without-repeating-characters',
+        title: 'Longest Substring Without Repeating Characters',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/description/',
+        definition: 'Given a string s, find the length of the longest substring without duplicate characters.',
+        examples: [
+          { input: 's = "abcabcbb"', output: '3', explanation: 'The answer is "abc", with the length of 3.' },
+          { input: 's = "bbbbb"', output: '1', explanation: 'The answer is "b", with the length of 1.' },
+          { input: 's = "pwwkew"', output: '3', explanation: 'The answer is "wke", with the length of 3. Notice that "pwke" is a subsequence and not a substring.' }
+        ],
+        brute: {
+          idea: 'Generate all possible substrings starting at each index i. Use a HashSet to track characters seen in the current substring. If a duplicate character is encountered, break the inner loop and record the maximum length found.',
+          code: `class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int maxLen = 0;
+
+        for(int i=0; i<n; i++){
+            HashSet<Character> set = new HashSet<>();          // Track characters in current substring
+
+            for(int j=i; j<n; j++){
+                if(set.contains(s.charAt(j))){                 // Duplicate found, stop expanding
+                    break;
+                }
+
+                set.add(s.charAt(j));
+                maxLen = Math.max(maxLen, set.size());
+            }
+        }
+
+        return maxLen;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop starts at each index i: O(n)\n• Inner loop expands substring up to n characters with O(1) HashSet lookups: O(n)\n• Total Time: O(n²)',
+          space: 'O(min(n, m))',
+          spaceDesc: 'O(min(n, m)) auxiliary space where n is string length and m is the size of the character set (at most 128 for ASCII or 26 for English letters).',
+          walkthrough: [
+            "Initialize n = s.length() and maxLen = 0.",
+            "Iterate outer loop with pointer i from 0 to n - 1 (starting point of substring).",
+            "Create a new HashSet<Character> to track unique characters in the substring starting at i.",
+            "Iterate inner loop with pointer j from i to n - 1.",
+            "If s.charAt(j) is already present in set, break out of inner loop as a duplicate was found.",
+            "Otherwise, add s.charAt(j) to set and update maxLen = Math.max(maxLen, set.size()).",
+            "After checking all substrings, return maxLen."
+          ]
+        },
+        optimal: {
+          idea: 'Use a sliding window with two pointers (left and right) and a HashSet. Expand right pointer to add characters. When a duplicate of s.charAt(right) is found, contract the window by incrementing left and removing s.charAt(left) until duplicate is removed. Maintain max window size.',
+          code: `class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        HashSet<Character> set = new HashSet<>();
+
+        int left = 0;
+        int right = 0;
+        int maxLen = 0;
+
+        while(right < n){
+            char currChar = s.charAt(right);
+
+            while(set.contains(currChar)){                     // Shrink window from left until duplicate is removed
+                set.remove(s.charAt(left));
+                left++;
+            }
+
+            set.add(currChar);                                 // Add current character to window
+            maxLen = Math.max(maxLen, right - left + 1);      // Update max window length (or set.size())
+            right++;
+        }
+
+        return maxLen;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Both left and right pointers traverse the string at most once: each character is added and removed from the set at most once.\n• HashSet operations (contains, add, remove) take O(1) average time.\n• Total Time: O(2n) = O(n)',
+          space: 'O(min(n, m))',
+          spaceDesc: 'O(min(n, m)) auxiliary space for the sliding window HashSet, bounded by the character alphabet size m (e.g. at most 128 for ASCII).',
+          walkthrough: [
+            "Initialize n = s.length(), an empty HashSet<Character> set, left = 0, right = 0, and maxLen = 0.",
+            "While right < n, fetch currChar = s.charAt(right).",
+            "If set already contains currChar, run a while loop removing s.charAt(left) from set and incrementing left until currChar is no longer in set.",
+            "Add currChar to set.",
+            "Update maxLen = Math.max(maxLen, right - left + 1).",
+            "Increment right pointer to continue expanding window.",
+            "Return maxLen after right reaches end of string."
+          ]
+        }
+      },
       p('Longest Repeating Character Replacement', 'Medium', 'Find longest substring with at most k character replacements.'),
       p('Permutation In String', 'Medium', 'Check if one string\'s permutation is a substring of another.'),
       p('Minimum Window Substring', 'Hard', 'Find minimum window in s that contains all characters of t.'),
