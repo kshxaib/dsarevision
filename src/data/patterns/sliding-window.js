@@ -537,12 +537,12 @@ export const slidingWindow = {
           code: `class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        int ans[] = new int[n - k + 1];
+        int ans[] = new int[n - k +1];
 
-        for(int i=0; i <= n-k; i++){                       // Each window position
+        for(int i=0; i <= n-k; i++){
             int max = Integer.MIN_VALUE;
 
-            for(int j=i; j < i+k; j++){                    // Scan all k elements in window
+            for(int j=i; j < i+k; j++){
                 max = Math.max(max, nums[j]);
             }
 
@@ -574,27 +574,25 @@ export const slidingWindow = {
         Deque<Integer> deque = new ArrayDeque<>();
         int ans[] = new int[n - k + 1];
 
-        // Process the first window of size k
         for(int i=0; i<k; i++){
             while(!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]){
-                deque.pollLast();                          // Remove smaller elements from back
+                deque.pollLast();
             }
             deque.offerLast(i);
         }
-        ans[0] = nums[deque.peekFirst()];                  // Front element is max of first window
+        ans[0] = nums[deque.peekFirst()];
 
-        // Process the remaining windows from index k to n - 1
         for(int i=k; i<n; i++){
-            if(deque.peekFirst() <= i - k){                // Remove index outside the sliding window
+            if(deque.peekFirst() <= i-k){
                 deque.pollFirst();
             }
 
             while(!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]){
-                deque.pollLast();                          // Maintain decreasing monotonic deque
+                deque.pollLast();
             }
             deque.offerLast(i);
 
-            ans[i - k + 1] = nums[deque.peekFirst()];      // Front of deque is max of current window
+            ans[i-k +1] = nums[deque.peekFirst()];
         }
 
         return ans;
