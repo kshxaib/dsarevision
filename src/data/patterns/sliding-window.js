@@ -272,7 +272,114 @@ export const slidingWindow = {
           ]
         }
       },
-      p('Permutation In String', 'Medium', 'Check if one string\'s permutation is a substring of another.'),
+      {
+        id: 'permutation-in-string',
+        title: 'Permutation in String',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/permutation-in-string/description/',
+        definition: 'Given two strings s1 and s2, return true if s2 contains a permutation of s1, or false otherwise. In other words, return true if one of s1\'s permutations is the substring of s2.',
+        examples: [
+          { input: 's1 = "ab", s2 = "eidbaooo"', output: 'true', explanation: 's2 contains one permutation of s1 ("ba").' },
+          { input: 's1 = "ab", s2 = "eidboaoo"', output: 'false', explanation: 'None of s1\'s permutations ("ab", "ba") exist as a substring in s2.' }
+        ],
+        brute: {
+          idea: 'Generate all permutations of s1 recursively. For each complete permutation string ans, check if s2 contains it using s2.contains(ans). If any permutation is found in s2, return true. If all permutations are checked without a match, return false.',
+          code: `class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if(s1.length() > s2.length()){
+            return false;
+        }
+
+        return permute(s1, s2, "");
+    }
+
+    private boolean permute(String s1, String s2, String ans){
+        if(s1.length() == 0){                              // Base case: full permutation formed
+            return s2.contains(ans);                       // Check if s2 contains this permutation
+        }
+
+        for(int i=0; i<s1.length(); i++){
+            char ch = s1.charAt(i);
+
+            String remaining = s1.substring(0, i) + s1.substring(i+1, s1.length());
+
+            if(permute(remaining, s2, ans + ch)){          // Recursive call with chosen char appended
+                return true;
+            }
+        }
+
+        return false;
+    }
+}`,
+          time: 'O(n! * m)',
+          timeDesc: '• Generating all permutations of s1 (length n) takes O(n!) recursive calls.\n• For each permutation, s2.contains(ans) takes O(m) substring search time where m is length of s2.\n• Total Time: O(n! * m)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) recursion stack depth and substring allocations for permutations of length n.',
+          walkthrough: [
+            "Check base condition: if s1.length() > s2.length(), return false immediately.",
+            "Call helper method permute(s1, s2, \"\").",
+            "In permute, if s1 is empty (length == 0), check whether s2 contains the accumulated permutation string ans using s2.contains(ans).",
+            "Otherwise, loop through characters of s1 at index i.",
+            "Extract character ch = s1.charAt(i) and form remaining string by excluding index i.",
+            "Recursively call permute(remaining, s2, ans + ch). If any branch returns true, propagate true upwards.",
+            "If no permutation matches any substring of s2, return false."
+          ]
+        },
+        optimal: {
+          idea: 'A substring of s2 is a permutation of s1 if and only if both have the same length and identical character frequency counts. Use a fixed-size sliding window of length s1.length() over s2. Maintain two 26-size frequency arrays (s1Map and s2Map). Slide the window across s2 by adding the new character and removing the outgoing character, checking for matching frequency maps at each step.',
+          code: `class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if(s1.length() > s2.length()){
+            return false;
+        }
+
+        int s1Map[] = new int[26];
+        int s2Map[] = new int[26];
+
+        // Initializing the freq maps for s1 and the first window of s2
+        for(int i=0; i<s1.length(); i++){
+            s1Map[s1.charAt(i) - 'a']++;
+            s2Map[s2.charAt(i) - 'a']++;
+        }
+
+        // Slide the window through s2
+        for(int i=0; i<s2.length() - s1.length(); i++){
+            if(matches(s1Map, s2Map)){
+                return true;
+            }
+
+            s2Map[s2.charAt(i) - 'a']--;                   // Remove old char leaving the window
+            s2Map[s2.charAt(i + s1.length()) - 'a']++;     // Add next char entering the window
+        }
+
+        return matches(s1Map, s2Map);                      // Check the final window
+    }
+
+    private boolean matches(int s1Map[], int s2Map[]){
+        for(int i=0; i<26; i++){
+            if(s1Map[i] != s2Map[i]){
+                return false;
+            }
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(m * 26) = O(m)',
+          timeDesc: '• Initializing the first window of size n = s1.length() takes O(n).\n• Sliding the window over (m - n) positions and comparing two 26-length arrays takes O((m - n) * 26) time.\n• Total Time: O(26 * m) = O(m) where m is length of s2.',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space for two fixed-size frequency arrays of size 26.',
+          walkthrough: [
+            "If s1.length() > s2.length(), return false.",
+            "Initialize two integer arrays s1Map and s2Map of size 26 for lowercase English letters.",
+            "Populate s1Map with character counts of s1, and s2Map with character counts of the first window of s2 (from index 0 to s1.length() - 1).",
+            "Loop i from 0 to s2.length() - s1.length() - 1 to slide the window:",
+            "If matches(s1Map, s2Map) is true, return true as a valid permutation substring was found.",
+            "Otherwise slide window: decrement count of s2.charAt(i) (outgoing character) and increment count of s2.charAt(i + s1.length()) (incoming character).",
+            "After the loop finishes, check the last window with matches(s1Map, s2Map) and return the result."
+          ]
+        }
+      },
       p('Minimum Window Substring', 'Hard', 'Find minimum window in s that contains all characters of t.'),
       p('Sliding Window Maximum', 'Hard', 'Find the maximum in each sliding window of size k.'),
     ]
