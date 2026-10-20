@@ -31,7 +31,7 @@ export default function Dashboard({ patterns, onSelectPattern, revisedProblems =
           {getGreeting()} 👋
         </h1>
         <p className="text-sm text-ink-muted">
-          Track your DSA revision progress across {patterns.length} patterns and {totalProblems} core problems.
+          Digital notes for revision — 150 problems divided into 18 patterns.
         </p>
       </div>
 
