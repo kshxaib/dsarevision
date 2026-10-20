@@ -301,7 +301,91 @@ export const stack = {
           ]
         }
       },
-      p('Daily Temperatures', 'Medium', 'Find number of days until a warmer temperature for each day.'),
+      {
+        id: 'daily-temperatures',
+        title: 'Daily Temperatures',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/daily-temperatures/description/',
+        definition: 'Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.',
+        examples: [
+          { input: 'temperatures = [73,74,75,71,69,72,76,73]', output: '[1,1,4,2,1,1,0,0]' },
+          { input: 'temperatures = [30,40,50,60]', output: '[1,1,1,0]' },
+          { input: 'temperatures = [30,60,90]', output: '[1,1,0]' }
+        ],
+        brute: {
+          idea: 'For each day, look ahead through future days to find the first day with a strictly higher temperature. The difference in indices is the waiting time.',
+          code: `class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int ans[] = new int[n];
+
+        // For each day, look ahead to find the first warmer day
+        for(int i=0; i<n; i++){
+            for(int j=i+1; j<n; j++){
+                if(temperatures[j] > temperatures[i]){
+                    ans[i] = j - i;                        // Days waited
+                    break;
+                }
+            }
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Outer loop runs n times.\n• For each day i, inner loop can look ahead up to (n - 1 - i) days in the worst case (e.g. strictly decreasing temperatures).\n• Total Time: O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space (excluding the output array ans).',
+          walkthrough: [
+            "Initialize n = temperatures.length and an answer array ans of size n initialized to 0.",
+            "Outer loop iterates through each day i from 0 to n - 1.",
+            "Inner loop looks forward from day j = i + 1 to n - 1.",
+            "If temperatures[j] > temperatures[i], a warmer day is found: set ans[i] = j - i and break.",
+            "If no warmer day is found, ans[i] remains 0.",
+            "Return the ans array."
+          ]
+        },
+        optimal: {
+          idea: 'Use a Monotonic Decreasing Stack storing indices. Traversing backwards from right to left: pop indices of temperatures less than or equal to temperatures[i]. If stack is non-empty, stack.peek() is the next warmer day, so ans[i] = stack.peek() - i. Then push current index i.',
+          code: `class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> stack = new Stack<>();              // Monotonic stack storing indices
+
+        int n = temperatures.length;
+        int ans[] = new int[n];
+
+        // Traverse backwards from right to left
+        for(int i=n-1; i>=0; i--){
+            // Pop smaller or equal temperatures from stack
+            while(!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[i]){
+                stack.pop();
+            }
+
+            // Next greater element index found at top of stack
+            if(!stack.isEmpty()){
+                ans[i] = stack.peek() - i;                 // Distance to next warmer day
+            }
+
+            stack.push(i);                                 // Push current day index
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Each day index is pushed onto the stack exactly once and popped at most once.\n• Across the entire array, at most 2n stack operations occur.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for the monotonic stack storing up to n indices.',
+          walkthrough: [
+            "Initialize an empty Stack<Integer> stack to store day indices and ans[] of size n.",
+            "Traverse the temperatures array backwards from right to left (i from n - 1 down to 0).",
+            "While stack is not empty and temperatures[stack.peek()] <= temperatures[i], pop from stack to maintain monotonic decreasing order.",
+            "If stack is not empty, top of stack is the next warmer day: ans[i] = stack.peek() - i.",
+            "Push current index i onto stack.",
+            "Return the completed ans array."
+          ]
+        }
+      },
       p('Car Fleet', 'Medium', 'Determine the number of car fleets that arrive at the destination.'),
       p('Largest Rectangle In Histogram', 'Hard', 'Find the largest rectangular area in a histogram.'),
     ]
