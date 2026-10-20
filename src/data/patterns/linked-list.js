@@ -205,7 +205,85 @@ export const linkedList = {
           ]
         }
       },
-      p('Linked List Cycle', 'Easy', 'Detect if a linked list has a cycle.'),
+      {
+        id: 'linked-list-cycle',
+        title: 'Linked List Cycle',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/linked-list-cycle/description/',
+        definition: 'Given head, the head of a linked list, determine if the linked list has a cycle in it. There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Return true if there is a cycle in the linked list. Otherwise, return false.',
+        examples: [
+          { input: 'head = [3,2,0,-4], pos = 1', output: 'true', explanation: 'There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).' },
+          { input: 'head = [1,2], pos = 0', output: 'true', explanation: 'There is a cycle in the linked list, where the tail connects to the 0th node.' },
+          { input: 'head = [1], pos = -1', output: 'false', explanation: 'There is no cycle in the linked list.' }
+        ],
+        brute: {
+          idea: 'Traverse the linked list while storing visited node references in a HashSet. If a node is encountered that is already present in the set, a cycle exists.',
+          code: `public class Solution {
+    public boolean hasCycle(ListNode head) {
+        HashSet<ListNode> set = new HashSet<>();
+
+        ListNode curr = head;
+        while(curr != null){
+            // If current node reference is already in set, cycle detected
+            if(set.contains(curr)){
+                return true;
+            }
+
+            set.add(curr);
+            curr = curr.next;
+        }
+
+        return false;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Traverse each node in the list once.\n• HashSet lookup and insertion take O(1) average time.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store node references in the HashSet.',
+          walkthrough: [
+            "Initialize an empty HashSet<ListNode> set to store visited node references.",
+            "Set pointer curr = head.",
+            "While curr is not null:",
+            "  Check if set.contains(curr): if true, a cycle exists, return true immediately.",
+            "  Otherwise, add curr to set.",
+            "  Advance curr = curr.next.",
+            "If curr reaches null, the list terminates without a loop, return false."
+          ]
+        },
+        optimal: {
+          idea: "Floyd's Tortoise and Hare algorithm: Use two pointers moving at different speeds. The slow pointer advances 1 step at a time while the fast pointer advances 2 steps. If there is a cycle, the fast pointer will eventually catch up and meet the slow pointer.",
+          code: `public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+        // Floyd's Cycle Detection Algorithm (Slow & Fast pointers)
+        while(fast != null && fast.next != null){
+            slow = slow.next;                              // Moves 1 step
+            fast = fast.next.next;                         // Moves 2 steps
+
+            if(slow == fast){
+                return true;                               // Pointers met, cycle detected
+            }
+        }
+
+        return false;                                      // Reached end of list, no cycle
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• If no cycle exists, fast pointer reaches the end in n/2 steps: O(n).\n• If a cycle exists, fast pointer reduces distance to slow by 1 each iteration and meets within at most n steps: O(n).\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using two pointer references slow and fast.',
+          walkthrough: [
+            "Initialize two pointers: slow = head and fast = head.",
+            "Loop while fast is not null and fast.next is not null:",
+            "  Advance slow by 1 step: slow = slow.next.",
+            "  Advance fast by 2 steps: fast = fast.next.next.",
+            "  If slow == fast, a cycle is confirmed, return true.",
+            "If the loop exits (fast or fast.next reaches null), no cycle exists, return false."
+          ]
+        }
+      },
       p('Remove Nth Node From End of List', 'Medium', 'Remove the nth node from the end of a linked list.'),
       p('Reorder List', 'Medium', 'Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2→...'),
       p('Add Two Numbers', 'Medium', 'Add two numbers represented as reversed linked lists.'),
