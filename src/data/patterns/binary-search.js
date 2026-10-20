@@ -284,8 +284,93 @@ export const binarySearch = {
           ]
         }
       },
+      {
+        id: 'search-in-rotated-sorted-array',
+        title: 'Search in Rotated Sorted Array',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/search-in-rotated-sorted-array/description/',
+        definition: 'Given the array nums after the possible rotation and an integer target (k), return the index of target if it is in nums, or -1 if it is not in nums. You must write an algorithm with O(log n) runtime complexity.',
+        examples: [
+          { input: 'nums = [4,5,6,7,0,1,2], k = 0', output: '4', explanation: 'k = 0 exists in nums at index 4' },
+          { input: 'nums = [4,5,6,7,0,1,2], k = 3', output: '-1', explanation: 'k = 3 does not exist in nums so return -1' },
+          { input: 'nums = [1], k = 0', output: '-1', explanation: 'k = 0 does not exist in nums so return -1' }
+        ],
+        brute: {
+          idea: 'Traverse the entire array linearly from start to end and compare each element nums[i] with target k. If found, return its index i; if the loop finishes without a match, return -1.',
+          code: `class Solution {
+    public int search(int[] nums, int k) {
+        int n = nums.length;
+
+        // Linearly scan every element
+        for(int i = 0; i < n; i++){
+            if(nums[i] == k){
+                return i;                                  // Target found at index i
+            }
+        }
+
+        return -1;                                         // Target not present
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Traverse the array linearly from start to end.\n• In the worst case (target not present or at the end), check all n elements.\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space.',
+          walkthrough: [
+            "Initialize n = nums.length.",
+            "Iterate from index i = 0 to n - 1.",
+            "If nums[i] == k, return index i immediately.",
+            "If loop terminates without finding k, return -1."
+          ]
+        },
+        optimal: {
+          idea: 'In a rotated sorted array, dividing the array at mid always produces at least one sorted half. Identify which half (left [start...mid] or right [mid...end]) is sorted. Then check if target k falls within that sorted half\'s boundaries to eliminate the other half.',
+          code: `class Solution {
+    public int search(int[] nums, int k) {
+       int start = 0;
+       int end = nums.length - 1;
+
+       while(start <= end){
+            int mid = start + (end - start)/2;
+
+            if(nums[mid] == k){
+                return mid;
+            }
+
+            // Check if the left half [start...mid] is sorted
+            if(nums[start] <= nums[mid]) {   
+                if(nums[start] <= k && k < nums[mid]){
+                    end = mid - 1;                         // k lies in left sorted half
+                } else {
+                    start = mid + 1;                       // k lies in right half
+                }
+            } else {                         
+                // Right half [mid...end] is sorted
+                if(nums[mid] < k && k <= nums[end]){
+                    start = mid + 1;                       // k lies in right sorted half
+                } else {
+                    end = mid - 1;                         // k lies in left half
+                }
+            }
+       }
+
+       return -1;
+    }
+}`,
+          time: 'O(log n)',
+          timeDesc: '• In each step, we identify the sorted half and discard half of the search space.\n• Total iterations = ⌈log₂ n⌉.\n• Total Time: O(log n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using pointers start, end, and mid.',
+          walkthrough: [
+            "Initialize start = 0 and end = nums.length - 1.",
+            "While start <= end, calculate mid = start + (end - start) / 2.",
+            "If nums[mid] == k, return mid.",
+            "If nums[start] <= nums[mid], the left half is sorted: if nums[start] <= k < nums[mid], search left (end = mid - 1); else search right (start = mid + 1).",
+            "Otherwise, the right half is sorted: if nums[mid] < k <= nums[end], search right (start = mid + 1); else search left (end = mid - 1).",
+            "If start > end without finding k, return -1."
+          ]
+        }
+      },
       p('Find Minimum In Rotated Sorted Array', 'Medium', 'Find the minimum element in a rotated sorted array.'),
-      p('Search In Rotated Sorted Array', 'Medium', 'Search for target in a rotated sorted array.'),
       p('Time Based Key Value Store', 'Medium', 'Design key-value store with timestamp-based retrieval.'),
       p('Median of Two Sorted Arrays', 'Hard', 'Find the median of two sorted arrays in O(log(m+n)).'),
     ]
