@@ -4,7 +4,6 @@ export const dynamicProgramming1D = {
     id: '1d-dynamic-programming',
     name: '1D Dynamic Programming',
     icon: '📈',
-    timestamp: '23:46:50',
     problems: [
       p('Climbing Stairs', 'Easy', 'Count the number of ways to climb n stairs (1 or 2 steps at a time).'),
       p('Min Cost Climbing Stairs', 'Easy', 'Find the minimum cost to reach the top of the stairs.'),

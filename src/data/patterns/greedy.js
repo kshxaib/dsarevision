@@ -4,7 +4,6 @@ export const greedy = {
     id: 'greedy',
     name: 'Greedy',
     icon: '🤑',
-    timestamp: '31:54:37',
     problems: [
       p('Maximum Subarray', 'Medium', 'Find the contiguous subarray with the largest sum (Kadane\'s algorithm).'),
       p('Jump Game', 'Medium', 'Determine if you can reach the last index by jumping.'),

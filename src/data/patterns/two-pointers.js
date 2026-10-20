@@ -4,7 +4,6 @@ export const twoPointers = {
     id: 'two-pointers',
     name: 'Two Pointers',
     icon: '👆',
-    timestamp: '1:35:31',
     problems: [
       {
         id: 'valid-palindrome',

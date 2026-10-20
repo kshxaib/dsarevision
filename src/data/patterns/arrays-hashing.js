@@ -4,7 +4,6 @@ export const arraysHashing = {
     id: 'arrays-hashing',
     name: 'Arrays & Hashing',
     icon: '📦',
-    timestamp: '0:02:09',
     problems: [
       {
         id: 'contains-duplicate',

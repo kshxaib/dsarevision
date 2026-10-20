@@ -4,7 +4,6 @@ export const trees = {
     id: 'trees',
     name: 'Trees',
     icon: '🌲',
-    timestamp: '10:33:35',
     problems: [
       p('Invert Binary Tree', 'Easy', 'Mirror/invert a binary tree.'),
       p('Maximum Depth of Binary Tree', 'Easy', 'Find the maximum depth of a binary tree.'),

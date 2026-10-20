@@ -4,7 +4,6 @@ export const advancedGraphs = {
     id: 'advanced-graphs',
     name: 'Advanced Graphs',
     icon: '🗺️',
-    timestamp: '21:42:50',
     problems: [
       p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
       p('Min Cost to Connect All Points', 'Medium', 'Find minimum cost to connect all points (MST).'),

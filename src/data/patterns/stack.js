@@ -4,7 +4,6 @@ export const stack = {
     id: 'stack',
     name: 'Stack',
     icon: '📚',
-    timestamp: '4:59:44',
     problems: [
       {
         id: 'valid-parentheses',

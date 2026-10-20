@@ -4,7 +4,6 @@ export const heapPriorityQueue = {
     id: 'heap-priority-queue',
     name: 'Heap / Priority Queue',
     icon: '⏫',
-    timestamp: '14:01:28',
     problems: [
       p('Kth Largest Element in a Stream', 'Easy', 'Design a class to find the kth largest element in a stream.'),
       p('Last Stone Weight', 'Easy', 'Simulate stone smashing and return the last stone weight.'),

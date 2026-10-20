@@ -4,7 +4,6 @@ export const intervals = {
     id: 'intervals',
     name: 'Intervals',
     icon: '📐',
-    timestamp: '33:55:28',
     problems: [
       p('Insert Interval', 'Medium', 'Insert a new interval and merge overlapping intervals.'),
       p('Merge Intervals', 'Medium', 'Merge all overlapping intervals.'),

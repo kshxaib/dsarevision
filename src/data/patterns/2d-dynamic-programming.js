@@ -4,7 +4,6 @@ export const dynamicProgramming2D = {
     id: '2d-dynamic-programming',
     name: '2D Dynamic Programming',
     icon: '📊',
-    timestamp: '28:45:52',
     problems: [
       p('Unique Paths', 'Medium', 'Count unique paths from top-left to bottom-right in a grid.'),
       p('Longest Common Subsequence', 'Medium', 'Find the length of the longest common subsequence of two strings.'),

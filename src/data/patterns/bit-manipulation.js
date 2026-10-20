@@ -4,7 +4,6 @@ export const bitManipulation = {
     id: 'bit-manipulation',
     name: 'Bit Manipulation',
     icon: '⚡',
-    timestamp: '37:11:53',
     problems: [
       p('Single Number', 'Easy', 'Find the element that appears only once (all others appear twice).'),
       p('Number of 1 Bits', 'Easy', 'Count the number of set bits (1s) in a 32-bit integer.'),

@@ -4,7 +4,6 @@ export const binarySearch = {
     id: 'binary-search',
     name: 'Binary Search',
     icon: '🔍',
-    timestamp: '6:19:22',
     problems: [
       {
         id: 'binary-search-problem',

@@ -4,7 +4,6 @@ export const graphs = {
     id: 'graphs',
     name: 'Graphs',
     icon: '🕸️',
-    timestamp: '17:44:08',
     problems: [
       p('Number of Islands', 'Medium', 'Count the number of islands in a 2D grid.'),
       p('Clone Graph', 'Medium', 'Deep copy an undirected graph.'),

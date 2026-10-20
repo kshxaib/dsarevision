@@ -4,7 +4,6 @@ export const backtracking = {
     id: 'backtracking',
     name: 'Backtracking',
     icon: '🔙',
-    timestamp: '16:15:43',
     problems: [
       p('Subsets', 'Medium', 'Generate all possible subsets of a set of distinct integers.'),
       p('Combination Sum', 'Medium', 'Find all combinations that sum to target (elements reusable).'),

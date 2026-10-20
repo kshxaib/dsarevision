@@ -4,7 +4,6 @@ export const slidingWindow = {
     id: 'sliding-window',
     name: 'Sliding Window',
     icon: '🪟',
-    timestamp: '3:22:29',
     problems: [
       {
         id: 'best-time-to-buy-and-sell-stock',
