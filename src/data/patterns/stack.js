@@ -192,7 +192,65 @@ export const stack = {
           ]
         }
       },
-      p('Evaluate Reverse Polish Notation', 'Medium', 'Evaluate an arithmetic expression in Reverse Polish Notation.'),
+      {
+        id: 'evaluate-reverse-polish-notation',
+        title: 'Evaluate Reverse Polish Notation',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/evaluate-reverse-polish-notation/description/',
+        definition: 'You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation. Evaluate the expression and return an integer that represents the value of the expression. Valid operators are "+", "-", "*", and "/". Each operand may be an integer or another expression.',
+        examples: [
+          { input: 'tokens = ["2","1","+","3","*"]', output: '9', explanation: '((2 + 1) * 3) = 9' },
+          { input: 'tokens = ["4","13","5","/","+"]', output: '6', explanation: '(4 + (13 / 5)) = 6' },
+          { input: 'tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]', output: '22' }
+        ],
+        optimal: {
+          idea: 'Use a Stack to evaluate RPN. Iterate through tokens: if the token is an operand, push it onto the stack. If it is an operator, pop the top two operands (second operand b, then first operand a), apply the operation (a op b), and push the result back onto the stack. The final answer will be at the top of the stack.',
+          code: `class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();              // Holds operands
+
+        for(String token : tokens){
+            // If operator: pop operands (b first, then a), apply operation, push result
+            if(token.equals("+") || token.equals("-") || token.equals("/") || token.equals("*")){
+                int b = stack.pop();                       // Second operand
+                int a = stack.pop();                       // First operand
+
+                int val = operate(a, b, token);
+                stack.push(val);                           // Push evaluated result back
+            } else {
+                stack.push(Integer.parseInt(token));       // Operand: parse and push
+            }
+        }
+
+        return stack.peek();                               // Final evaluated expression result
+    }
+
+    private int operate(int a, int b, String operator){
+        if(operator.equals("+")){
+            return a + b;
+        } else if (operator.equals("-")){
+            return a - b;
+        } else if(operator.equals("*")) {
+            return a * b;
+        } else {
+            return a / b;
+        }
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Iterate through all n tokens once.\n• Stack push and pop operations take O(1) time.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for the stack storing operands.',
+          walkthrough: [
+            "Initialize an empty Stack<Integer> stack to store operands.",
+            "Iterate through each token in tokens:",
+            "If token is an operator ('+', '-', '*', '/'): pop the top two numbers from stack as b (second operand) and a (first operand).",
+            "Calculate val = operate(a, b, token) and push the evaluated result onto stack.",
+            "If token is a number: parse it with Integer.parseInt(token) and push onto stack.",
+            "After processing all tokens, return stack.peek() as the evaluated result."
+          ]
+        }
+      },
       p('Generate Parentheses', 'Medium', 'Generate all valid combinations of n pairs of parentheses.'),
       p('Daily Temperatures', 'Medium', 'Find number of days until a warmer temperature for each day.'),
       p('Car Fleet', 'Medium', 'Determine the number of car fleets that arrive at the destination.'),
