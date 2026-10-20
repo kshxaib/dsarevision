@@ -447,7 +447,131 @@ export const binarySearch = {
           ]
         }
       },
-      p('Time Based Key Value Store', 'Medium', 'Design key-value store with timestamp-based retrieval.'),
+      {
+        id: 'time-based-key-value-store',
+        title: 'Time Based Key-Value Store',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/time-based-key-value-store/description/',
+        definition: 'Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key\'s value at a certain timestamp.\n\nImplement the TimeMap class:\n• TimeMap() Initializes the object of the data structure.\n• void set(String key, String value, int timestamp) Stores the key with the value at the given time stamp.\n• String get(String key, int timestamp) Returns a value such that set was called previously, with timestamp_prev <= timestamp. If there are multiple such values, it returns the value associated with the largest timestamp_prev. If there are no values, it returns "".',
+        examples: [
+          {
+            input: '["TimeMap", "set", "get", "get", "set", "get", "get"]\n[[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]',
+            output: '[null, null, "bar", "bar", null, "bar2", "bar2"]',
+            explanation: 'TimeMap timeMap = new TimeMap();\ntimeMap.set("foo", "bar", 1);  // store key "foo" and value "bar" along with timestamp = 1\ntimeMap.get("foo", 1);         // returns "bar"\ntimeMap.get("foo", 3);         // returns "bar" (largest timestamp_prev <= 3 is 1)\ntimeMap.set("foo", "bar2", 4); // store key "foo" and value "bar2" along with timestamp = 4\ntimeMap.get("foo", 4);         // returns "bar2"\ntimeMap.get("foo", 5);         // returns "bar2"'
+          }
+        ],
+        brute: {
+          idea: 'Store key-value pairs in a nested HashMap<String, HashMap<Integer, String>>. On get, linearly iterate through all timestamps recorded for the key to find the largest timestamp <= target.',
+          code: `class TimeMap {
+    HashMap<String, HashMap<Integer, String>> map;
+
+    public TimeMap() {
+        map = new HashMap<>();    
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if(!map.containsKey(key)){
+            map.put(key, new HashMap<>());
+        }
+
+        map.get(key).put(timestamp, value);
+    }
+    
+    public String get(String key, int timestamp) {
+        if(!map.containsKey(key)){
+            return "";
+        }
+
+        HashMap<Integer, String> innerMap = map.get(key);
+
+        int maxTimestamp = -1;
+        String ans = "";
+
+        // Linearly scan all timestamps recorded for this key
+        for(int time : innerMap.keySet()){
+            if(time <= timestamp && time > maxTimestamp){
+                ans = innerMap.get(time);
+                maxTimestamp = time;
+            }
+        }
+
+        return ans;
+    }
+}`,
+          time: 'set: O(1), get: O(n)',
+          timeDesc: '• set: O(1) average time to insert into nested HashMap.\n• get: O(n) where n is the number of timestamps stored for the key, as it scans all keys in innerMap.',
+          space: 'O(m)',
+          spaceDesc: 'O(m) space where m is the total number of (key, value, timestamp) entries stored.',
+          walkthrough: [
+            "TimeMap(): Initialize a nested HashMap<String, HashMap<Integer, String>>.",
+            "set(key, value, timestamp): If key doesn't exist, create an inner map. Put (timestamp -> value) into innerMap.",
+            "get(key, timestamp): If key doesn't exist in map, return \"\".",
+            "Iterate over innerMap.keySet(): if time <= timestamp and time > maxTimestamp, update maxTimestamp and ans.",
+            "Return ans."
+          ]
+        },
+        optimal: {
+          idea: 'Maintain a list of timestamps for each key in addition to the map. Since set calls arrive in strictly increasing timestamp order, the timestamp list is already sorted. On get, apply Binary Search on the timestamps list to find the largest timestamp <= target in O(log n) time.',
+          code: `class TimeMap {
+    HashMap<String, HashMap<Integer, String>> map;
+    HashMap<String, List<Integer>> timestamps;
+
+    public TimeMap() {
+        map = new HashMap<>();
+        timestamps = new HashMap<>();
+    }
+
+    public void set(String key, String value, int timestamp) {
+        if (!map.containsKey(key)) {
+            map.put(key, new HashMap<>());
+            timestamps.put(key, new ArrayList<>());
+        }
+
+        map.get(key).put(timestamp, value);
+        timestamps.get(key).add(timestamp);              // Timestamps arrive in strictly increasing order
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) {
+            return "";
+        }
+
+        List<Integer> times = timestamps.get(key);
+
+        int low = 0;
+        int high = times.size() - 1;
+        String ans = "";
+
+        // Binary search for the largest timestamp <= target timestamp
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (times.get(mid) <= timestamp) {
+                ans = map.get(key).get(times.get(mid));  // Valid candidate, try to find a larger one
+                low = mid + 1;
+            } else {
+                high = mid - 1;                          // Timestamp is too large, search left
+            }
+        }
+
+        return ans;
+    }
+}`,
+          time: 'set: O(1), get: O(log n)',
+          timeDesc: '• set: O(1) average time to append to list and insert into map.\n• get: O(log n) binary search across the n timestamps for the given key.',
+          space: 'O(m)',
+          spaceDesc: 'O(m) auxiliary space where m is the total number of entries stored across maps and lists.',
+          walkthrough: [
+            "TimeMap(): Initialize map (key -> timestamp -> value) and timestamps (key -> List of timestamps).",
+            "set(key, value, timestamp): Add entry to map and append timestamp to timestamps list (preserves sorted order).",
+            "get(key, timestamp): If key doesn't exist, return \"\".",
+            "Binary search on times list: initialize low = 0, high = times.size() - 1, and ans = \"\".",
+            "If times.get(mid) <= timestamp: save candidate value ans = map.get(key).get(times.get(mid)) and move right (low = mid + 1) to find closer timestamp.",
+            "Else: move left (high = mid - 1).",
+            "Return ans."
+          ]
+        }
+      },
       p('Median of Two Sorted Arrays', 'Hard', 'Find the median of two sorted arrays in O(log(m+n)).'),
     ]
   };
