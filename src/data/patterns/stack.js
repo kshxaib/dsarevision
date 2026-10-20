@@ -386,7 +386,103 @@ export const stack = {
           ]
         }
       },
-      p('Car Fleet', 'Medium', 'Determine the number of car fleets that arrive at the destination.'),
+      {
+        id: 'car-fleet',
+        title: 'Car Fleet',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/car-fleet/description/',
+        definition: 'There are n cars at given miles away from the starting mile 0, traveling to reach the mile target. You are given two integer arrays position and speed, both of size n. A car fleet is some non-empty set of cars driving at the same position and same speed. Return the number of car fleets that will arrive at the destination.',
+        examples: [
+          { input: 'target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]', output: '3', explanation: 'The cars starting at 10 (speed 2) and 8 (speed 4) become a fleet, meeting each other at 12. The fleet arrives at target (time 1).\nThe car starting at 0 (speed 1) does not catch up to any other car, so it is a fleet by itself (time 12).\nThe cars starting at 5 (speed 1) and 3 (speed 3) become a fleet, meeting each other at 6. The fleet moves at speed 1 until it reaches target (time 7).' },
+          { input: 'target = 10, position = [3], speed = [3]', output: '1' },
+          { input: 'target = 100, position = [0,2,4], speed = [4,2,1]', output: '1' }
+        ],
+        brute: {
+          idea: 'Calculate time taken by each car to reach target. Sort cars in descending order of starting position. Use a Stack to track fleet lead times: push if current car takes strictly more time than stack top; otherwise it merges into the fleet ahead.',
+          code: `class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+        int n = position.length;
+        double[][] cars = new double[n][2];
+
+        // Store [position, time to reach target]
+        for (int i = 0; i < n; i++) {
+            cars[i][0] = position[i];
+            cars[i][1] = (double) (target - position[i]) / speed[i];
+        }
+
+        // Sort positions in descending order
+        Arrays.sort(cars, (a, b) -> Double.compare(b[0], a[0]));
+
+        Stack<Double> stack = new Stack<>();
+
+        for (double[] car : cars) {
+            double time = car[1];
+
+            // If car takes longer than fleet ahead, it starts a new fleet
+            if (stack.isEmpty() || time > stack.peek()) {
+                stack.push(time);
+            }
+        }
+
+        return stack.size();                               // Number of fleets
+    }
+}`,
+          time: 'O(n log n)',
+          timeDesc: '• Calculating time for n cars takes O(n).\n• Sorting cars array by position takes O(n log n).\n• Single pass with stack takes O(n).\n• Total Time: O(n log n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for cars array and stack.',
+          walkthrough: [
+            "Initialize cars array of size n x 2, where cars[i][0] is position and cars[i][1] is time to target: (target - position[i]) / speed[i].",
+            "Sort cars in descending order of position so we process cars closest to target first.",
+            "Initialize a Stack<Double> stack.",
+            "Iterate through sorted cars: if stack is empty or current car's time > stack.peek(), current car cannot catch up to the fleet ahead and forms a new fleet; push its time onto stack.",
+            "Otherwise, if time <= stack.peek(), current car catches up to the fleet ahead and merges with it.",
+            "Return stack.size(), which represents the total number of car fleets."
+          ]
+        },
+        optimal: {
+          idea: 'Instead of storing fleet times in a stack, keep a single variable prevTime tracking the arrival time of the current fleet leader ahead. If a car takes longer than prevTime, it cannot catch up and forms a new fleet, so increment count and update prevTime.',
+          code: `class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+        int n = position.length;
+        double cars[][] = new double[n][2];
+
+        for(int i=0; i<n; i++){
+            cars[i][0] = position[i];                      // Starting position
+            cars[i][1] = (double) (target - position[i]) / speed[i]; // Time taken to reach destination
+        }
+
+        // Sort positions in descending order (closest to target first)
+        Arrays.sort(cars, (a, b) -> Double.compare(b[0], a[0]));
+
+        int count = 0;
+        double prevTime = 0;                               // Arrival time of current fleet leader
+
+        for(double car[] : cars){
+            // If car takes more time, it cannot catch up and forms a new fleet
+            if(car[1] > prevTime){
+                count++;
+                prevTime = car[1];                         // Update new fleet bottleneck time
+            }
+        }
+
+        return count;
+    }
+}`,
+          time: 'O(n log n)',
+          timeDesc: '• Calculating arrival times takes O(n).\n• Sorting cars array by starting position takes O(n log n).\n• Linear scan to count fleets takes O(n).\n• Total Time: O(n log n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store cars pairs [position, time]; O(1) extra space during traversal without needing a stack.',
+          walkthrough: [
+            "Create a 2D array cars of size n x 2 to store position and time to reach target: (target - position[i]) / speed[i].",
+            "Sort cars in descending order of starting position.",
+            "Initialize count = 0 and prevTime = 0 to track the bottleneck arrival time of the current fleet leader ahead.",
+            "Iterate through cars: if car[1] > prevTime, this car takes longer than the fleet ahead, so it cannot catch up and forms a new fleet. Increment count and update prevTime = car[1].",
+            "If car[1] <= prevTime, the car catches up before the target and joins the existing fleet.",
+            "Return count."
+          ]
+        }
+      },
       p('Largest Rectangle In Histogram', 'Hard', 'Find the largest rectangular area in a histogram.'),
     ]
   };
