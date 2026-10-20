@@ -498,7 +498,65 @@ export const linkedList = {
           ]
         }
       },
-      p('Add Two Numbers', 'Medium', 'Add two numbers represented as reversed linked lists.'),
+      {
+        id: 'add-two-numbers',
+        title: 'Add Two Numbers',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/add-two-numbers/description/',
+        definition: 'You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.',
+        examples: [
+          { input: 'l1 = [2,4,3], l2 = [5,6,4]', output: '[7,0,8]', explanation: '342 + 465 = 807.' },
+          { input: 'l1 = [0], l2 = [0]', output: '[0]' },
+          { input: 'l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]', output: '[8,9,9,9,0,0,0,1]' }
+        ],
+        optimal: {
+          idea: 'Simulate elementary math addition column-by-column from least significant digit to most significant digit. Maintain a dummy node and a carry variable. At each step, compute sum = carry + (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0), create a new node with value sum % 10, update carry = sum / 10, and advance pointers until both lists are fully traversed and carry is 0.',
+          code: `class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+
+        int carry = 0;
+
+        // Loop as long as either list has nodes or a leftover carry exists
+        while (l1 != null || l2 != null || carry != 0) {
+            int sum = carry;
+
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+
+            carry = sum / 10;                              // Update carry for the next position
+
+            curr.next = new ListNode(sum % 10);            // Create node with current digit
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(max(n, m))',
+          timeDesc: '• n and m are the lengths of l1 and l2 respectively.\n• The loop runs at most max(n, m) + 1 times (if there is a trailing carry).\n• Total Time: O(max(n, m))',
+          space: 'O(max(n, m))',
+          spaceDesc: 'The length of the new linked list is at most max(n, m) + 1 (or O(1) auxiliary space excluding the output list).',
+          walkthrough: [
+            "Initialize dummy = new ListNode(-1) and curr = dummy to build the result list.",
+            "Initialize carry = 0.",
+            "Loop while l1 != null || l2 != null || carry != 0: set sum = carry.",
+            "If l1 != null, add l1.val to sum and advance l1 = l1.next.",
+            "If l2 != null, add l2.val to sum and advance l2 = l2.next.",
+            "Calculate new carry = sum / 10.",
+            "Create a new node with digit value sum % 10, attach it as curr.next, and advance curr.",
+            "Return dummy.next, which points to the start of the sum list."
+          ]
+        }
+      },
       p('Find the Duplicate Number', 'Medium', 'Find the duplicate in an array of n+1 integers in range [1, n].'),
       p('Copy List With Random Pointer', 'Medium', 'Deep copy a linked list with next and random pointers.'),
       p('Merge K Sorted Lists', 'Hard', 'Merge k sorted linked lists into one sorted list.'),
