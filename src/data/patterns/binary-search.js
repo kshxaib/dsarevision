@@ -370,7 +370,83 @@ export const binarySearch = {
           ]
         }
       },
-      p('Find Minimum In Rotated Sorted Array', 'Medium', 'Find the minimum element in a rotated sorted array.'),
+      {
+        id: 'find-minimum-in-rotated-sorted-array',
+        title: 'Find Minimum in Rotated Sorted Array',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/description/',
+        definition: 'Suppose an array of length n sorted in ascending order is rotated between 1 and n times. Given the sorted rotated array nums of unique elements, return the minimum element of this array. You must write an algorithm that runs in O(log n) time.',
+        examples: [
+          { input: 'nums = [3,4,5,1,2]', output: '1', explanation: 'The original array was [1,2,3,4,5] rotated 3 times.' },
+          { input: 'nums = [4,5,6,7,0,1,2]', output: '0', explanation: 'The original array was [0,1,2,4,5,6,7] and it was rotated 4 times.' },
+          { input: 'nums = [11,13,15,17]', output: '11', explanation: 'The original array was [11,13,15,17] and it was rotated 4 times.' }
+        ],
+        brute: {
+          idea: 'Traverse the entire array linearly from start to end and track the smallest element seen so far.',
+          code: `class Solution {
+    public int findMin(int[] nums) {
+        int n = nums.length;
+        int min = Integer.MAX_VALUE;
+
+        // Linearly scan every element to find minimum
+        for(int i = 0; i < n; i++){
+            min = Math.min(min, nums[i]);
+        }
+
+        return min;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Traverse through all n elements once.\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space.',
+          walkthrough: [
+            "Initialize min = Integer.MAX_VALUE.",
+            "Iterate through nums from index 0 to n - 1.",
+            "Update min = Math.min(min, nums[i]) at each element.",
+            "Return min after the loop ends."
+          ]
+        },
+        optimal: {
+          idea: 'In a rotated sorted array, dividing at mid gives at least one sorted half. If the left half [low...mid] is sorted, nums[low] is the smallest in that range—record it and explore the right half (low = mid + 1). If the left half is unsorted, the right half is sorted and nums[mid] is a minimum candidate—record it and explore the left half (high = mid - 1).',
+          code: `class Solution {
+    public int findMin(int[] nums) {
+        int n = nums.length;
+
+        int min = Integer.MAX_VALUE;
+        int low = 0;
+        int high = n-1;
+
+        while(low <= high){
+            int mid = low + (high - low)/2;
+
+            // If left half [low...mid] is sorted
+            if(nums[low] <= nums[mid]){
+                min = Math.min(min, nums[low]);            // nums[low] is the minimum in left half
+                low = mid + 1;                             // Eliminate left half, search right
+            } else {
+                // Right half [mid...high] is sorted
+                min = Math.min(min, nums[mid]);            // nums[mid] is candidate minimum
+                high = mid - 1;                            // Eliminate right half, search left
+            }
+        }
+
+        return min;
+    }
+}`,
+          time: 'O(log n)',
+          timeDesc: '• In each iteration, we identify the sorted half, record its minimum, and eliminate half of the search space.\n• Total iterations = ⌈log₂ n⌉.\n• Total Time: O(log n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using pointers low, high, mid, and min.',
+          walkthrough: [
+            "Initialize low = 0, high = n - 1, and min = Integer.MAX_VALUE.",
+            "While low <= high, compute mid = low + (high - low) / 2.",
+            "If nums[low] <= nums[mid], the left half is sorted: record min = Math.min(min, nums[low]) and move right (low = mid + 1).",
+            "Else, the right half is sorted: record min = Math.min(min, nums[mid]) and move left (high = mid - 1).",
+            "Return min."
+          ]
+        }
+      },
       p('Time Based Key Value Store', 'Medium', 'Design key-value store with timestamp-based retrieval.'),
       p('Median of Two Sorted Arrays', 'Hard', 'Find the median of two sorted arrays in O(log(m+n)).'),
     ]
