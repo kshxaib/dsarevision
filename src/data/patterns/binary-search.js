@@ -572,6 +572,179 @@ export const binarySearch = {
           ]
         }
       },
-      p('Median of Two Sorted Arrays', 'Hard', 'Find the median of two sorted arrays in O(log(m+n)).'),
+      {
+        id: 'median-of-two-sorted-arrays',
+        title: 'Median of Two Sorted Arrays',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/median-of-two-sorted-arrays/description/',
+        definition: 'Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).',
+        examples: [
+          { input: 'nums1 = [1,3], nums2 = [2]', output: '2.00000', explanation: 'merged array = [1,2,3] and median is 2.' },
+          { input: 'nums1 = [1,2], nums2 = [3,4]', output: '2.50000', explanation: 'merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.' }
+        ],
+        brute: {
+          idea: 'Merge both sorted arrays into a single sorted array of size (n + m) using two pointers. Then find the middle element(s) to compute the median.',
+          code: `class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+
+        int[] merged = new int[n + m];
+
+        int i = 0;
+        int j = 0;
+        int k = 0;
+
+        // Merge both sorted arrays
+        while (i < n && j < m) {
+            if (nums1[i] <= nums2[j]) {
+                merged[k++] = nums1[i++];
+            } else {
+                merged[k++] = nums2[j++];
+            }
+        }
+
+        while (i < n) {
+            merged[k++] = nums1[i++];
+        }
+
+        while (j < m) {
+            merged[k++] = nums2[j++];
+        }
+
+        int total = n + m;
+        int mid = total / 2;
+
+        // If odd, return the middle element
+        if (total % 2 == 1) {
+            return merged[mid];
+        }
+
+        // If even, return average of the two middle elements
+        return (double)(merged[mid - 1] +  merged[mid]) / 2.0;
+    }
+}`,
+          time: 'O(n + m)',
+          timeDesc: '• Merging both sorted arrays linearly takes O(n + m) time.\n• Total Time: O(n + m)',
+          space: 'O(n + m)',
+          spaceDesc: 'O(n + m) auxiliary space for the merged array.',
+          walkthrough: [
+            "Initialize an array merged of size n + m with pointers i = 0, j = 0, k = 0.",
+            "Compare elements from nums1 and nums2, adding the smaller element to merged.",
+            "Copy any remaining elements from either array.",
+            "If total length is odd, return merged[total / 2].",
+            "If even, return (merged[mid - 1] + merged[mid]) / 2.0."
+          ]
+        },
+        better: {
+          idea: 'Instead of storing the entire merged array, iterate through both arrays with two pointers and only keep track of the two middle elements (prev and curr) until reaching index (n + m) / 2.',
+          code: `class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int total = n + m;
+
+        int i = 0, j = 0;
+        int counter = 0;
+        int prev = 0, curr = 0;
+
+        // Track only the two middle elements up to index total / 2
+        while (counter <= total / 2) {
+            prev = curr;
+
+            if (i >= n) {
+                curr = nums2[j++];
+            } else if (j >= m) {
+                curr = nums1[i++];
+            } else if (nums1[i] <= nums2[j]) {
+                curr = nums1[i++];
+            } else {
+                curr = nums2[j++];
+            }
+
+            counter++;
+        }
+
+        if (total % 2 == 1) {
+            return curr;
+        }
+
+        return ((double) prev + curr) / 2.0;
+    }
+}`,
+          time: 'O(n + m)',
+          timeDesc: '• Iterate up to (n + m) / 2 steps.\n• Total Time: O(n + m)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using pointers and two tracking variables.',
+          walkthrough: [
+            "Initialize counter = 0, prev = 0, curr = 0, i = 0, and j = 0.",
+            "Simulate the merge step by step up to counter <= total / 2.",
+            "In each step, record prev = curr and update curr with the next smallest element from nums1 or nums2.",
+            "If total length is odd, return curr.",
+            "If even, return (prev + curr) / 2.0."
+          ]
+        },
+        optimal: {
+          idea: 'Binary search on the partition of the smaller array. Partition both arrays such that the left combined partition has half of the total elements. If left1 <= right2 and left2 <= right1, valid partition is found.',
+          code: `class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int total = n + m;
+
+        // Always binary search on the smaller array
+        if (n > m) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        int leftPartitionSize = (total + 1) / 2;
+
+        int low = 0;
+        int high = n;
+
+        while(low <= high){
+            int partition1 = low + (high - low) / 2;
+            int partition2 = leftPartitionSize - partition1;
+
+            int left1 = partition1 == 0 ? Integer.MIN_VALUE : nums1[partition1 - 1];
+            int left2 = partition2 == 0 ? Integer.MIN_VALUE : nums2[partition2 - 1];
+
+            int right1 = partition1 == n ? Integer.MAX_VALUE : nums1[partition1];
+            int right2 = partition2 == m ? Integer.MAX_VALUE : nums2[partition2];
+
+            // Valid partition condition
+            if(left1 <= right2 && left2 <= right1){
+                if(total % 2 == 1){
+                    return Math.max(left1, left2);
+                } else {
+                    return (Math.max(left1, left2) + Math.min(right1, right2)) / 2.0;
+                }
+            }
+
+            if(left1 > left2){
+                high = partition1 - 1;
+            } else {
+                low = partition1 + 1;
+            }
+        }
+
+        return 0.0;
+    }
+}`,
+          time: 'O(log(min(n, m)))',
+          timeDesc: '• Binary search runs on the smaller array of length min(n, m).\n• Total iterations = O(log(min(n, m))).\n• Total Time: O(log(min(n, m)))',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space.',
+          walkthrough: [
+            "Ensure nums1 is the smaller array (if n > m, swap arguments).",
+            "Set leftPartitionSize = (total + 1) / 2, with search range low = 0, high = n.",
+            "Calculate partition1 = (low + high) / 2 and partition2 = leftPartitionSize - partition1.",
+            "Determine border values: left1, left2, right1, right2 (handling edges with MIN_VALUE and MAX_VALUE).",
+            "If left1 <= right2 and left2 <= right1: partition is valid. Return max(left1, left2) if odd, or average of max(left1, left2) and min(right1, right2) if even.",
+            "If left1 > left2: shift partition left by setting high = partition1 - 1.",
+            "Else: shift partition right by setting low = partition1 + 1."
+          ]
+        }
+      }
     ]
   };
