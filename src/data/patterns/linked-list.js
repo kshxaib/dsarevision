@@ -284,7 +284,100 @@ export const linkedList = {
           ]
         }
       },
-      p('Remove Nth Node From End of List', 'Medium', 'Remove the nth node from the end of a linked list.'),
+      {
+        id: 'remove-nth-node-from-end-of-list',
+        title: 'Remove Nth Node From End of List',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/',
+        definition: 'Given the head of a linked list, remove the nth node from the end of the list and return its head.',
+        examples: [
+          { input: 'head = [1,2,3,4,5], n = 2', output: '[1,2,3,5]' },
+          { input: 'head = [1], n = 1', output: '[]' },
+          { input: 'head = [1,2], n = 1', output: '[1]' }
+        ],
+        brute: {
+          idea: 'Traverse the linked list and collect all node values into an ArrayList. Calculate the index to remove (size - n), remove it from the ArrayList, and rebuild a new linked list.',
+          code: `class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        // Collect all node values into an ArrayList
+        ListNode curr = head;
+        while (curr != null) {
+            list.add(curr.val);
+            curr = curr.next;
+        }
+
+        // Identify and remove the target index
+        int removingIdx = list.size() - n;
+        list.remove(removingIdx);
+
+        // Reconstruct linked list from modified ArrayList
+        ListNode dummy = new ListNode(-1);
+        curr = dummy;
+        for (int i = 0; i < list.size(); i++) {
+            curr.next = new ListNode(list.get(i));
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(L)',
+          timeDesc: '• Traversing the list of length L: O(L).\n• Removing element at index (L - n): O(L).\n• Reconstructing the linked list: O(L).\n• Total Time: O(L)',
+          space: 'O(L)',
+          spaceDesc: 'O(L) auxiliary space to store elements in ArrayList and create new list nodes.',
+          walkthrough: [
+            "Initialize an ArrayList list to store integer values.",
+            "Traverse the linked list from head, adding each node's value to list.",
+            "Compute target index to remove: removingIdx = list.size() - n.",
+            "Remove the element at removingIdx from list.",
+            "Initialize dummy = ListNode(-1) and curr = dummy.",
+            "Iterate through remaining elements in list, creating new nodes and linking via curr.next.",
+            "Return dummy.next."
+          ]
+        },
+        optimal: {
+          idea: 'Use a two-pointer sliding window technique with a dummy node. First advance pointer2 by n nodes. Then advance both pointer1 and pointer2 together until pointer2 reaches the last node. pointer1 will then be positioned immediately before the node to be removed.',
+          code: `class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        ListNode pointer1 = dummy;        
+        ListNode pointer2 = dummy;
+
+        // Advance pointer2 by n steps ahead
+        for(int i=0; i<n; i++){
+            pointer2 = pointer2.next;
+        }      
+
+        // Move both pointers until pointer2 reaches the last node
+        while(pointer2.next != null){
+            pointer1 = pointer1.next;
+            pointer2 = pointer2.next;
+        } 
+
+        // Skip the nth node from the end
+        pointer1.next = pointer1.next.next;
+        return dummy.next;
+    }
+}`,
+          time: 'O(L)',
+          timeDesc: '• Single pass through the list of length L: O(L).\n• Total Time: O(L)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using two pointer references and a dummy node.',
+          walkthrough: [
+            "Create a dummy head node dummy with dummy.next = head to handle edge cases like removing the head node.",
+            "Initialize pointer1 = dummy and pointer2 = dummy.",
+            "Advance pointer2 forward by n steps.",
+            "While pointer2.next is not null, move both pointer1 and pointer2 forward by 1 step.",
+            "When pointer2 reaches the end, pointer1 points right before the node to delete.",
+            "Delete target node: pointer1.next = pointer1.next.next.",
+            "Return dummy.next."
+          ]
+        }
+      },
       p('Reorder List', 'Medium', 'Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2→...'),
       p('Add Two Numbers', 'Medium', 'Add two numbers represented as reversed linked lists.'),
       p('Find the Duplicate Number', 'Medium', 'Find the duplicate in an array of n+1 integers in range [1, n].'),
