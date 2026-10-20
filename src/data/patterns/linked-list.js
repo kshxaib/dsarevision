@@ -900,7 +900,93 @@ export const linkedList = {
           ]
         }
       },
-      p('Reverse Nodes in K Group', 'Hard', 'Reverse linked list nodes in groups of k.'),
+      {
+        id: 'reverse-nodes-in-k-group',
+        title: 'Reverse Nodes in k-Group',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/reverse-nodes-in-k-group/description/',
+        definition: 'Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list. k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should remain as it is. You may not alter the values in the list\'s nodes, only nodes themselves may be changed.',
+        examples: [
+          { input: 'head = [1,2,3,4,5], k = 2', output: '[2,1,4,3,5]' },
+          { input: 'head = [1,2,3,4,5], k = 3', output: '[3,2,1,4,5]' }
+        ],
+        optimal: {
+          idea: 'Reverse the linked list in groups of k in-place:\n1. For each group starting at temp, find the k-th node using findKthNode(temp, k). If fewer than k nodes remain, preserve them by connecting prev.next = temp and break.\n2. Temporarily isolate the k-group by saving nextNode = kthNode.next and setting kthNode.next = null.\n3. Reverse the isolated k nodes in-place.\n4. Connect: If it is the first group (temp == head), update head = kthNode; otherwise link prev.next = kthNode.\n5. Update prev = temp (as temp is now the tail of this reversed group) and advance temp = nextNode.',
+          code: `class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode temp = head;
+        ListNode prev = null;
+
+        while(temp != null){
+            ListNode kthNode = findKthNode(temp, k);
+
+            // If remaining nodes are fewer than k, attach as is and break
+            if(kthNode == null){
+                if(prev != null){
+                    prev.next = temp;
+                }
+                break;
+            }
+
+            ListNode nextNode = kthNode.next;
+            kthNode.next = null;                           // Detach current k-group
+
+            reverse(temp);                                 // Reverse current k-group
+
+            // If it's the first group, kthNode becomes the new head of the entire list
+            if(temp == head){
+                head = kthNode;
+            } else {
+                prev.next = kthNode;                       // Connect previous group tail to new group head
+            }
+
+            prev = temp;                                   // temp is now the tail of reversed group
+            temp = nextNode;                               // Move to the next group
+        }
+
+        return head;
+    }
+
+    // Helper to find the k-th node from temp
+    public ListNode findKthNode(ListNode temp, int k) {
+        int count = 1;
+        while (temp != null && count < k) {
+            temp = temp.next;
+            count++;
+        }
+        return temp;
+    }
+
+    // Helper to reverse an isolated sublist
+    public void reverse(ListNode temp) {
+        ListNode curr = temp;
+        ListNode prev = null;
+
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Finding the k-th node traverses each node once: O(n).\n• Reversing each group traverses each node once: O(n).\n• Total Time: O(2n) = O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space since node pointers are reversed in-place without recursion stack or auxiliary data structures.',
+          walkthrough: [
+            "Initialize temp = head and prev = null.",
+            "In a loop while temp != null, find kthNode = findKthNode(temp, k).",
+            "If kthNode == null (fewer than k nodes remain), link prev.next = temp and break.",
+            "Save nextNode = kthNode.next and isolate the k-group by setting kthNode.next = null.",
+            "Call reverse(temp) to reverse the isolated group in-place.",
+            "If temp == head, update head = kthNode (the k-th node is the new overall list head); otherwise set prev.next = kthNode.",
+            "Set prev = temp (the original group head is now the group tail) and advance temp = nextNode.",
+            "Return the updated head."
+          ]
+        }
+      },
       p('LRU Cache', 'Medium', 'Design a Least Recently Used (LRU) cache.'),
     ]
   };
