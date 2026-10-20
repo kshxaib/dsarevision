@@ -557,7 +557,54 @@ export const linkedList = {
           ]
         }
       },
-      p('Find the Duplicate Number', 'Medium', 'Find the duplicate in an array of n+1 integers in range [1, n].'),
+      {
+        id: 'find-the-duplicate-number',
+        title: 'Find the Duplicate Number',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/find-the-duplicate-number/description/',
+        definition: 'Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive. There is only one repeated number in nums, return this repeated number. You must solve the problem without modifying the array nums and using only constant extra space.',
+        examples: [
+          { input: 'nums = [1,3,4,2,2]', output: '2' },
+          { input: 'nums = [3,1,3,4,2]', output: '3' },
+          { input: 'nums = [3,3,3,3,3]', output: '3' }
+        ],
+        optimal: {
+          idea: 'Treat the array as a linked list where index i points to nums[i]. Because numbers are in range [1, n] with length n + 1, a cycle is guaranteed by the Pigeonhole Principle. Use Floyd\'s Tortoise and Hare algorithm: Phase 1 moves slow by 1 step and fast by 2 steps until they collide. Phase 2 resets slow to 0 and moves both pointers by 1 step; their meeting point is the start of the cycle, which is the duplicate number.',
+          code: `class Solution {
+    public int findDuplicate(int[] nums) {
+        // Floyd's Tortoise and Hare (Cycle Detection)
+        int slow = 0;
+        int fast = 0;
+
+        // Phase 1: Detect cycle intersection
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+
+        // Phase 2: Find entrance to cycle (duplicate number)
+        slow = 0;
+        while(slow != fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Phase 1 takes at most O(n) steps inside the cycle.\n• Phase 2 takes at most O(n) steps to reach the cycle entrance.\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space using only two integer pointers (slow and fast).',
+          walkthrough: [
+            "Model the array as a directed graph / linked list where index i points to nums[i].",
+            "Phase 1: Initialize slow = 0 and fast = 0. In a do-while loop, advance slow by 1 step (nums[slow]) and fast by 2 steps (nums[nums[fast]]) until slow == fast.",
+            "Phase 2: Reset slow = 0 while keeping fast at the meeting point.",
+            "Advance both slow and fast by 1 step at a time (slow = nums[slow], fast = nums[fast]) until slow == fast.",
+            "Return slow (the entrance to the cycle is the duplicate value)."
+          ]
+        }
+      },
       p('Copy List With Random Pointer', 'Medium', 'Deep copy a linked list with next and random pointers.'),
       p('Merge K Sorted Lists', 'Hard', 'Merge k sorted linked lists into one sorted list.'),
       p('Reverse Nodes in K Group', 'Hard', 'Reverse linked list nodes in groups of k.'),
