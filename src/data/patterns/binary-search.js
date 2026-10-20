@@ -169,7 +169,121 @@ export const binarySearch = {
           ]
         }
       },
-      p('Koko Eating Bananas', 'Medium', 'Find minimum eating speed to finish all bananas in h hours.'),
+      {
+        id: 'koko-eating-bananas',
+        title: 'Koko Eating Bananas',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/koko-eating-bananas/description/',
+        definition: 'Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours. Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them and will not eat any more bananas during this hour. Return the minimum integer k such that she can eat all the bananas within h hours.',
+        examples: [
+          { input: 'piles = [3,6,7,11], h = 8', output: '4' },
+          { input: 'piles = [30,11,23,4,20], h = 5', output: '30' },
+          { input: 'piles = [30,11,23,4,20], h = 6', output: '23' }
+        ],
+        brute: {
+          idea: 'The minimum possible speed is 1, and the maximum speed needed is the largest pile. Linearly test every speed k from 1 up to max(piles), calculating the total hours required. The first speed where total hours <= h is the answer.',
+          code: `class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+
+        // Find the maximum pile size (upper bound on speed)
+        int max = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++){
+            max = Math.max(max, piles[i]);
+        }
+
+        // Linearly test speeds from 1 up to max
+        for (int k = 1; k <= max; k++) {
+            int totalHrs = calculateTotalHours(piles, k);
+
+            if (totalHrs <= h) {
+                return k;                                  // First valid speed is minimum
+            }
+        }
+
+        return max;
+    }
+
+    // Calculate total hours required at eating speed h
+    private int calculateTotalHours(int piles[], int h){
+        int totalHr = 0;
+
+        for(int i=0; i<piles.length; i++){
+            totalHr += Math.ceil((double)piles[i]/h);      // Round up each pile's eating time
+        }
+
+        return totalHr;
+    }
+}`,
+          time: 'O(max(piles) * n)',
+          timeDesc: '• Finding the maximum element takes O(n).\n• In the worst case, speeds from 1 to max are tested, each taking O(n) hours calculation.\n• Total Time: O(max(piles) * n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space.',
+          walkthrough: [
+            "Find the maximum pile size max in piles (Koko never needs to eat faster than the largest pile per hour).",
+            "Iterate eating speed k from 1 to max.",
+            "For each speed k, compute total hours required: sum of Math.ceil((double)pile / k) for all piles.",
+            "If totalHrs <= h, return k immediately (the first speed that finishes within h hours is minimal).",
+            "If loop terminates, return max."
+          ]
+        },
+        optimal: {
+          idea: 'Apply Binary Search on Answer within the speed search space [1, max(piles)]. For any candidate speed mid, calculate total hours required. If totalHrs <= h, mid is feasible, so record it and search for a smaller speed (high = mid - 1); otherwise search for a higher speed (low = mid + 1).',
+          code: `class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length;
+
+        // Find the maximum pile size
+        int max = Integer.MIN_VALUE;
+        for(int i=0; i<n; i++){
+            max = Math.max(max, piles[i]);
+        }
+
+        int minBananaPerHr = Integer.MAX_VALUE;
+        int low = 1;                                       // Minimum possible speed
+        int high = max;                                    // Maximum possible speed
+
+        // Binary search on speed range [1, max]
+        while(low <= high){
+            int mid = low + (high - low)/2;
+            int totalHrs = calculateTotalHours(piles, mid);
+
+            if(totalHrs <= h){
+                minBananaPerHr = mid;                      // Possible answer, try smaller speed
+                high = mid -1;
+            } else {
+                low = mid +1;                              // Speed too slow, need to eat faster
+            }
+        }
+
+        return minBananaPerHr;
+    }
+
+    // Calculate total hours required at eating speed h
+    private int calculateTotalHours(int piles[], int h){
+        int totalHr = 0;
+
+        for(int i=0; i<piles.length; i++){
+            totalHr += Math.ceil((double)piles[i]/h);      // Ceiling division
+        }
+
+        return totalHr;
+    }
+}`,
+          time: 'O(n * log(max(piles)))',
+          timeDesc: '• Finding maximum pile takes O(n).\n• Binary search runs for O(log(max(piles))) iterations.\n• In each iteration, calculateTotalHours takes O(n).\n• Total Time: O(n * log(max(piles)))',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space.',
+          walkthrough: [
+            "Find the maximum pile size max in piles, which defines the upper bound on speed.",
+            "Initialize binary search range low = 1 and high = max.",
+            "While low <= high, pick speed mid = low + (high - low) / 2 and compute total hours needed.",
+            "If totalHrs <= h: Koko can finish in time at this speed. Save mid as a potential answer and try smaller speeds by setting high = mid - 1.",
+            "Else: Koko is too slow (exceeds h hours), so increase speed by setting low = mid + 1.",
+            "Return minBananaPerHr."
+          ]
+        }
+      },
       p('Find Minimum In Rotated Sorted Array', 'Medium', 'Find the minimum element in a rotated sorted array.'),
       p('Search In Rotated Sorted Array', 'Medium', 'Search for target in a rotated sorted array.'),
       p('Time Based Key Value Store', 'Medium', 'Design key-value store with timestamp-based retrieval.'),
