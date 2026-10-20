@@ -102,11 +102,6 @@ export default function AppSidebar({
                       : 'text-ink-muted hover:text-ink-text hover:bg-ink-surface'
                     }`}
                 >
-                  {/* Amber active indicator bar */}
-                  {isActive && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-amber-accent rounded-r" />
-                  )}
-
                   {/* Aesthetic Number */}
                   <span
                     className={`font-mono text-xs font-semibold w-5 text-center shrink-0 transition-colors ${

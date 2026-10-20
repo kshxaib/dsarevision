@@ -2,10 +2,10 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X, CornerDownLeft, ArrowUpDown, BookOpen, Check } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-const diffBadgeClass = {
-  Easy: 'text-easy border-easy/30 bg-easy/10',
-  Medium: 'text-medium border-medium/30 bg-medium/10',
-  Hard: 'text-hard border-hard/30 bg-hard/10',
+const diffColorClass = {
+  Easy: 'text-easy',
+  Medium: 'text-medium',
+  Hard: 'text-hard',
 };
 
 export default function CommandPalette({
@@ -183,10 +183,10 @@ export default function CommandPalette({
               <button
                 key={diff}
                 onClick={() => setSelectedDifficulty(diff)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-colors cursor-pointer ${
+                className={`px-2 py-0.5 text-[11px] font-mono transition-colors cursor-pointer ${
                   isActive
-                    ? 'bg-amber-accent/15 text-amber-accent font-semibold border border-amber-accent/30'
-                    : 'text-ink-subtle hover:text-ink-text hover:bg-ink-surface border border-transparent'
+                    ? 'text-amber-accent font-bold'
+                    : 'text-ink-subtle hover:text-ink-text'
                 }`}
               >
                 {diff === 'ALL' ? 'All' : diff.charAt(0) + diff.slice(1).toLowerCase()}
@@ -236,12 +236,11 @@ export default function CommandPalette({
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge
-                      variant="outline"
-                      className={`text-[10px] px-1.5 py-0.5 border font-medium ${diffBadgeClass[item.problem.difficulty]}`}
+                    <span
+                      className={`text-xs font-medium ${diffColorClass[item.problem.difficulty] || 'text-ink-muted'}`}
                     >
                       {item.problem.difficulty}
-                    </Badge>
+                    </span>
                     {isSelected && (
                       <CornerDownLeft className="w-3.5 h-3.5 text-amber-accent shrink-0 ml-1" />
                     )}
@@ -265,7 +264,6 @@ export default function CommandPalette({
               <kbd className="px-1.5 py-0.5 bg-ink-elevated rounded border border-ink-border text-[10px]">esc</kbd> Close
             </span>
           </div>
-          <span className="text-amber-accent/70">DSA Revision</span>
         </div>
       </div>
     </div>

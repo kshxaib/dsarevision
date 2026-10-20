@@ -8,10 +8,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import StepWalkthrough from './StepWalkthrough';
 
-const diffBadgeClass = {
-  Easy: 'bg-easy/10 text-easy border-easy/30',
-  Medium: 'bg-medium/10 text-medium border-medium/30',
-  Hard: 'bg-hard/10 text-hard border-hard/30',
+const diffColorClass = {
+  Easy: 'text-easy',
+  Medium: 'text-medium',
+  Hard: 'text-hard',
 };
 
 function CodeBlock({ code }) {
@@ -190,12 +190,9 @@ export default function ProblemDetail({
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-2xl font-heading font-bold text-ink-text">{problem.title}</h1>
-          <Badge
-            variant="outline"
-            className={`text-[10px] font-semibold px-2 py-0.5 border ${diffBadgeClass[problem.difficulty]}`}
-          >
+          <span className={`text-xs font-semibold ${diffColorClass[problem.difficulty] || 'text-ink-muted'}`}>
             {problem.difficulty}
-          </Badge>
+          </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -325,12 +322,11 @@ export default function ProblemDetail({
                 <span className="text-[13px] text-ink-muted group-hover:text-ink-text transition-colors truncate">
                   {p.title}
                 </span>
-                <Badge
-                  variant="outline"
-                  className={`text-[10px] font-semibold px-2 py-0.5 border shrink-0 ${diffBadgeClass[p.difficulty]}`}
+                <span
+                  className={`text-xs font-medium shrink-0 ${diffColorClass[p.difficulty] || 'text-ink-muted'}`}
                 >
                   {p.difficulty}
-                </Badge>
+                </span>
               </button>
             ))}
           </div>

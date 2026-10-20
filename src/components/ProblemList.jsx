@@ -1,10 +1,10 @@
 import { ChevronRight, Check, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-const diffBadgeClass = {
-  Easy: 'bg-easy/10 text-easy border-easy/30 hover:bg-easy/20',
-  Medium: 'bg-medium/10 text-medium border-medium/30 hover:bg-medium/20',
-  Hard: 'bg-hard/10 text-hard border-hard/30 hover:bg-hard/20',
+const diffColorClass = {
+  Easy: 'text-easy',
+  Medium: 'text-medium',
+  Hard: 'text-hard',
 };
 
 export default function ProblemList({
@@ -85,13 +85,12 @@ export default function ProblemList({
                 )}
               </div>
 
-              {/* Difficulty Badge */}
-              <Badge
-                variant="outline"
-                className={`text-[10px] font-semibold px-2 py-0.5 border shrink-0 ${diffBadgeClass[problem.difficulty]}`}
+              {/* Difficulty */}
+              <span
+                className={`text-xs font-medium shrink-0 ${diffColorClass[problem.difficulty] || 'text-ink-muted'}`}
               >
                 {problem.difficulty}
-              </Badge>
+              </span>
 
               {/* Chevron icon */}
               <ChevronRight className="w-3.5 h-3.5 text-ink-faint group-hover:text-ink-subtle transition-colors shrink-0" />
