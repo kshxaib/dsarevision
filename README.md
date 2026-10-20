@@ -14,6 +14,7 @@ A structured revision guide for mastering Data Structures and Algorithms based o
 - **Detailed Complexity Analysis:** Clear breakdown of Time ($O$) and Space ($O$) complexities with explanations.
 - **Step-by-Step Walkthroughs:** Bullet-point algorithm traces to solidify understanding before writing code.
 - **Interactive Command Palette (`Ctrl + K`):** Quick-jump search across all patterns and problems.
+- **DSA Theory & Interview Q&A:** 20 fundamental data structure interview questions with in-depth answers, comparisons, complexities, and video timestamps.
 - **LeetCode Integration:** Direct links to original problem statements and test cases.
 
 ---

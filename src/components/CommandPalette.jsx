@@ -13,6 +13,7 @@ export default function CommandPalette({
   onOpenChange,
   patterns,
   onSelectProblem,
+  onSelectTheory,
   revisedProblems = new Set(),
 }) {
   const [query, setQuery] = useState('');
@@ -200,7 +201,27 @@ export default function CommandPalette({
 
         {/* Results List */}
         <div ref={listRef} className="flex-1 overflow-y-auto p-2 space-y-1 max-h-[50vh]">
-          {filtered.length === 0 ? (
+          {/* Quick jump to Theory Questions */}
+          {(!query || 'theory questions dsa concepts fundamentals basics'.includes(query.toLowerCase())) && onSelectTheory && (
+            <div
+              onClick={() => {
+                onSelectTheory();
+                onOpenChange(false);
+              }}
+              className="flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-all bg-amber-accent-muted/20 border border-amber-accent/30 text-ink-text mb-1 hover:bg-amber-accent-muted/40"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <BookOpen className="w-4 h-4 text-amber-accent shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-sm font-medium text-amber-accent block truncate">DSA Theory Questions</span>
+                  <span className="text-[11px] text-ink-subtle block truncate">20 Essential Interview Questions</span>
+                </div>
+              </div>
+              <span className="text-[11px] font-mono text-amber-accent shrink-0 ml-2">Open →</span>
+            </div>
+          )}
+
+          {filtered.length === 0 && !('theory questions dsa concepts fundamentals basics'.includes(query.toLowerCase())) ? (
             <div className="py-12 text-center text-ink-subtle text-sm flex flex-col items-center gap-2">
               <BookOpen className="w-8 h-8 text-ink-faint" />
               <p>No problems found for &quot;<span className="text-ink-text">{query}</span>&quot;</p>

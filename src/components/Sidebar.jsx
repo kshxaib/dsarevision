@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search } from 'lucide-react';
+import { Search, BookOpen } from 'lucide-react';
 
 function DifficultyDots({ problems }) {
   const easy = problems.filter(p => p.difficulty === 'Easy').length;
@@ -18,6 +18,8 @@ export default function AppSidebar({
   patterns,
   activePattern,
   onSelectPattern,
+  isTheoryActive = false,
+  onSelectTheory,
   onOpenCommand,
   isOpen = false,
   onClose,
@@ -76,8 +78,29 @@ export default function AppSidebar({
           </button>
         </div>
 
+        {/* Theory Questions Link */}
+        <div className="px-2 pt-2.5 pb-1 shrink-0">
+          <button
+            onClick={() => {
+              if (onSelectTheory) onSelectTheory();
+              if (isMobile && onClose) onClose();
+            }}
+            className={`w-full h-9 flex items-center rounded-lg px-2.5 transition-colors cursor-pointer group ${
+              isTheoryActive
+                ? 'bg-amber-accent-muted text-ink-text font-medium border border-amber-accent/20'
+                : 'text-ink-muted hover:text-ink-text hover:bg-ink-surface'
+            }`}
+          >
+            <BookOpen className={`w-4 h-4 shrink-0 mr-2.5 transition-colors ${isTheoryActive ? 'text-amber-accent' : 'text-ink-muted group-hover:text-ink-text'}`} />
+            <span className="flex-1 text-[13px] text-left truncate">Theory Questions</span>
+            <span className={`text-[11px] font-mono tabular-nums ${isTheoryActive ? 'text-amber-accent' : 'text-ink-subtle'}`}>
+              20
+            </span>
+          </button>
+        </div>
+
         {/* Section Label */}
-        <div className="px-3.5 pt-3 pb-1.5 shrink-0 flex items-center justify-between">
+        <div className="px-3.5 pt-3 pb-1.5 shrink-0 flex items-center justify-between border-t border-ink-border/50 mt-1">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-ink-faint block">
             Patterns
           </span>

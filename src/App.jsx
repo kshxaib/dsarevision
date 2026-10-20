@@ -3,24 +3,29 @@ import { patterns } from './data/problems';
 import Sidebar from './components/Sidebar';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
+import TheoryQuestions from './components/TheoryQuestions';
 import CommandPalette from './components/CommandPalette';
 import { Menu } from 'lucide-react';
 
 function resolveInitialState() {
   const hash = window.location.hash.replace('#', '').trim();
 
+  if (hash === 'theory' || hash === 'theory-questions') {
+    return { isTheory: true, patternId: patterns[0]?.id || '', problem: null };
+  }
+
   if (hash) {
     // 1. Check if hash matches a pattern (e.g. #binary-search, #arrays-hashing)
     const foundPat = patterns.find(p => p.id === hash);
     if (foundPat) {
-      return { patternId: foundPat.id, problem: null };
+      return { isTheory: false, patternId: foundPat.id, problem: null };
     }
 
     // 2. Check if hash matches a problem
     for (const pat of patterns) {
       const found = pat.problems.find(p => p.id === hash);
       if (found) {
-        return { patternId: pat.id, problem: found };
+        return { isTheory: false, patternId: pat.id, problem: found };
       }
     }
   }
@@ -36,11 +41,13 @@ function resolveInitialState() {
       prob = pat.problems.find(p => p.id === savedProblemId) || null;
     }
     return {
+      isTheory: false,
       patternId: pat?.id || patterns[0]?.id || '',
       problem: prob,
     };
   } catch {
     return {
+      isTheory: false,
       patternId: patterns[0]?.id || '',
       problem: null,
     };
@@ -49,6 +56,7 @@ function resolveInitialState() {
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isTheoryView, setIsTheoryView] = useState(() => resolveInitialState().isTheory);
   const [activePatternId, setActivePatternId] = useState(() => resolveInitialState().patternId);
   const [activeProblem, setActiveProblem] = useState(() => resolveInitialState().problem);
   const [commandOpen, setCommandOpen] = useState(false);
@@ -83,6 +91,7 @@ export default function App() {
 
   // Change Pattern
   const handleSelectPattern = (id) => {
+    setIsTheoryView(false);
     setActivePatternId(id);
     setActiveProblem(null);
     try {
@@ -93,8 +102,17 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
+  // Select Theory View
+  const handleSelectTheory = () => {
+    setIsTheoryView(true);
+    setActiveProblem(null);
+    window.location.hash = '#theory';
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   // Change Problem
   const handleSelectProblem = (prob) => {
+    setIsTheoryView(false);
     setActiveProblem(prob);
     try {
       localStorage.setItem('dsa_active_pattern', activePatternId);
@@ -106,6 +124,7 @@ export default function App() {
 
   // Back from problem to pattern list
   const handleBackToPattern = () => {
+    setIsTheoryView(false);
     setActiveProblem(null);
     try {
       localStorage.removeItem('dsa_active_problem');
@@ -116,6 +135,7 @@ export default function App() {
 
   // Select problem from Command Palette
   const handleSelectProblemFromSearch = (patternId, problem) => {
+    setIsTheoryView(false);
     setActivePatternId(patternId);
     setActiveProblem(problem);
     try {
@@ -130,7 +150,7 @@ export default function App() {
   useEffect(() => {
     const currentHash = window.location.hash.replace('#', '').trim();
     if (!currentHash) {
-      const targetHash = activeProblem ? activeProblem.id : activePatternId;
+      const targetHash = isTheoryView ? 'theory' : activeProblem ? activeProblem.id : activePatternId;
       if (targetHash) {
         window.history.replaceState(null, '', '#' + targetHash);
       }
@@ -139,6 +159,15 @@ export default function App() {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '').trim();
       if (!hash) return;
+
+      // 0. Check if hash is theory
+      if (hash === 'theory' || hash === 'theory-questions') {
+        setIsTheoryView(true);
+        setActiveProblem(null);
+        return;
+      }
+
+      setIsTheoryView(false);
 
       // 1. Check if hash matches a pattern
       const foundPat = patterns.find(p => p.id === hash);
@@ -169,7 +198,7 @@ export default function App() {
 
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, [activePatternId, activeProblem]);
+  }, [activePatternId, activeProblem, isTheoryView]);
 
   // Save scroll position for refresh restoration
   useEffect(() => {
@@ -206,6 +235,8 @@ export default function App() {
         patterns={patterns}
         activePattern={activePatternId}
         onSelectPattern={handleSelectPattern}
+        isTheoryActive={isTheoryView}
+        onSelectTheory={handleSelectTheory}
         onOpenCommand={() => setCommandOpen(true)}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -224,7 +255,9 @@ export default function App() {
       <div className="flex-1 flex flex-col min-h-screen lg:pl-64">
         {/* Main page content - clean ~880px max-width */}
         <main className="flex-1 w-full max-w-[880px] mx-auto px-4 sm:px-6 py-8">
-          {activeProblem ? (
+          {isTheoryView ? (
+            <TheoryQuestions />
+          ) : activeProblem ? (
             <ProblemDetail
               problem={activeProblem}
               patternName={activePattern?.name || ''}
@@ -252,6 +285,7 @@ export default function App() {
         onOpenChange={setCommandOpen}
         patterns={patterns}
         onSelectProblem={handleSelectProblemFromSearch}
+        onSelectTheory={handleSelectTheory}
         revisedProblems={revisedProblems}
       />
     </div>
