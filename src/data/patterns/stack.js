@@ -483,6 +483,181 @@ export const stack = {
           ]
         }
       },
-      p('Largest Rectangle In Histogram', 'Hard', 'Find the largest rectangular area in a histogram.'),
+      {
+        id: 'largest-rectangle-in-histogram',
+        title: 'Largest Rectangle In Histogram',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/largest-rectangle-in-histogram/description/',
+        definition: 'Given an array of integers heights representing the histogram\'s bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.',
+        examples: [
+          { input: 'heights = [2,1,5,6,2,3]', output: '10', explanation: 'The largest rectangle has area = 10 units (formed by heights 5 and 6 with min height 5 and width 2).' },
+          { input: 'heights = [2,4]', output: '4' }
+        ],
+        brute: {
+          idea: 'For each bar, find the previous smaller element (PSE) to the left and the next smaller element (NSE) to the right using linear scans. The width where this bar is the bottleneck height is (NSE - PSE - 1). Calculate area = heights[i] * width and track max area.',
+          code: `class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int maxArea = 0;
+
+        for(int i=0; i<n; i++){
+            // Find index of previous smaller element
+            int prevSmaller = -1;
+            for(int j=i-1; j>=0; j--){
+                if(heights[j] < heights[i]){
+                    prevSmaller = j;
+                    break;
+                }
+            }
+
+            // Find index of next smaller element
+            int nextSmaller = n;
+            for(int j=i+1; j<n; j++){
+                if(heights[j] < heights[i]){
+                    nextSmaller = j;
+                    break;
+                }
+            }
+
+            // Width = (nextSmaller - prevSmaller - 1)
+            int area = heights[i] * (nextSmaller - prevSmaller - 1);
+            maxArea = Math.max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• For each of the n bars, scanning left and right can take O(n) time.\n• Total Time: O(n²)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space.',
+          walkthrough: [
+            "Initialize n = heights.length and maxArea = 0.",
+            "Iterate through each bar index i from 0 to n - 1.",
+            "Scan backwards from j = i - 1 to 0 to find the first index with heights[j] < heights[i] (prevSmaller, default -1).",
+            "Scan forwards from j = i + 1 to n - 1 to find the first index with heights[j] < heights[i] (nextSmaller, default n).",
+            "Calculate area = heights[i] * (nextSmaller - prevSmaller - 1) and update maxArea.",
+            "Return maxArea after checking all bars."
+          ]
+        },
+        better: {
+          idea: 'Precompute Previous Smaller Element (PSE) and Next Smaller Element (NSE) arrays in O(n) using Monotonic Stacks. Then in a third pass, calculate area for each bar as heights[i] * (nse[i] - pse[i] - 1).',
+          code: `class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+
+        int[] pse = findPSE(heights);                      // Previous Smaller Element indices
+        int[] nse = findNSE(heights);                      // Next Smaller Element indices
+
+        int maxArea = 0;
+
+        for (int i = 0; i < n; i++) {
+            int width = nse[i] - pse[i] - 1;               // Width where heights[i] is the minimum bar
+            int area = heights[i] * width;
+            maxArea = Math.max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+
+    // Monotonic stack to find previous smaller element index for each bar
+    private int[] findPSE(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> stack = new Stack<>();
+        int[] pse = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
+            }
+
+            pse[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+
+        return pse;
+    }
+
+    // Monotonic stack to find next smaller element index for each bar
+    private int[] findNSE(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> stack = new Stack<>();
+        int[] nse = new int[n];
+
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                stack.pop();
+            }
+
+            nse[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+
+        return nse;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• findPSE takes O(n) using monotonic stack.\n• findNSE takes O(n) using monotonic stack.\n• Final loop computing areas takes O(n).\n• Total Time: O(3n) = O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for pse array, nse array, and stack.',
+          walkthrough: [
+            "Precompute pse[] where pse[i] is the index of the first smaller bar to the left (-1 if none).",
+            "Precompute nse[] where nse[i] is the index of the first smaller bar to the right (n if none).",
+            "Iterate i from 0 to n - 1: calculate width = nse[i] - pse[i] - 1 and area = heights[i] * width.",
+            "Update maxArea = Math.max(maxArea, area).",
+            "Return maxArea."
+          ]
+        },
+        optimal: {
+          idea: 'Single-Pass Monotonic Increasing Stack: maintain bar indices. When a smaller bar heights[i] is found, pop bars from the stack. For each popped bar, current index i is its NSE, and the new stack top is its PSE! When the loop finishes, process remaining elements in stack with NSE = n.',
+          code: `class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> stack = new Stack<>();              // Stores indices of increasing heights
+
+        int maxArea = 0;
+
+        for(int i=0; i<n; i++){
+            // Current bar is smaller than stack top -> it is the NSE for bars in stack
+            while(!stack.isEmpty() && heights[stack.peek()] > heights[i]){
+                int element = heights[stack.pop()];        // Bar height
+                int pse = stack.isEmpty() ? -1 : stack.peek(); // PSE is element right below in stack
+                int nse = i;                               // NSE is current index i
+
+                int area = element * (nse - pse - 1);
+                maxArea = Math.max(maxArea, area);
+            }
+            stack.push(i);
+        }
+
+        // Process remaining bars in stack (NSE for all is n)
+        while(!stack.isEmpty()){
+            int element = heights[stack.pop()];
+            int nse = n;                                   // No smaller element on right
+            int pse = stack.isEmpty() ? -1 : stack.peek();
+
+            int area = element * (nse - pse - 1);
+            maxArea = Math.max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Every bar index is pushed onto the stack exactly once and popped at most once.\n• Single pass over the array: O(n) total time.',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for the single monotonic stack without extra PSE/NSE arrays.',
+          walkthrough: [
+            "Initialize an empty Stack<Integer> stack to store bar indices and maxArea = 0.",
+            "Iterate i from 0 to n - 1: while stack is not empty and heights[stack.peek()] > heights[i]:",
+            "Pop the top bar as element = heights[stack.pop()].",
+            "NSE is current index i, and PSE is stack.isEmpty() ? -1 : stack.peek().",
+            "Calculate area = element * (nse - pse - 1) and update maxArea.",
+            "Push current index i onto stack.",
+            "After array traversal, pop all remaining bars from stack: for each, NSE is n and PSE is the element below it in stack.",
+            "Return maxArea."
+          ]
+        }
+      }
     ]
   };
