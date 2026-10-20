@@ -378,7 +378,126 @@ export const linkedList = {
           ]
         }
       },
-      p('Reorder List', 'Medium', 'Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2→...'),
+      {
+        id: 'reorder-list',
+        title: 'Reorder List',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/reorder-list/description/',
+        definition: 'You are given the head of a singly linked-list: L0 → L1 → … → Ln - 1 → Ln. Reorder the list to be on the following form: L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → … You may not modify the values in the list\'s nodes. Only nodes themselves may be changed.',
+        examples: [
+          { input: 'head = [1,2,3,4]', output: '[1,4,2,3]' },
+          { input: 'head = [1,2,3,4,5]', output: '[1,5,2,4,3]' }
+        ],
+        brute: {
+          idea: 'Collect all node values in an ArrayList. Use two pointers (i at start, j at end) to alternate picking elements from the front and back, overwriting the linked list node values in the required reordered sequence.',
+          code: `class Solution {
+    public void reorderList(ListNode head) {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        // Store all node values in an ArrayList
+        ListNode curr = head;
+        while(curr != null){
+            list.add(curr.val);
+            curr = curr.next;
+        }
+
+        // Two pointers from both ends
+        int i = 0, j = list.size() - 1;
+        int count = 0;
+        curr = head;
+
+        // Alternate taking elements from start and end
+        while(i <= j){
+            int val;
+
+            if(count % 2 == 0){
+                val = list.get(i);
+                i++;
+            } else {
+                val = list.get(j);
+                j--;
+            }
+
+            curr.val = val;
+            curr = curr.next;
+            count++;
+        }
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Traversing the list to populate ArrayList: O(n).\n• Traversing again with two pointers to reassign node values: O(n).\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for the ArrayList storing n elements.',
+          walkthrough: [
+            "Traverse the linked list and append each node's val to an ArrayList list.",
+            "Initialize two pointers i = 0 (start) and j = list.size() - 1 (end).",
+            "Set curr = head and counter count = 0.",
+            "While i <= j:",
+            "  If count is even, pick value from start list.get(i) and increment i.",
+            "  If count is odd, pick value from end list.get(j) and decrement j.",
+            "  Assign curr.val = val, advance curr = curr.next, and increment count."
+          ]
+        },
+        optimal: {
+          idea: 'Three-step in-place solution: 1) Find the middle node using slow and fast pointers. 2) Reverse the second half of the list. 3) Interleave / merge nodes from the first half and the reversed second half alternately.',
+          code: `class Solution {
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null){
+            return;
+        }        
+
+        // 1. Find middle of the linked list
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // 2. Split list and reverse the second half
+        ListNode secondHalf = slow.next;
+        slow.next = null;
+
+        ListNode curr = secondHalf;
+        ListNode prev = null;
+        ListNode next = null;
+        while(curr != null){
+            next = curr.next;
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+
+        // 3. Merge first half and reversed second half alternately
+        ListNode pointer1 = head;
+        ListNode pointer2 = prev;
+
+        while(pointer2 != null){
+            ListNode next1 = pointer1.next;
+            ListNode next2 = pointer2.next;
+
+            pointer1.next = pointer2;
+            pointer2.next = next1;
+
+            pointer1 = next1;
+            pointer2 = next2;
+        }
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Finding middle takes n/2 steps: O(n).\n• Reversing second half takes n/2 steps: O(n).\n• Merging both halves takes n/2 steps: O(n).\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space as all node pointers are rearranged in-place.',
+          walkthrough: [
+            "Handle edge case: if head is null or head.next is null, return immediately.",
+            "Step 1 (Find middle): Use slow and fast pointers. When fast reaches the end, slow is at the middle.",
+            "Step 2 (Reverse second half): Disconnect second half (slow.next = null) and iteratively reverse it using prev, curr, next pointers.",
+            "Step 3 (Merge): Set pointer1 = head (first half) and pointer2 = prev (reversed second half).",
+            "While pointer2 is not null, interleave: link pointer1.next = pointer2, pointer2.next = next1, and advance both pointers."
+          ]
+        }
+      },
       p('Add Two Numbers', 'Medium', 'Add two numbers represented as reversed linked lists.'),
       p('Find the Duplicate Number', 'Medium', 'Find the duplicate in an array of n+1 integers in range [1, n].'),
       p('Copy List With Random Pointer', 'Medium', 'Deep copy a linked list with next and random pointers.'),
