@@ -237,6 +237,7 @@ export default function App() {
           ) : (
             <ProblemList
               pattern={activePattern}
+              patternIndex={patterns.findIndex(p => p.id === activePattern?.id)}
               onSelectProblem={handleSelectProblem}
               revisedProblems={revisedProblems}
               onToggleRevised={handleToggleRevised}

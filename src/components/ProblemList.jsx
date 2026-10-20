@@ -9,6 +9,7 @@ const diffBadgeClass = {
 
 export default function ProblemList({
   pattern,
+  patternIndex,
   onSelectProblem,
   revisedProblems = new Set(),
   onToggleRevised,
@@ -17,12 +18,16 @@ export default function ProblemList({
     <div className="animate-fadeIn">
       {/* Pattern Header */}
       <div className="mb-6 pb-4 border-b border-ink-border">
-        <h1 className="text-2xl font-heading font-bold text-ink-text mb-1">
-          {pattern.name}
-        </h1>
-        <p className="text-sm text-ink-subtle">
-          {pattern.problems.length} problems
-        </p>
+        <div className="flex items-center gap-2.5">
+          {typeof patternIndex === 'number' && patternIndex >= 0 && (
+            <span className="text-2xl font-mono font-bold text-amber-accent">
+              {String(patternIndex + 1).padStart(2, '0')}
+            </span>
+          )}
+          <h1 className="text-2xl font-heading font-bold text-ink-text">
+            {pattern.name}
+          </h1>
+        </div>
       </div>
 
       {/* Problems List */}

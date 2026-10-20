@@ -1,32 +1,8 @@
 import {
-  Hash, GitBranch, Layers, BookOpen, Search, Binary,
-  Link2, TreePine, Type, ArrowUpCircle, Undo2, Network,
-  Map, TrendingUp, Grid3x3, Scissors, Calendar, Calculator, Zap,
   Flame, Target, BookCheck, CheckCircle2
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-
-const patternIcons = {
-  'arrays-hashing': Hash,
-  'two-pointers': GitBranch,
-  'sliding-window': Layers,
-  'stack': BookOpen,
-  'binary-search': Search,
-  'linked-list': Link2,
-  'trees': TreePine,
-  'tries': Type,
-  'heap-priority-queue': ArrowUpCircle,
-  'backtracking': Undo2,
-  'graphs': Network,
-  'advanced-graphs': Map,
-  '1d-dynamic-programming': TrendingUp,
-  '2d-dynamic-programming': Grid3x3,
-  'greedy': Scissors,
-  'intervals': Calendar,
-  'math-geometry': Calculator,
-  'bit-manipulation': Zap,
-};
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -124,8 +100,7 @@ export default function Dashboard({ patterns, onSelectPattern, revisedProblems =
 
       {/* Pattern Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {patterns.map(pattern => {
-          const Icon = patternIcons[pattern.id] || Hash;
+        {patterns.map((pattern, index) => {
           const easy = pattern.problems.filter(p => p.difficulty === 'Easy').length;
           const med = pattern.problems.filter(p => p.difficulty === 'Medium').length;
           const hard = pattern.problems.filter(p => p.difficulty === 'Hard').length;
@@ -142,9 +117,9 @@ export default function Dashboard({ patterns, onSelectPattern, revisedProblems =
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 rounded-lg bg-ink-elevated border border-ink-border group-hover:border-amber-accent/40 group-hover:bg-amber-accent-muted transition-colors">
-                      <Icon className="w-4 h-4 text-ink-muted group-hover:text-amber-accent transition-colors" />
-                    </div>
+                    <span className="font-mono text-base font-bold text-ink-muted group-hover:text-amber-accent transition-colors shrink-0">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                     <div className="min-w-0">
                       <h3 className="text-sm font-medium text-ink-text group-hover:text-white transition-colors truncate">
                         {pattern.name}

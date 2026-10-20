@@ -1,30 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  Hash, GitBranch, Layers, BookOpen, Search,
-  Link2, TreePine, Type, ArrowUpCircle, Undo2, Network,
-  Map, TrendingUp, Grid3x3, Scissors, Calendar, Calculator, Zap
-} from 'lucide-react';
-
-const patternIcons = {
-  'arrays-hashing': Hash,
-  'two-pointers': GitBranch,
-  'sliding-window': Layers,
-  'stack': BookOpen,
-  'binary-search': Search,
-  'linked-list': Link2,
-  'trees': TreePine,
-  'tries': Type,
-  'heap-priority-queue': ArrowUpCircle,
-  'backtracking': Undo2,
-  'graphs': Network,
-  'advanced-graphs': Map,
-  '1d-dynamic-programming': TrendingUp,
-  '2d-dynamic-programming': Grid3x3,
-  'greedy': Scissors,
-  'intervals': Calendar,
-  'math-geometry': Calculator,
-  'bit-manipulation': Zap,
-};
+import { Search } from 'lucide-react';
 
 function DifficultyDots({ problems }) {
   const easy = problems.filter(p => p.difficulty === 'Easy').length;
@@ -114,9 +89,8 @@ export default function AppSidebar({
         {/* Patterns List with Dedicated Scrollbar */}
         <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-2 py-1 sidebar-scroll">
           <nav className="space-y-0.5">
-            {patterns.map((pattern) => {
+            {patterns.map((pattern, index) => {
               const isActive = activePattern === pattern.id;
-              const Icon = patternIcons[pattern.id] || Hash;
 
               return (
                 <button
@@ -133,9 +107,15 @@ export default function AppSidebar({
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-amber-accent rounded-r" />
                   )}
 
-                  {/* Icon */}
-                  <span className="w-5 h-5 flex items-center justify-center shrink-0">
-                    <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-amber-accent' : 'text-ink-muted group-hover:text-ink-text'}`} />
+                  {/* Aesthetic Number */}
+                  <span
+                    className={`font-mono text-xs font-semibold w-5 text-center shrink-0 transition-colors ${
+                      isActive
+                        ? 'text-amber-accent'
+                        : 'text-ink-muted group-hover:text-ink-text'
+                    }`}
+                  >
+                    {String(index + 1).padStart(2, '0')}
                   </span>
 
                   {/* Pattern Name */}

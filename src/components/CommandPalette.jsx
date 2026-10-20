@@ -54,16 +54,17 @@ export default function CommandPalette({
   // Flatten all problems with pattern context
   const allProblems = useMemo(() => {
     const list = [];
-    for (const pat of patterns) {
+    patterns.forEach((pat, patIdx) => {
+      const patternNumber = String(patIdx + 1).padStart(2, '0');
       for (const prob of pat.problems) {
         list.push({
           patternId: pat.id,
           patternName: pat.name,
-          patternIcon: pat.icon,
+          patternNumber,
           problem: prob,
         });
       }
-    }
+    });
     return list;
   }, [patterns]);
 
@@ -230,7 +231,7 @@ export default function CommandPalette({
                       )}
                     </div>
                     <span className="text-[11px] text-ink-subtle font-mono truncate block mt-0.5">
-                      {item.patternName}
+                      {item.patternNumber} · {item.patternName}
                     </span>
                   </div>
 
