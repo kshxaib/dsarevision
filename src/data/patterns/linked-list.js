@@ -90,7 +90,121 @@ export const linkedList = {
           ]
         }
       },
-      p('Merge Two Sorted Lists', 'Easy', 'Merge two sorted linked lists into one sorted list.'),
+      {
+        id: 'merge-two-sorted-lists',
+        title: 'Merge Two Sorted Lists',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/merge-two-sorted-lists/description/',
+        definition: 'You are given the heads of two sorted linked lists list1 and list2. Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists. Return the head of the merged linked list.',
+        examples: [
+          { input: 'list1 = [1,2,4], list2 = [1,3,4]', output: '[1,1,2,3,4,4]' },
+          { input: 'list1 = [], list2 = []', output: '[]' },
+          { input: 'list1 = [], list2 = [0]', output: '[0]' }
+        ],
+        brute: {
+          idea: 'Collect all values from both linked lists into an ArrayList, sort the array in ascending order, and then reconstruct a new sorted linked list.',
+          code: `class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ArrayList<Integer> arr = new ArrayList<>();
+
+        // Collect all elements from list1
+        while (list1 != null) {
+            arr.add(list1.val);
+            list1 = list1.next;
+        }
+
+        // Collect all elements from list2
+        while (list2 != null) {
+            arr.add(list2.val);
+            list2 = list2.next;
+        }
+
+        // Sort all elements
+        Collections.sort(arr);
+
+        // Reconstruct merged linked list
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+
+        for (int val : arr) {
+            temp.next = new ListNode(val);
+            temp = temp.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O((n + m) log(n + m))',
+          timeDesc: '• Traversing both lists to populate array: O(n + m).\n• Sorting the array of size (n + m): O((n + m) log(n + m)).\n• Creating the new linked list: O(n + m).\n• Total Time: O((n + m) log(n + m))',
+          space: 'O(n + m)',
+          spaceDesc: 'O(n + m) auxiliary space for the ArrayList and new linked list nodes.',
+          walkthrough: [
+            "Initialize an empty ArrayList arr to store values.",
+            "Traverse list1 and add all node values to arr.",
+            "Traverse list2 and add all node values to arr.",
+            "Sort arr in ascending order using Collections.sort(arr).",
+            "Initialize a dummy node ListNode(-1) with pointer temp = dummy.",
+            "Iterate through sorted values in arr, creating new nodes and linking via temp.next.",
+            "Return dummy.next as head of merged list."
+          ]
+        },
+        optimal: {
+          idea: 'Use a two-pointer approach to splice the existing nodes of both sorted lists in-place. Compare node values from list1 and list2, link the smaller node to the merged list, and advance the corresponding pointer.',
+          code: `class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+
+        ListNode temp1 = list1;
+        ListNode temp2 = list2;
+
+        // Compare and link the smaller node
+        while(temp1 != null && temp2 != null){
+            if(temp1.val <= temp2.val){
+                temp.next = temp1;
+                temp1 = temp1.next;
+            } else {
+                temp.next = temp2;
+                temp2 = temp2.next;
+            }
+
+            temp = temp.next;
+        }
+
+        // Append remaining nodes from list1
+        while(temp1 != null){
+            temp.next = temp1;
+            temp1 = temp1.next;
+            temp = temp.next;
+        }
+
+        // Append remaining nodes from list2
+        while(temp2 != null){
+            temp.next = temp2;
+            temp2 = temp2.next;
+            temp = temp.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(n + m)',
+          timeDesc: '• Traverse each node in list1 and list2 at most once.\n• Total Time: O(n + m)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space since we rearrange existing nodes in-place using pointers.',
+          walkthrough: [
+            "Create a dummy head node ListNode(-1) and pointer temp = dummy.",
+            "Initialize temp1 = list1 and temp2 = list2.",
+            "While both temp1 and temp2 are not null:",
+            "  If temp1.val <= temp2.val, attach temp1 to temp.next and advance temp1.",
+            "  Else, attach temp2 to temp.next and advance temp2.",
+            "  Advance temp.",
+            "Attach any remaining elements of temp1 to temp.next.",
+            "Attach any remaining elements of temp2 to temp.next.",
+            "Return dummy.next as head of the merged sorted list."
+          ]
+        }
+      },
       p('Linked List Cycle', 'Easy', 'Detect if a linked list has a cycle.'),
       p('Remove Nth Node From End of List', 'Medium', 'Remove the nth node from the end of a linked list.'),
       p('Reorder List', 'Medium', 'Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2→...'),
