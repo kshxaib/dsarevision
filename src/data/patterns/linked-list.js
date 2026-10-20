@@ -736,7 +736,170 @@ export const linkedList = {
           ]
         }
       },
-      p('Merge K Sorted Lists', 'Hard', 'Merge k sorted linked lists into one sorted list.'),
+      {
+        id: 'merge-k-sorted-lists',
+        title: 'Merge K Sorted Lists',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/merge-k-sorted-lists/description/',
+        definition: 'You are given an array of k linked-lists lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.',
+        examples: [
+          { input: 'lists = [[1,4,5],[1,3,4],[2,6]]', output: '[1,1,2,3,4,4,5,6]', explanation: 'The lists merged into one sorted list: 1->1->2->3->4->4->5->6.' },
+          { input: 'lists = []', output: '[]' },
+          { input: 'lists = [[]]', output: '[]' }
+        ],
+        brute: {
+          idea: 'Traverse all k linked lists and collect all node values into an ArrayList. Sort the array using Collections.sort(), then iterate through the sorted values to construct a new linked list.',
+          code: `class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        // Collect all node values across all k lists
+        for(int i=0; i<lists.length; i++){
+            ListNode temp = lists[i];
+
+            while(temp != null){
+                list.add(temp.val);
+                temp = temp.next;
+            }
+        }        
+
+        // Sort all extracted values
+        Collections.sort(list);
+
+        ListNode dummy = new ListNode(-1);
+        ListNode dTemp = dummy;
+
+        // Reconstruct the sorted linked list
+        for(int i=0; i<list.size(); i++){
+            dTemp.next = new ListNode(list.get(i));
+            dTemp = dTemp.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(N log N)',
+          timeDesc: '• Let N be the total number of nodes across all k lists.\n• Extracting values takes O(N).\n• Sorting array of size N takes O(N log N).\n• Rebuilding linked list takes O(N).\n• Total Time: O(N log N)',
+          space: 'O(N)',
+          spaceDesc: 'O(N) auxiliary space to store all node values in the ArrayList and create new nodes.',
+          walkthrough: [
+            "Initialize an ArrayList<Integer> list to collect node values.",
+            "Traverse each list in the lists array and append each node value to list.",
+            "Sort the array list in ascending order using Collections.sort(list).",
+            "Create a dummy node and iterate through the sorted list, creating a new ListNode for each value and linking it.",
+            "Return dummy.next as the head of the sorted list."
+          ]
+        },
+        better: {
+          idea: 'Merge the k lists sequentially one by one using a standard 2-way linked list merge function. Start with the first list as the accumulated head, and repeatedly merge it with the next list for all k lists.',
+          code: `class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+
+        ListNode head = lists[0];
+
+        // Iteratively merge cumulative list with each subsequent list
+        for (int i = 1; i < lists.length; i++) {
+            head = mergeLL(head, lists[i]);
+        }
+
+        return head;
+    }
+
+    // Standard two-way merge for two sorted linked lists
+    private ListNode mergeLL(ListNode firstLL, ListNode secondLL) {
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+
+        while (firstLL != null && secondLL != null) {
+            if (firstLL.val <= secondLL.val) {
+                temp.next = firstLL;
+                firstLL = firstLL.next;
+            } else {
+                temp.next = secondLL;
+                secondLL = secondLL.next;
+            }
+
+            temp = temp.next;
+        }
+
+        if (firstLL != null) {
+            temp.next = firstLL;
+        }
+
+        if (secondLL != null) {
+            temp.next = secondLL;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(k · N)',
+          timeDesc: '• In the i-th merge step, merging with the accumulated list of length ~i·(N/k) takes O(i·N/k).\n• Summing over k lists: O(N/k · (1 + 2 + ... + k)) = O(N/k · k²) = O(k · N).\n• Total Time: O(k · N)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) constant auxiliary space since existing node pointers are rearranged in-place.',
+          walkthrough: [
+            "Edge case check: If lists.length == 0, return null.",
+            "Initialize head = lists[0].",
+            "Loop i from 1 to lists.length - 1, updating head = mergeLL(head, lists[i]).",
+            "In mergeLL: use a dummy node and two pointers to merge two sorted lists by comparing values and appending the smaller node.",
+            "Attach any remaining nodes from firstLL or secondLL.",
+            "Return the final merged head."
+          ]
+        },
+        optimal: {
+          idea: 'Use a Min-Heap (PriorityQueue<ListNode>) of size at most k. Insert the head node of each non-empty list. Repeatedly extract the minimum node, attach it to the result list, and if that extracted node has a next node, insert next into the min-heap. This ensures we always pick the globally minimum available element in O(log k) time.',
+          code: `class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists.length == 0){
+            return null;
+        }
+
+        // Min-heap ordered by node values
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+
+        // Add the head of each non-empty list
+        for(int i=0; i<lists.length; i++){
+            ListNode temp = lists[i];
+            if(temp != null){
+                pq.add(temp);
+            }
+        }
+
+        ListNode dummy = new ListNode(-1);
+        ListNode temp = dummy;
+
+        // Extract minimum node and push its next node
+        while(!pq.isEmpty()){
+            ListNode smallestNode = pq.remove();
+            temp.next = smallestNode;
+            temp = temp.next;
+
+            if(smallestNode.next != null){
+                pq.add(smallestNode.next);
+            }
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(N log k)',
+          timeDesc: '• Let N be the total number of nodes and k be the number of linked lists.\n• Inserting the initial k heads takes O(k log k).\n• Each of the N nodes is inserted and extracted from the priority queue of size k once: N · O(log k).\n• Total Time: O(N log k)',
+          space: 'O(k)',
+          spaceDesc: 'O(k) auxiliary space for the PriorityQueue containing at most k node references simultaneously.',
+          walkthrough: [
+            "Edge case check: If lists.length == 0, return null immediately.",
+            "Initialize a PriorityQueue<ListNode> with a comparator sorting by node.val ascending.",
+            "Iterate through lists array and push all non-null head nodes into the priority queue.",
+            "Initialize dummy = new ListNode(-1) and temp = dummy.",
+            "While pq is not empty: remove smallestNode = pq.remove(), attach it to temp.next, and advance temp.",
+            "If smallestNode.next != null, add smallestNode.next into the queue.",
+            "Return dummy.next as the head of the completely merged sorted linked list."
+          ]
+        }
+      },
       p('Reverse Nodes in K Group', 'Hard', 'Reverse linked list nodes in groups of k.'),
       p('LRU Cache', 'Medium', 'Design a Least Recently Used (LRU) cache.'),
     ]
