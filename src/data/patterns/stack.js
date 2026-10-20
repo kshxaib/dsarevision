@@ -89,7 +89,109 @@ export const stack = {
           ]
         }
       },
-      p('Min Stack', 'Medium', 'Design a stack that supports push, pop, top, and getMin in O(1).'),
+      {
+        id: 'min-stack',
+        title: 'Min Stack',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/min-stack/description/',
+        definition: 'Design a stack that supports push, pop, top, and retrieving the minimum element in constant time O(1). Implement the MinStack class with push(val), pop(), top(), and getMin() methods.',
+        examples: [
+          {
+            input: '["MinStack","push","push","push","getMin","pop","top","getMin"]\n[[],[-2],[0],[-3],[],[],[],[]]',
+            output: '[null,null,null,null,-3,null,0,-2]',
+            explanation: 'MinStack minStack = new MinStack();\nminStack.push(-2);\nminStack.push(0);\nminStack.push(-3);\nminStack.getMin(); // return -3\nminStack.pop();\nminStack.top();    // return 0\nminStack.getMin(); // return -2'
+          }
+        ],
+        brute: {
+          idea: 'Use a single standard Stack. For push, pop, and top, perform standard O(1) stack operations. For getMin, iterate through the stack to find the minimum value in O(n) time.',
+          code: `class MinStack {
+    Stack<Integer> stack;
+
+    public MinStack() {
+        stack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        stack.push(val);                                   // O(1) push
+    }
+    
+    public void pop() {
+        stack.pop();                                       // O(1) pop
+    }
+    
+    public int top() {
+        return stack.peek();                               // O(1) top
+    }
+    
+    public int getMin() {
+        int min = Integer.MAX_VALUE;
+        for (int val : stack) {                            // Scan all elements: O(n)
+            min = Math.min(min, val);
+        }
+        return min;
+    }
+}`,
+          time: 'O(1) push/pop/top, O(n) getMin',
+          timeDesc: '• push, pop, and top take O(1) constant time.\n• getMin iterates through all elements currently in the stack: O(n) time.',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store n elements in a single stack.',
+          walkthrough: [
+            "Initialize a single Stack<Integer> stack.",
+            "push(val): Push val onto the stack directly in O(1).",
+            "pop(): Pop the top element from the stack in O(1).",
+            "top(): Return stack.peek() in O(1).",
+            "getMin(): Initialize min = Integer.MAX_VALUE, loop through all elements in stack, and return the minimum value found."
+          ]
+        },
+        optimal: {
+          idea: 'Use two stacks: a primary stack for all elements and an auxiliary minStack to track minimum values. Only push to minStack if val <= current minimum. On pop, if top of minStack equals top of stack, pop from minStack as well. This guarantees O(1) for all operations.',
+          code: `class MinStack {
+    Stack<Integer> stack;
+    Stack<Integer> minStack;                               // Tracks minimum elements
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        stack.push(val);
+
+        // Push to minStack if empty or val is <= current minimum
+        if(minStack.isEmpty() || val <= minStack.peek()){
+            minStack.push(val);
+        }
+    }
+    
+    public void pop() {
+        // Use .equals() for Integer object value comparison
+        if (minStack.peek().equals(stack.peek())) {
+            minStack.pop();
+        }
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();                               // Top of main stack
+    }
+    
+    public int getMin() {
+        return minStack.peek();                            // Current minimum in O(1)
+    }
+}`,
+          time: 'O(1) for all operations',
+          timeDesc: '• push, pop, top, and getMin all run in O(1) constant time.',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space for stack and minStack in the worst case (strictly non-increasing inputs).',
+          walkthrough: [
+            "Initialize two stacks: stack for all values, and minStack for minimums.",
+            "push(val): Push val onto stack. If minStack is empty or val <= minStack.peek(), also push val onto minStack.",
+            "pop(): If minStack.peek().equals(stack.peek()), pop from minStack. Then pop from stack.",
+            "top(): Return stack.peek() in O(1).",
+            "getMin(): Return minStack.peek() in O(1)."
+          ]
+        }
+      },
       p('Evaluate Reverse Polish Notation', 'Medium', 'Evaluate an arithmetic expression in Reverse Polish Notation.'),
       p('Generate Parentheses', 'Medium', 'Generate all valid combinations of n pairs of parentheses.'),
       p('Daily Temperatures', 'Medium', 'Find number of days until a warmer temperature for each day.'),
