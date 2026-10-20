@@ -605,7 +605,137 @@ export const linkedList = {
           ]
         }
       },
-      p('Copy List With Random Pointer', 'Medium', 'Deep copy a linked list with next and random pointers.'),
+      {
+        id: 'copy-list-with-random-pointer',
+        title: 'Copy List with Random Pointer',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/copy-list-with-random-pointer/description/',
+        definition: 'A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null. Construct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list.',
+        examples: [
+          { input: 'head = [[7,null],[13,0],[11,4],[10,2],[1,0]]', output: '[[7,null],[13,0],[11,4],[10,2],[1,0]]' },
+          { input: 'head = [[1,1],[2,1]]', output: '[[1,1],[2,1]]' },
+          { input: 'head = [[3,null],[3,0],[3,null]]', output: '[[3,null],[3,0],[3,null]]' }
+        ],
+        brute: {
+          idea: 'Use a HashMap to store the mapping from each original node to its newly cloned copy (originalNode -> clonedNode). In the first pass, traverse the original linked list and create a clone node for each original node, placing the pair into the map. In the second pass, assign the cloned node\'s next and random pointers using map lookups. Finally, return the clone corresponding to head.',
+          code: `class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>(); 
+
+        Node temp = head;
+
+        // Pass 1: Create a copy of each node and store mapping (original -> copy)
+        while (temp != null) {
+            Node copyNode = new Node(temp.val);
+            map.put(temp, copyNode);
+
+            temp = temp.next;
+        }
+
+        temp = head;
+
+        // Pass 2: Connect next and random pointers using the map
+        while (temp != null) {
+            Node copiedNode = map.get(temp);
+
+            copiedNode.next = map.get(temp.next);
+            copiedNode.random = map.get(temp.random);
+
+            temp = temp.next;
+        }
+
+        return map.get(head);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Pass 1: Traverse the original list to create nodes and populate the map: O(n).\n• Pass 2: Traverse again to connect next and random pointers via O(1) hash map lookups: O(n).\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary space to store all n nodes in the HashMap.',
+          walkthrough: [
+            "Initialize a HashMap<Node, Node> to map each original node to its newly instantiated copy.",
+            "Pass 1: Traverse original list from head. For each node temp, create copyNode = new Node(temp.val) and store map.put(temp, copyNode).",
+            "Pass 2: Reset temp = head. For each node, retrieve copiedNode = map.get(temp).",
+            "Set copiedNode.next = map.get(temp.next) and copiedNode.random = map.get(temp.random).",
+            "Return map.get(head), the head of the new cloned deep copy list."
+          ]
+        },
+        optimal: {
+          idea: 'Solve in O(1) auxiliary space using a 3-step in-place interleaving strategy:\n1. Insert copy nodes directly in-between each original node and its next node (A -> A\' -> B -> B\').\n2. Connect random pointers: for each copied node (curr.next), its random pointer points to curr.random.next.\n3. Extract the copied list: unweave the interleaved list back into original and cloned lists, restoring original pointers.',
+          code: `class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null){
+            return head;
+        }        
+
+        // Step 1: Insert copied nodes directly after each original node
+        insertCopyInBetween(head);
+
+        // Step 2: Assign random pointers for all copied nodes
+        connectRandomPointers(head);
+
+        // Step 3: Separate the copied list from the original list
+        return extractCopiedList(head);
+    }
+
+    private void insertCopyInBetween(Node head){
+        Node curr = head;
+
+        while(curr != null){
+            Node nextNode = curr.next;
+            Node copyNode = new Node(curr.val);
+
+            copyNode.next = nextNode;
+            curr.next = copyNode;
+
+            curr = nextNode;
+        }
+    }
+
+    private void connectRandomPointers(Node head){
+        Node curr = head;
+
+        while(curr != null){
+            Node copiedNode = curr.next;
+
+            if(curr.random != null){
+                copiedNode.random = curr.random.next;
+            } else {
+                copiedNode.random = null;
+            }
+
+            curr = curr.next.next;
+        }
+    }
+
+    private Node extractCopiedList(Node head){
+        Node dummy = new Node(-1);
+        Node dTemp = dummy;
+
+        Node curr = head;
+        while(curr != null){
+            dTemp.next = curr.next;
+            dTemp = dTemp.next;
+
+            curr.next = curr.next.next;
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Step 1: Interleaving copy nodes takes O(n).\n• Step 2: Assigning random pointers takes O(n).\n• Step 3: Unweaving and restoring original list takes O(n).\n• Total Time: O(n)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space as the pointer manipulation is done in-place without any extra hash tables or collections.',
+          walkthrough: [
+            "Handle edge case: if head is null, return null immediately.",
+            "Step 1 (insertCopyInBetween): For every original node curr, create copyNode = new Node(curr.val), set copyNode.next = curr.next, and splice it in as curr.next = copyNode.",
+            "Step 2 (connectRandomPointers): Traverse interleaved list. For each original node curr, set curr.next.random = (curr.random != null) ? curr.random.next : null, and advance curr = curr.next.next.",
+            "Step 3 (extractCopiedList): Use a dummy node to extract the copied nodes (dTemp.next = curr.next) while simultaneously restoring the original list links (curr.next = curr.next.next).",
+            "Return dummy.next, which is the head of the deep copy list."
+          ]
+        }
+      },
       p('Merge K Sorted Lists', 'Hard', 'Merge k sorted linked lists into one sorted list.'),
       p('Reverse Nodes in K Group', 'Hard', 'Reverse linked list nodes in groups of k.'),
       p('LRU Cache', 'Medium', 'Design a Least Recently Used (LRU) cache.'),
