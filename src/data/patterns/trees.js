@@ -166,7 +166,84 @@ export const trees = {
           ]
         }
       },
-      p('Same Tree', 'Easy', 'Check if two binary trees are structurally identical.'),
+      {
+        id: 'same-tree',
+        title: 'Same Tree',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/same-tree/description/',
+        definition: 'Given the roots of two binary trees p and q, write a function to check if they are the same or not. Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.',
+        examples: [
+          { input: 'p = [1,2,3], q = [1,2,3]', output: 'true' },
+          { input: 'p = [1,2], q = [1,null,2]', output: 'false' },
+          { input: 'p = [1,2,1], q = [1,1,2]', output: 'false' }
+        ],
+        brute: {
+          idea: 'Recursive DFS traversal:\n\n• If both p and q are null, both trees are identical at this branch (return true).\n• If only one is null or values differ (p.val != q.val), trees are not identical (return false).\n• Recursively verify left and right subtrees match.',
+          code: `class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+
+        if(p.val != q.val) return false;
+
+        boolean left = isSameTree(p.left, q.left);
+        boolean right = isSameTree(p.right, q.right);
+
+        return left && right; 
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits every node up to min(n, m) where n and m are tree sizes.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is the minimum tree height.',
+          walkthrough: [
+            "Base case: If both p == null && q == null, return true.",
+            "If only one is null (p == null || q == null), return false.",
+            "If values mismatch (p.val != q.val), return false.",
+            "Recursively verify left children: left = isSameTree(p.left, q.left).",
+            "Recursively verify right children: right = isSameTree(p.right, q.right).",
+            "Return left && right."
+          ]
+        },
+        optimal: {
+          idea: 'Iterative BFS using a Queue:\n\n• Enqueue pairs of corresponding nodes from p and q.\n• Poll two nodes at each step and compare structure and values.\n• Enqueue matching left and right children pairs until queue is empty.',
+          code: `class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(p);
+        queue.offer(q);
+
+        while(!queue.isEmpty()){
+            TreeNode first = queue.poll();
+            TreeNode second = queue.poll();
+
+            if(first == null && second == null) continue;
+            if(first == null || second == null) return false;
+            if(first.val != second.val) return false;
+
+            queue.offer(first.left);
+            queue.offer(second.left);
+            queue.offer(first.right);
+            queue.offer(second.right);
+        }
+
+        return true;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Traverses corresponding node pairs once.\n• Total Time: O(n)',
+          space: 'O(w)',
+          spaceDesc: 'O(w) queue memory where w is the maximum width of the tree.',
+          walkthrough: [
+            "Initialize Queue<TreeNode> and offer roots p and q.",
+            "While queue is not empty, poll two nodes: first and second.",
+            "If both nodes are null, continue to next pair.",
+            "If one node is null or first.val != second.val, return false.",
+            "Enqueue first.left and second.left, followed by first.right and second.right.",
+            "Return true once queue is emptied without mismatches."
+          ]
+        }
+      },
       p('Diameter of Binary Tree', 'Easy', 'Find the longest path between any two nodes in a tree.'),
       p('Balanced Binary Tree', 'Easy', 'Check if a binary tree is height-balanced.'),
       p('Subtree of Another Tree', 'Easy', 'Check if a tree is a subtree of another tree.'),
