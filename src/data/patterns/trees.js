@@ -301,7 +301,92 @@ export const trees = {
           ]
         }
       },
-      p('Subtree of Another Tree', 'Easy', 'Check if a tree is a subtree of another tree.'),
+      {
+        id: 'subtree-of-another-tree',
+        title: 'Subtree of Another Tree',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/subtree-of-another-tree/description/',
+        definition: 'Given the roots of two binary trees root and subRoot, return true if there is a subtree of root with the same structure and node values of subRoot and false otherwise.',
+        examples: [
+          { input: 'root = [3,4,5,1,2], subRoot = [4,1,2]', output: 'true' },
+          { input: 'root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]', output: 'false' }
+        ],
+        brute: {
+          idea: 'Recursive DFS with isSameTree Helper:\n\n• If subRoot is null, empty tree is always a valid subtree (return true).\n• If root is null, non-empty subRoot cannot match (return false).\n• If isSameTree(root, subRoot) is true, return true.\n• Otherwise recursively check left subtree or right subtree.',
+          code: `class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if(subRoot == null) return true;
+        if(root == null) return false;   
+
+        if(isSameTree(root, subRoot)){
+            return true;
+        }  
+
+        boolean leftTree = isSubtree(root.left, subRoot);
+        boolean rightTree = isSubtree(root.right, subRoot);
+
+        return leftTree || rightTree;
+    }
+
+    private boolean isSameTree(TreeNode p, TreeNode q){
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+
+        if(p.val != q.val) return false;
+
+        boolean left = isSameTree(p.left, q.left);
+        boolean right = isSameTree(p.right, q.right);
+
+        return left && right;
+    }
+}`,
+          time: 'O(n · m)',
+          timeDesc: '• In worst case, compares subtree of size m at each of the n nodes.\n• Total Time: O(n · m)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is root tree height.',
+          walkthrough: [
+            "Base case: If subRoot == null, return true; if root == null, return false.",
+            "Check if tree starting at current node matches subRoot: if (isSameTree(root, subRoot)) return true.",
+            "Recursively check left subtree: leftTree = isSubtree(root.left, subRoot).",
+            "Recursively check right subtree: rightTree = isSubtree(root.right, subRoot).",
+            "Return leftTree || rightTree."
+          ]
+        },
+        optimal: {
+          idea: 'Pre-order Traversal Serialization (String Matching):\n\n• Serialize both root and subRoot trees into strings using pre-order traversal with commas and null indicators.\n• Check if subRoot serialized string is a substring of fullTree using contains.',
+          code: `class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        String fullTree = preOrderTraversal(root);
+        String subTree = preOrderTraversal(subRoot);
+
+        return fullTree.contains(subTree);
+    }
+
+    private String preOrderTraversal(TreeNode node) {
+        if (node == null) {
+            return "null";
+        }
+
+        StringBuilder sb = new StringBuilder(",");
+        sb.append(node.val);
+        sb.append(preOrderTraversal(node.left));
+        sb.append(preOrderTraversal(node.right));
+
+        return sb.toString();
+    }
+}`,
+          time: 'O(n + m)',
+          timeDesc: '• Pre-order traversal serializes both trees in linear time.\n• Total Time: O(n + m)',
+          space: 'O(n + m)',
+          spaceDesc: 'O(n + m) space to store serialized strings.',
+          walkthrough: [
+            "Serialize entire tree: fullTree = preOrderTraversal(root).",
+            "Serialize target subtree: subTree = preOrderTraversal(subRoot).",
+            "Return fullTree.contains(subTree).",
+            "In preOrderTraversal: Append ',' + node.val + left traversal + right traversal with base case 'null'."
+          ]
+        }
+      },
       p('Lowest Common Ancestor of a Binary Search Tree', 'Medium', 'Find the lowest common ancestor of two nodes in a BST.'),
       p('Binary Tree Level Order Traversal', 'Medium', 'Traverse the tree level by level (BFS).'),
       p('Binary Tree Right Side View', 'Medium', 'Return the values visible from the right side of the tree.'),
