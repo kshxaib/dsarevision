@@ -93,7 +93,79 @@ export const trees = {
           ]
         }
       },
-      p('Maximum Depth of Binary Tree', 'Easy', 'Find the maximum depth of a binary tree.'),
+      {
+        id: 'maximum-depth-of-binary-tree',
+        title: 'Maximum Depth of Binary Tree',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/maximum-depth-of-binary-tree/description/',
+        definition: 'Given the root of a binary tree, return its maximum depth. A binary tree maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.',
+        examples: [
+          { input: 'root = [3,9,20,null,null,15,7]', output: '3' },
+          { input: 'root = [1,null,2]', output: '2' }
+        ],
+        brute: {
+          idea: 'Recursive DFS (Post-order Traversal):\n\n• Base case: If root is null, return 0.\n• Recursively calculate left subtree depth (lh) and right subtree depth (rh).\n• Return 1 + Math.max(lh, rh).',
+          code: `class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null) return 0;
+
+        int lh = maxDepth(root.left);
+        int rh = maxDepth(root.right);
+
+        return 1+ Math.max(lh, rh);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits every node in the binary tree exactly once.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
+          walkthrough: [
+            "Base case: If root == null, return 0.",
+            "Compute left subtree depth: lh = maxDepth(root.left).",
+            "Compute right subtree depth: rh = maxDepth(root.right).",
+            "Return 1 + Math.max(lh, rh)."
+          ]
+        },
+        optimal: {
+          idea: 'Iterative BFS (Level Order Traversal):\n\n• Traverse the tree level by level using a Queue.\n• For each level, process all nodes at current depth and increment depth by 1.\n• Return depth once queue is empty.',
+          code: `class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null) return 0;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int depth = 0;
+
+        while(!queue.isEmpty()){
+            int size = queue.size();
+
+            // Process all nodes at current level
+            for(int i = 0; i < size; i++){
+                TreeNode curr = queue.poll();
+                if(curr.left != null) queue.offer(curr.left);
+                if(curr.right != null) queue.offer(curr.right);
+            }
+
+            depth++;
+        }
+
+        return depth;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Every node is pushed and polled from the queue once.\n• Total Time: O(n)',
+          space: 'O(w)',
+          spaceDesc: 'O(w) queue memory where w is maximum tree width.',
+          walkthrough: [
+            "Base case: If root == null, return 0.",
+            "Initialize Queue and enqueue root. Initialize depth = 0.",
+            "While queue is not empty, get current level size = queue.size().",
+            "Poll all nodes at current level and enqueue existing children.",
+            "Increment depth by 1 after finishing each level.",
+            "Return depth once queue is empty."
+          ]
+        }
+      },
       p('Same Tree', 'Easy', 'Check if two binary trees are structurally identical.'),
       p('Diameter of Binary Tree', 'Easy', 'Find the longest path between any two nodes in a tree.'),
       p('Balanced Binary Tree', 'Easy', 'Check if a binary tree is height-balanced.'),

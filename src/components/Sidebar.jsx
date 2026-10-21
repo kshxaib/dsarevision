@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, BookOpen } from 'lucide-react';
+import { theoryQuestions } from '../data/theoryQuestions';
 
 function DifficultyDots({ problems }) {
   const easy = problems.filter(p => p.difficulty === 'Easy').length;
@@ -94,7 +95,7 @@ export default function AppSidebar({
             <BookOpen className={`w-4 h-4 shrink-0 mr-2.5 transition-colors ${isTheoryActive ? 'text-amber-accent' : 'text-ink-muted group-hover:text-ink-text'}`} />
             <span className="flex-1 text-[13px] text-left truncate">Theory Questions</span>
             <span className={`text-[11px] font-mono tabular-nums ${isTheoryActive ? 'text-amber-accent' : 'text-ink-subtle'}`}>
-              20
+              {theoryQuestions.length}
             </span>
           </button>
         </div>
