@@ -2,7 +2,7 @@ import { p } from '../helper.js';
 
 export const heapPriorityQueue = {
     id: 'heap-priority-queue',
-    name: 'Heap / Priority Queue',
+    name: 'Heap & Priority Queue',
     icon: '⏫',
     problems: [
       p('Kth Largest Element in a Stream', 'Easy', 'Design a class to find the kth largest element in a stream.'),

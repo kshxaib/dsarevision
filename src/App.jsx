@@ -252,7 +252,7 @@ export default function App() {
       </button>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen lg:pl-64">
+      <div className="flex-1 flex flex-col min-h-screen lg:pl-72">
         {/* Main page content - clean ~880px max-width */}
         <main className="flex-1 w-full max-w-[880px] mx-auto px-4 sm:px-6 py-8">
           {isTheoryView ? (

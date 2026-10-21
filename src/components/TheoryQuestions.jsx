@@ -87,7 +87,7 @@ export default function TheoryQuestions() {
                     <ul className="space-y-1 text-xs sm:text-sm">
                       {ans.types.map((type, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-ink-muted">
-                          <span className="text-easy font-bold">•</span>
+                          <span className="text-ink-subtle font-bold">•</span>
                           <span>{type}</span>
                         </li>
                       ))}
@@ -104,7 +104,7 @@ export default function TheoryQuestions() {
                     <div className="space-y-1.5 text-xs">
                       {ans.advantages.map((adv, idx) => (
                         <div key={idx} className="leading-relaxed">
-                          <strong className="text-easy">{adv.title}: </strong>
+                          <strong className="text-ink-text">{adv.title}: </strong>
                           <span className="text-ink-muted">{adv.detail}</span>
                         </div>
                       ))}
@@ -121,7 +121,7 @@ export default function TheoryQuestions() {
                     <ul className="space-y-1 text-xs">
                       {ans.tradeoffs.map((to, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-ink-muted">
-                          <span className="text-medium font-bold">•</span>
+                          <span className="text-ink-subtle font-bold">•</span>
                           <span>{to}</span>
                         </li>
                       ))}
@@ -275,14 +275,14 @@ export default function TheoryQuestions() {
                         if (typeof app === 'string') {
                           return (
                             <li key={idx} className="flex items-start gap-2 text-ink-muted">
-                              <span className="text-amber-accent font-bold">•</span>
+                              <span className="text-ink-subtle font-bold">•</span>
                               <span>{app}</span>
                             </li>
                           );
                         }
                         return (
                           <li key={idx} className="flex items-start gap-2 text-ink-muted">
-                            <span className="text-amber-accent font-bold">•</span>
+                            <span className="text-ink-subtle font-bold">•</span>
                             <span><strong className="text-ink-text">{app.domain}:</strong> {app.detail}</span>
                           </li>
                         );

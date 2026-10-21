@@ -63,7 +63,7 @@ export default function AppSidebar({
 
       {/* Fixed Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#0F0F11] border-r border-ink-border z-50 flex flex-col overflow-hidden transition-transform duration-200 ${isMobile ? (isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full') : 'translate-x-0'
+        className={`fixed top-0 left-0 h-full w-72 bg-[#0F0F11] border-r border-ink-border z-50 flex flex-col overflow-hidden transition-transform duration-200 ${isMobile ? (isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full') : 'translate-x-0'
           }`}
       >
         {/* Search Bar at the Very Top */}
@@ -137,7 +137,7 @@ export default function AppSidebar({
                   </span>
 
                   {/* Pattern Name */}
-                  <span className="flex-1 text-[13px] text-left truncate ml-2.5">
+                  <span className="flex-1 text-[13px] text-left truncate ml-2.5" title={pattern.name}>
                     {pattern.name}
                   </span>
 
