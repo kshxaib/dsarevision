@@ -397,7 +397,7 @@ export const twoPointers = {
           ]
         },
         optimal: {
-          idea: 'Use two pointers from left and right maintaining leftMax and rightMax. Water trapped is limited by the shorter boundary, allowing us to compute trapped water and move the smaller pointer inward in a single pass.',
+          idea: 'Two pointers (left and right) with leftMax and rightMax:\n\n• Shorter boundary limits water trapped: process the smaller side first.\n• If height[left] < height[right]: update leftMax or trap (leftMax - height[left]); left++.\n• Otherwise: update rightMax or trap (rightMax - height[right]); right--.',
           code: `class Solution {
     public int trap(int[] height) {
         int left = 0;

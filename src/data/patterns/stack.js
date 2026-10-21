@@ -203,7 +203,7 @@ export const stack = {
           { input: 'tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]', output: '22' }
         ],
         optimal: {
-          idea: 'Use a Stack to evaluate RPN. Iterate through tokens: if the token is an operand, push it onto the stack. If it is an operator, pop the top two operands (second operand b, then first operand a), apply the operation (a op b), and push the result back onto the stack. The final answer will be at the top of the stack.',
+          idea: 'Evaluate RPN expression using a Stack:\n\n• If operand: Parse integer and push onto stack.\n• If operator (+, -, *, /): Pop b, pop a, compute (a op b), and push result back.\n• Result is the final element at stack.peek().',
           code: `class Solution {
     public int evalRPN(String[] tokens) {
         Stack<Integer> stack = new Stack<>();              // Holds operands
@@ -608,7 +608,7 @@ export const stack = {
           ]
         },
         optimal: {
-          idea: 'Single-Pass Monotonic Increasing Stack: maintain bar indices. When a smaller bar heights[i] is found, pop bars from the stack. For each popped bar, current index i is its NSE, and the new stack top is its PSE! When the loop finishes, process remaining elements in stack with NSE = n.',
+          idea: 'Single-Pass Monotonic Stack (increasing heights):\n\n• When heights[i] < stack top: Pop bar.\n• For popped bar: NSE = i, and PSE = new stack top.\n• Width = NSE - PSE - 1. Compute area and update max.\n• When array ends, process remaining stack bars with NSE = n.',
           code: `class Solution {
     public int largestRectangleArea(int[] heights) {
         int n = heights.length;

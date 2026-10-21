@@ -454,7 +454,7 @@ export const slidingWindow = {
           ]
         },
         optimal: {
-          idea: 'Use sliding window with two pointers (left and right) and a 256-size frequency map hash[]. Prepopulate hash[] with characters of t. Expand right: decrement hash[rightChar] and increment count if rightChar was needed (> 0). When count == t.length(), all characters are matched: update minLen and startingIdx, then shrink window from left by incrementing hash[leftChar] and decrementing count if an essential character leaves.',
+          idea: 'Two-pointer sliding window with a frequency map:\n\n• Expand right: Decrement hash[char]. If needed (> 0), increment count.\n• When count == t.length(): Valid window found. Update minLen, then shrink left until no longer valid.',
           code: `class Solution {
     public String minWindow(String s, String t) {
         int n = s.length();
@@ -566,7 +566,7 @@ export const slidingWindow = {
           ]
         },
         optimal: {
-          idea: 'Use a monotonic decreasing Deque storing indices. Elements in the deque are kept in strictly decreasing order of their values: smaller elements at the back are popped before adding nums[i]. For sliding: discard indices that fall outside the current window (deque.peekFirst() <= i - k). The maximum of the current window is always at the front: nums[deque.peekFirst()].',
+          idea: 'Monotonic decreasing Deque storing indices:\n\n• Pop from back if element <= nums[i] to maintain decreasing order.\n• Pop from front if index <= i - k (out of current window bounds).\n• Current window maximum is always at front: nums[deque.peekFirst()].',
           code: `class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;

@@ -322,7 +322,7 @@ export const binarySearch = {
           ]
         },
         optimal: {
-          idea: 'In a rotated sorted array, dividing the array at mid always produces at least one sorted half. Identify which half (left [start...mid] or right [mid...end]) is sorted. Then check if target k falls within that sorted half\'s boundaries to eliminate the other half.',
+          idea: 'Binary Search (one half is always sorted):\n\n• If left half sorted (nums[low] <= nums[mid]): Check if target is in [nums[low], nums[mid]]. If yes, search left; else search right.\n• Else right half sorted: Check if target is in [nums[mid], nums[high]]. If yes, search right; else search left.',
           code: `class Solution {
     public int search(int[] nums, int k) {
        int start = 0;
@@ -684,7 +684,7 @@ export const binarySearch = {
           ]
         },
         optimal: {
-          idea: 'Binary search on the partition of the smaller array. Partition both arrays such that the left combined partition has half of the total elements. If left1 <= right2 and left2 <= right1, valid partition is found.',
+          idea: 'Binary search on the partition of the smaller array:\n\n• Partition both arrays so left side has (m + n + 1) / 2 elements.\n• Valid condition: left1 <= right2 && left2 <= right1.\n• Median: max(lefts) for odd, or average(max(lefts), min(rights)) for even.',
           code: `class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int n = nums1.length;

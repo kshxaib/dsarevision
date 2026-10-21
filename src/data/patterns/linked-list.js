@@ -439,7 +439,7 @@ export const linkedList = {
           ]
         },
         optimal: {
-          idea: 'Three-step in-place solution: 1) Find the middle node using slow and fast pointers. 2) Reverse the second half of the list. 3) Interleave / merge nodes from the first half and the reversed second half alternately.',
+          idea: 'Three-step in-place solution:\n1. Find middle of the list using slow & fast pointers.\n2. Reverse the second half.\n3. Interleave/merge the first and reversed second halves alternately.',
           code: `class Solution {
     public void reorderList(ListNode head) {
         if(head == null || head.next == null){
@@ -510,7 +510,7 @@ export const linkedList = {
           { input: 'l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]', output: '[8,9,9,9,0,0,0,1]' }
         ],
         optimal: {
-          idea: 'Simulate elementary math addition column-by-column from least significant digit to most significant digit. Maintain a dummy node and a carry variable. At each step, compute sum = carry + (l1 != null ? l1.val : 0) + (l2 != null ? l2.val : 0), create a new node with value sum % 10, update carry = sum / 10, and advance pointers until both lists are fully traversed and carry is 0.',
+          idea: 'Simulate elementary addition column-by-column using a dummy node:\n\n• sum = carry + l1.val + l2.val\n• Create node with sum % 10, update carry = sum / 10\n• Advance pointers until both lists and carry are exhausted.',
           code: `class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(-1);
@@ -569,7 +569,7 @@ export const linkedList = {
           { input: 'nums = [3,3,3,3,3]', output: '3' }
         ],
         optimal: {
-          idea: 'Treat the array as a linked list where index i points to nums[i]. Because numbers are in range [1, n] with length n + 1, a cycle is guaranteed by the Pigeonhole Principle. Use Floyd\'s Tortoise and Hare algorithm: Phase 1 moves slow by 1 step and fast by 2 steps until they collide. Phase 2 resets slow to 0 and moves both pointers by 1 step; their meeting point is the start of the cycle, which is the duplicate number.',
+          idea: 'Treat array as a linked list (i -> nums[i]) and use Floyd\'s Cycle Detection:\n\n• Phase 1: Move slow (1 step) and fast (2 steps) until they collide in the cycle.\n• Phase 2: Reset slow to 0. Move both by 1 step; they will meet at the cycle entrance (the duplicate number).',
           code: `class Solution {
     public int findDuplicate(int[] nums) {
         // Floyd's Tortoise and Hare (Cycle Detection)
@@ -660,7 +660,7 @@ export const linkedList = {
           ]
         },
         optimal: {
-          idea: 'Solve in O(1) auxiliary space using a 3-step in-place interleaving strategy:\n1. Insert copy nodes directly in-between each original node and its next node (A -> A\' -> B -> B\').\n2. Connect random pointers: for each copied node (curr.next), its random pointer points to curr.random.next.\n3. Extract the copied list: unweave the interleaved list back into original and cloned lists, restoring original pointers.',
+          idea: 'Three-step in-place interleave in O(1) auxiliary space:\n\n1. Interleave: Insert clone node right after each original node (A -> A\' -> B -> B\').\n2. Random pointers: copiedNode.random = curr.random.next.\n3. Unweave: Extract cloned list and restore original list links.',
           code: `class Solution {
     public Node copyRandomList(Node head) {
         if(head == null){
@@ -850,7 +850,7 @@ export const linkedList = {
           ]
         },
         optimal: {
-          idea: 'Use a Min-Heap (PriorityQueue<ListNode>) of size at most k. Insert the head node of each non-empty list. Repeatedly extract the minimum node, attach it to the result list, and if that extracted node has a next node, insert next into the min-heap. This ensures we always pick the globally minimum available element in O(log k) time.',
+          idea: 'Use a Min-Heap (PriorityQueue<ListNode>) of size k:\n\n• Add the head of each non-empty list to the heap.\n• Repeatedly poll the smallest node, attach it to the result list, and push its next node if present.',
           code: `class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         if(lists.length == 0){
@@ -911,7 +911,7 @@ export const linkedList = {
           { input: 'head = [1,2,3,4,5], k = 3', output: '[3,2,1,4,5]' }
         ],
         optimal: {
-          idea: 'Reverse the linked list in groups of k in-place:\n1. For each group starting at temp, find the k-th node using findKthNode(temp, k). If fewer than k nodes remain, preserve them by connecting prev.next = temp and break.\n2. Temporarily isolate the k-group by saving nextNode = kthNode.next and setting kthNode.next = null.\n3. Reverse the isolated k nodes in-place.\n4. Connect: If it is the first group (temp == head), update head = kthNode; otherwise link prev.next = kthNode.\n5. Update prev = temp (as temp is now the tail of this reversed group) and advance temp = nextNode.',
+          idea: 'Reverse in groups of k in-place:\n\n1. Find k-th node: If fewer than k nodes remain, preserve them and break.\n2. Isolate & reverse: Detach k-group (kthNode.next = null) and reverse it in-place.\n3. Connect: Link previous group tail to the new reversed head.\n4. Repeat for the remaining list.',
           code: `class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode temp = head;
@@ -987,6 +987,112 @@ export const linkedList = {
           ]
         }
       },
-      p('LRU Cache', 'Medium', 'Design a Least Recently Used (LRU) cache.'),
+      {
+        id: 'lru-cache',
+        title: 'LRU Cache',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/lru-cache/description/',
+        definition: 'Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement the LRUCache class with get(key) and put(key, value) in O(1) average time complexity.',
+        examples: [
+          {
+            input: '["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]\n[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]',
+            output: '[null, null, null, 1, null, -1, null, -1, 3, 4]',
+            explanation: 'LRUCache lRUCache = new LRUCache(2);\nlRUCache.put(1, 1); // cache: {1=1}\nlRUCache.put(2, 2); // cache: {1=1, 2=2}\nlRUCache.get(1);    // return 1 (1 is MRU)\nlRUCache.put(3, 3); // evicts key 2, cache: {1=1, 3=3}\nlRUCache.get(2);    // return -1 (not found)\nlRUCache.put(4, 4); // evicts key 1, cache: {4=4, 3=3}\nlRUCache.get(1);    // return -1 (not found)\nlRUCache.get(3);    // return 3\nlRUCache.get(4);    // return 4'
+          }
+        ],
+        optimal: {
+          idea: 'Combine a Doubly Linked List (DLL) with a HashMap to achieve O(1) operations:\n\n• HashMap<Integer, Node>: Gives O(1) direct lookup to find any cached node.\n• Doubly Linked List: Tracks recency using a dummy head (MRU) and dummy tail (LRU).\n\nKey Operations:\n• get(key): If key exists, move its node to the MRU position (right after head) and return its value.\n• put(key, value): If key exists, update and move to MRU. If capacity is reached, evict the LRU node (tail.prev) from both the map and DLL.',
+          code: `class LRUCache {
+    class Node {
+        int key;
+        int val;
+        Node next;
+        Node prev;
+
+        Node(int key, int val){
+            this.key = key;
+            this.val = val;
+        }
+    }
+
+    Node head = new Node(-1, -1);                          // Dummy MRU head
+    Node tail = new Node(-1, -1);                          // Dummy LRU tail
+
+    int cap;
+    HashMap<Integer, Node> map = new HashMap<>();
+
+    public LRUCache(int capacity) {
+        cap = capacity;
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        if(map.containsKey(key)){
+            Node existingNode = map.get(key);
+            int val = existingNode.val;
+
+            map.remove(key);
+            deleteNode(existingNode);
+
+            addNode(existingNode);                         // Move to MRU position (right after head)
+
+            map.put(key, head.next);
+            return val;
+        }
+
+        return -1;
+    }
+
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+            Node existingNode = map.get(key);
+            map.remove(key);
+            deleteNode(existingNode);
+        }
+
+        if(map.size() == cap){
+            map.remove(tail.prev.key);                     // Evict LRU node (right before tail)
+            deleteNode(tail.prev);
+        }
+
+        addNode(new Node(key, value));                     // Add new node at MRU position
+        map.put(key, head.next);
+    }
+
+    // Insert node right after dummy head (MRU position)
+    public void addNode(Node newNode){
+        Node temp = head.next;
+        newNode.next = temp;
+        newNode.prev = head;
+
+        head.next = newNode;
+        temp.prev = newNode;
+    }
+
+    // Remove node from doubly linked list in O(1)
+    public void deleteNode(Node node){
+        Node prevNode = node.prev;
+        Node nextNode = node.next;
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+    }
+}`,
+          time: 'O(1)',
+          timeDesc: '• get(key): O(1) average time for hash map lookup, node deletion, and node insertion.\n• put(key, value): O(1) average time for hash map lookup, deletion, eviction, and insertion.\n• Total Time: O(1) per operation',
+          space: 'O(capacity)',
+          spaceDesc: 'O(capacity) auxiliary space to store at most capacity entries in the Doubly Linked List and HashMap.',
+          walkthrough: [
+            "Initialize LRUCache: store capacity cap and connect dummy head and tail (head.next = tail, tail.prev = head).",
+            "get(key): Check if map contains key. If found, extract val, remove from map, call deleteNode(existingNode), call addNode(existingNode) to put it at MRU, re-add to map, and return val. Otherwise return -1.",
+            "put(key, value): If key is already in map, remove it and delete existingNode from DLL.",
+            "If map.size() == cap: Evict the least recently used node by removing tail.prev.key from map and calling deleteNode(tail.prev).",
+            "Instantiate new Node(key, value), add it right after head via addNode, and insert into map.",
+            "addNode(newNode): Link newNode between head and head.next in O(1).",
+            "deleteNode(node): Reconnect node.prev and node.next in O(1)."
+          ]
+        }
+      },
     ]
   };

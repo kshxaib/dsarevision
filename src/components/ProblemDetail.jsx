@@ -99,7 +99,7 @@ function ApproachContent({ approach }) {
       {approach.idea && (
         <div>
           <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1.5">Idea</p>
-          <p className="text-ink-muted text-sm leading-relaxed">{approach.idea}</p>
+          <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{approach.idea}</p>
         </div>
       )}
       {approach.code && (
