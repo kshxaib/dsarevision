@@ -212,7 +212,95 @@ export const trees = {
           ]
         }
       },
-      p('Balanced Binary Tree', 'Easy', 'Check if a binary tree is height-balanced.'),
+      {
+        id: 'balanced-binary-tree',
+        title: 'Balanced Binary Tree',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/balanced-binary-tree/description/',
+        definition: 'Given a binary tree, determine if it is height-balanced. A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.',
+        examples: [
+          { input: 'root = [3,9,20,null,null,15,7]', output: 'true' },
+          { input: 'root = [1,2,2,3,3,null,null,4,4]', output: 'false' },
+          { input: 'root = []', output: 'true' }
+        ],
+        brute: {
+          idea: 'Top-Down Height Check for Every Node:\n\n• For each node, calculate left height (LH) and right height (RH).\n• If |LH - RH| > 1, tree is unbalanced (return false).\n• Recursively check that left and right subtrees are both balanced.',
+          code: `class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if(root == null) return true;
+
+        int LH = findHeight(root.left);
+        int RH = findHeight(root.right);
+
+        if(Math.abs(LH - RH) > 1) return false;
+
+        boolean left = isBalanced(root.left);
+        boolean right = isBalanced(root.right);
+
+        return left && right;
+    }
+
+    private int findHeight(TreeNode root) {
+        if(root == null) return 0;
+
+        int lh = findHeight(root.left);
+        int rh = findHeight(root.right);
+
+        return 1+ Math.max(lh, rh);
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Height calculation repeatedly scans subtrees at every node.\n• Total Time: O(n²)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height.',
+          walkthrough: [
+            "Base case: If root == null, return true.",
+            "Find LH = findHeight(root.left) and RH = findHeight(root.right).",
+            "If Math.abs(LH - RH) > 1, return false.",
+            "Recursively verify left and right subtrees: isBalanced(root.left) && isBalanced(root.right).",
+            "Return true if all nodes satisfy the condition."
+          ]
+        },
+        optimal: {
+          idea: 'Bottom-Up DFS with -1 Flag (Early Exit):\n\n• Traverse bottom-up. If any subtree is unbalanced, return -1 immediately.\n• If left height or right height is -1, or if |lh - rh| > 1, propagate -1 up.\n• Otherwise return 1 + max(lh, rh). If root returns -1, return false.',
+          code: `class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if(findHeight(root) == -1){
+            return false;
+        }
+
+        return true;
+    }
+
+    private int findHeight(TreeNode root) {
+        if(root == null) return 0;
+
+        int lh = findHeight(root.left);
+        int rh = findHeight(root.right);
+        
+        if(lh == -1 || rh == -1) return -1;
+
+        if(Math.abs(lh - rh) > 1){
+            return -1;
+        }
+
+        return 1+ Math.max(lh, rh);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits every node once with immediate early exit when unbalanced.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
+          walkthrough: [
+            "Check if findHeight(root) == -1; return false if true, else return true.",
+            "In findHeight: If root == null, return 0.",
+            "Recursively get lh = findHeight(root.left) and rh = findHeight(root.right).",
+            "If lh == -1 or rh == -1, return -1 (early termination).",
+            "If Math.abs(lh - rh) > 1, return -1.",
+            "Return 1 + Math.max(lh, rh) to parent."
+          ]
+        }
+      },
       p('Subtree of Another Tree', 'Easy', 'Check if a tree is a subtree of another tree.'),
       p('Lowest Common Ancestor of a Binary Search Tree', 'Medium', 'Find the lowest common ancestor of two nodes in a BST.'),
       p('Binary Tree Level Order Traversal', 'Medium', 'Traverse the tree level by level (BFS).'),
