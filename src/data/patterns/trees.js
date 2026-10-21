@@ -387,7 +387,100 @@ export const trees = {
           ]
         }
       },
-      p('Lowest Common Ancestor of a Binary Search Tree', 'Medium', 'Find the lowest common ancestor of two nodes in a BST.'),
+      {
+        id: 'lowest-common-ancestor-of-a-binary-search-tree',
+        title: 'Lowest Common Ancestor of a Binary Search Tree',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/',
+        definition: 'Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST. The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).',
+        examples: [
+          { input: 'root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8', output: '6' },
+          { input: 'root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4', output: '2' },
+          { input: 'root = [2,1], p = 2, q = 1', output: '2' }
+        ],
+        brute: {
+          idea: 'Path Comparison (Root-to-Node Paths):\n\n• Find path from root to node p and path from root to node q using backtracking.\n• Compare both paths from index 0 to find the last common node before they diverge.\n• Return that last common node as the LCA.',
+          code: `class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        List<TreeNode> pathP = new ArrayList<>();
+        List<TreeNode> pathQ = new ArrayList<>();
+
+        findPath(root, p, pathP);
+        findPath(root, q, pathQ);
+
+        TreeNode lca = null;
+        int i=0;
+
+        while(i<pathP.size() && i<pathQ.size() && pathP.get(i) == pathQ.get(i)){
+            lca = pathP.get(i);
+            i++;
+        }
+
+        return lca;
+    }
+
+    private boolean findPath(TreeNode root, TreeNode target, List<TreeNode> path) {
+        if(root == null) return false;
+
+        path.add(root);
+
+        if(root == target) return true;
+
+        if(findPath(root.left, target, path) || findPath(root.right, target, path)){
+            return true;
+        }
+
+        path.remove(path.size() -1);
+        return false;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Backtracking finds root-to-node path for both nodes in O(n) time.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary memory for path lists and recursion call stack.',
+          walkthrough: [
+            "Initialize List<TreeNode> pathP and pathQ.",
+            "Call helper findPath(root, p, pathP) and findPath(root, q, pathQ).",
+            "While both paths match at index i, update lca = pathP.get(i) and increment i.",
+            "Return lca when paths diverge.",
+            "In findPath: Backtrack path by adding current node, testing children, and removing if target not found."
+          ]
+        },
+        optimal: {
+          idea: 'BST Invariant Navigation (Iterative O(1) Space):\n\n• If both p and q values are greater than current node, LCA must be in right subtree.\n• If both p and q values are smaller than current node, LCA must be in left subtree.\n• Otherwise current node is the split point where p and q branch off (return curr).',
+          code: `class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode curr = root;
+
+        while (curr != null) {
+            if (curr.val < p.val && curr.val < q.val) {
+                curr = curr.right;
+            }
+
+            else if (curr.val > p.val && curr.val > q.val) {
+                curr = curr.left;
+            }
+
+            else {
+                return curr;
+            }
+        }
+
+        return null;
+    }
+}`,
+          time: 'O(h)',
+          timeDesc: '• Travels down a single path from root to LCA in O(h) steps (O(log n) balanced, O(n) skewed).\n• Total Time: O(h)',
+          space: 'O(1)',
+          spaceDesc: 'O(1) auxiliary space as it traverses iteratively without extra memory or recursion stack.',
+          walkthrough: [
+            "Start pointer at curr = root.",
+            "If curr.val < p.val && curr.val < q.val, move right: curr = curr.right.",
+            "Else if curr.val > p.val && curr.val > q.val, move left: curr = curr.left.",
+            "Else (split point reached where p and q branch, or one matches curr), return curr."
+          ]
+        }
+      },
       p('Binary Tree Level Order Traversal', 'Medium', 'Traverse the tree level by level (BFS).'),
       p('Binary Tree Right Side View', 'Medium', 'Return the values visible from the right side of the tree.'),
       p('Count Good Nodes in Binary Tree', 'Medium', 'Count nodes where the path from root has no greater value.'),
