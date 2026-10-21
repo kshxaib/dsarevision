@@ -103,7 +103,7 @@ export const trees = {
           { input: 'root = [3,9,20,null,null,15,7]', output: '3' },
           { input: 'root = [1,null,2]', output: '2' }
         ],
-        brute: {
+        optimal: {
           idea: 'Recursive DFS (Post-order Traversal):\n\n• Base case: If root is null, return 0.\n• Recursively calculate left subtree depth (lh) and right subtree depth (rh).\n• Return 1 + Math.max(lh, rh).',
           code: `class Solution {
     public int maxDepth(TreeNode root) {
@@ -125,45 +125,6 @@ export const trees = {
             "Compute right subtree depth: rh = maxDepth(root.right).",
             "Return 1 + Math.max(lh, rh)."
           ]
-        },
-        optimal: {
-          idea: 'Iterative BFS (Level Order Traversal):\n\n• Traverse the tree level by level using a Queue.\n• For each level, process all nodes at current depth and increment depth by 1.\n• Return depth once queue is empty.',
-          code: `class Solution {
-    public int maxDepth(TreeNode root) {
-        if(root == null) return 0;
-
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        int depth = 0;
-
-        while(!queue.isEmpty()){
-            int size = queue.size();
-
-            // Process all nodes at current level
-            for(int i = 0; i < size; i++){
-                TreeNode curr = queue.poll();
-                if(curr.left != null) queue.offer(curr.left);
-                if(curr.right != null) queue.offer(curr.right);
-            }
-
-            depth++;
-        }
-
-        return depth;
-    }
-}`,
-          time: 'O(n)',
-          timeDesc: '• Every node is pushed and polled from the queue once.\n• Total Time: O(n)',
-          space: 'O(w)',
-          spaceDesc: 'O(w) queue memory where w is maximum tree width.',
-          walkthrough: [
-            "Base case: If root == null, return 0.",
-            "Initialize Queue and enqueue root. Initialize depth = 0.",
-            "While queue is not empty, get current level size = queue.size().",
-            "Poll all nodes at current level and enqueue existing children.",
-            "Increment depth by 1 after finishing each level.",
-            "Return depth once queue is empty."
-          ]
         }
       },
       {
@@ -177,7 +138,7 @@ export const trees = {
           { input: 'p = [1,2], q = [1,null,2]', output: 'false' },
           { input: 'p = [1,2,1], q = [1,1,2]', output: 'false' }
         ],
-        brute: {
+        optimal: {
           idea: 'Recursive DFS traversal:\n\n• If both p and q are null, both trees are identical at this branch (return true).\n• If only one is null or values differ (p.val != q.val), trees are not identical (return false).\n• Recursively verify left and right subtrees match.',
           code: `class Solution {
     public boolean isSameTree(TreeNode p, TreeNode q) {
@@ -204,47 +165,53 @@ export const trees = {
             "Recursively verify right children: right = isSameTree(p.right, q.right).",
             "Return left && right."
           ]
-        },
-        optimal: {
-          idea: 'Iterative BFS using a Queue:\n\n• Enqueue pairs of corresponding nodes from p and q.\n• Poll two nodes at each step and compare structure and values.\n• Enqueue matching left and right children pairs until queue is empty.',
-          code: `class Solution {
-    public boolean isSameTree(TreeNode p, TreeNode q) {
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(p);
-        queue.offer(q);
-
-        while(!queue.isEmpty()){
-            TreeNode first = queue.poll();
-            TreeNode second = queue.poll();
-
-            if(first == null && second == null) continue;
-            if(first == null || second == null) return false;
-            if(first.val != second.val) return false;
-
-            queue.offer(first.left);
-            queue.offer(second.left);
-            queue.offer(first.right);
-            queue.offer(second.right);
         }
+      },
+      {
+        id: 'diameter-of-binary-tree',
+        title: 'Diameter of Binary Tree',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/diameter-of-binary-tree/description/',
+        definition: 'Given the root of a binary tree, return the length of the diameter of the tree. The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.',
+        examples: [
+          { input: 'root = [1,2,3,4,5]', output: '3' },
+          { input: 'root = [1,2]', output: '1' }
+        ],
+        optimal: {
+          idea: 'Single-Pass Post-order DFS (Bottom-Up):\n\n• Calculate height of each subtree while simultaneously updating the diameter array.\n• At each node, diameter through this node = leftHeight + rightHeight.\n• Return 1 + max(leftHeight, rightHeight) to parent for height calculation in O(n) total time.',
+          code: `class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        int diameter[] = new int[1];
 
-        return true;
+        calHeight(root, diameter);
+        return diameter[0];        
+    }
+
+    private int calHeight(TreeNode root, int diameter[]){
+        if(root == null) return 0;
+
+        int leftHeight = calHeight(root.left, diameter);
+        int rightHeight = calHeight(root.right, diameter);
+
+        diameter[0] = Math.max(diameter[0], leftHeight + rightHeight);
+        return 1+ Math.max(leftHeight, rightHeight);
     }
 }`,
           time: 'O(n)',
-          timeDesc: '• Traverses corresponding node pairs once.\n• Total Time: O(n)',
-          space: 'O(w)',
-          spaceDesc: 'O(w) queue memory where w is the maximum width of the tree.',
+          timeDesc: '• Each node is visited once during bottom-up height computation.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
           walkthrough: [
-            "Initialize Queue<TreeNode> and offer roots p and q.",
-            "While queue is not empty, poll two nodes: first and second.",
-            "If both nodes are null, continue to next pair.",
-            "If one node is null or first.val != second.val, return false.",
-            "Enqueue first.left and second.left, followed by first.right and second.right.",
-            "Return true once queue is emptied without mismatches."
+            "Initialize a 1-element array int diameter[] = new int[1] to pass by reference.",
+            "Call helper calHeight(root, diameter).",
+            "Base case: If root is null, return 0.",
+            "Recursively find leftHeight and rightHeight.",
+            "Update max diameter: diameter[0] = Math.max(diameter[0], leftHeight + rightHeight).",
+            "Return 1 + Math.max(leftHeight, rightHeight) to parent.",
+            "Return diameter[0] as final answer."
           ]
         }
       },
-      p('Diameter of Binary Tree', 'Easy', 'Find the longest path between any two nodes in a tree.'),
       p('Balanced Binary Tree', 'Easy', 'Check if a binary tree is height-balanced.'),
       p('Subtree of Another Tree', 'Easy', 'Check if a tree is a subtree of another tree.'),
       p('Lowest Common Ancestor of a Binary Search Tree', 'Medium', 'Find the lowest common ancestor of two nodes in a BST.'),
