@@ -602,7 +602,128 @@ export const trees = {
           ]
         }
       },
-      p('Count Good Nodes in Binary Tree', 'Medium', 'Count nodes where the path from root has no greater value.'),
+      {
+        id: 'count-good-nodes-in-binary-tree',
+        title: 'Count Good Nodes in Binary Tree',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/count-good-nodes-in-binary-tree/description/',
+        definition: 'Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X. Return the number of good nodes in the binary tree.',
+        examples: [
+          { input: 'root = [3,1,4,3,null,1,5]', output: '4' },
+          { input: 'root = [3,3,null,4,2]', output: '3' },
+          { input: 'root = [1]', output: '1' }
+        ],
+        brute: {
+          idea: 'Level-Order Traversal with Path Verification:\n\n• For each node visited via BFS, reconstruct the full path from root using backtracking (findPath).\n• Scan the path: if any ancestor has a value strictly greater than node.val, it is not a good node.\n• Increment countGoodNodes whenever all path ancestors have values ≤ node.val.',
+          code: `class Solution {
+    public int goodNodes(TreeNode root) {
+        if(root == null) return 0;
+
+        int countGoodNodes = 0;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while(!queue.isEmpty()){
+            int currLvlSize = queue.size();
+
+            for(int i=0; i<currLvlSize; i++){
+                TreeNode node = queue.poll();
+
+                if(isGoodNode(root, node)){
+                    countGoodNodes++;
+                }
+
+                if(node.left != null){
+                    queue.offer(node.left);
+                }
+                if(node.right != null){
+                    queue.offer(node.right);
+                }
+            }
+        }
+
+        return countGoodNodes;
+    }
+
+    private boolean isGoodNode(TreeNode root, TreeNode node){
+        List<TreeNode> path = new ArrayList<>();
+        findPath(root, node, path);
+
+        for(int i=0; i<path.size(); i++){
+            if(path.get(i).val > node.val){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean findPath(TreeNode root, TreeNode target, List<TreeNode> path){
+        if(root == null) return false;
+
+        path.add(root);
+
+        if(root == target) return true;
+
+        if(findPath(root.left, target, path) || findPath(root.right, target, path)){
+            return true;
+        }
+
+        path.remove(path.size() -1);
+        return false;
+    }
+}`,
+          time: 'O(n²)',
+          timeDesc: '• Reconstructs and scans a path of length up to n for each of the n nodes.\n• Total Time: O(n²)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary memory for the queue, path list, and call stack.',
+          walkthrough: [
+            "If root == null, return 0.",
+            "Initialize Queue<TreeNode> and add root.",
+            "For each node polled from queue, call isGoodNode(root, node).",
+            "In isGoodNode, backtrack path from root to target; return false if any ancestor has val > node.val.",
+            "Enqueue non-null left and right children.",
+            "Return countGoodNodes."
+          ]
+        },
+        optimal: {
+          idea: 'Single-Pass DFS with Running Maximum (maxTillNow):\n\n• Traverse down the tree while maintaining maxTillNow (the highest value seen on the current path from root).\n• If node.val >= maxTillNow, current node is good (count = 1) and update maxTillNow = node.val.\n• Recursively sum good nodes from left and right subtrees with the updated maxTillNow.',
+          code: `class Solution {
+    public int goodNodes(TreeNode root) {
+        return dfs(root, Integer.MIN_VALUE);        
+    }
+
+    private int dfs(TreeNode node, int maxTillNow){
+        if(node == null) return 0;
+
+        int count = 0;
+
+        if(node.val >= maxTillNow){
+            count = 1;
+            maxTillNow = node.val;
+        }
+
+        count += dfs(node.left, maxTillNow); 
+        count += dfs(node.right, maxTillNow); 
+
+        return count;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Each node in the tree is visited exactly once during DFS.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
+          walkthrough: [
+            "Start DFS from root with maxTillNow = Integer.MIN_VALUE.",
+            "Base case: If node == null, return 0.",
+            "If node.val >= maxTillNow, set count = 1 and update maxTillNow = node.val.",
+            "Recursively add count from left child: dfs(node.left, maxTillNow).",
+            "Recursively add count from right child: dfs(node.right, maxTillNow).",
+            "Return total count."
+          ]
+        }
+      },
       p('Validate Binary Search Tree', 'Medium', 'Check if a binary tree is a valid BST.'),
       p('Kth Smallest Element in a BST', 'Medium', 'Find the kth smallest element in a BST.'),
       p('Construct Binary Tree From Preorder and Inorder Traversal', 'Medium', 'Build a tree from preorder and inorder traversal arrays.'),
