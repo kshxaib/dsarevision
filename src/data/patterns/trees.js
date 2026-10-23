@@ -542,7 +542,66 @@ export const trees = {
           ]
         }
       },
-      p('Binary Tree Right Side View', 'Medium', 'Return the values visible from the right side of the tree.'),
+      {
+        id: 'binary-tree-right-side-view',
+        title: 'Binary Tree Right Side View',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/binary-tree-right-side-view/description/',
+        definition: 'Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.',
+        examples: [
+          { input: 'root = [1,2,3,null,5,null,4]', output: '[1,3,4]' },
+          { input: 'root = [1,null,3]', output: '[1,3]' },
+          { input: 'root = []', output: '[]' }
+        ],
+        optimal: {
+          idea: 'Breadth-First Search (Level-by-Level Rightmost Node Tracking):\n\n• Traverse the tree level by level using a Queue.\n• For each level of size currLvlSize, iterate through all nodes from left to right.\n• Continuously update rightMostValue = node.val so that it holds the last (rightmost) value at level completion.\n• Add rightMostValue to ans after processing each level.',
+          code: `class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+
+        if(root == null) return ans;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while(!queue.isEmpty()){
+            int currLvlSize = queue.size();
+            int rightMostValue = 0;
+
+            for(int i=0; i<currLvlSize; i++){
+                TreeNode node = queue.poll();
+
+                rightMostValue = node.val;
+
+                if(node.left != null){
+                    queue.offer(node.left);
+                }
+
+                if(node.right != null){
+                    queue.offer(node.right);
+                }
+            }
+
+            ans.add(rightMostValue);
+        }
+
+        return ans;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits every node in the binary tree exactly once.\n• Total Time: O(n)',
+          space: 'O(w)',
+          spaceDesc: 'O(w) queue memory where w is the maximum width of the tree.',
+          walkthrough: [
+            "Initialize List<Integer> ans; if root == null, return ans immediately.",
+            "Initialize Queue<TreeNode> and offer root.",
+            "While queue is not empty, get current level count: currLvlSize = queue.size().",
+            "Loop currLvlSize times: poll node, set rightMostValue = node.val, and enqueue non-null left and right children.",
+            "Append rightMostValue to ans.",
+            "Return ans once traversal finishes."
+          ]
+        }
+      },
       p('Count Good Nodes in Binary Tree', 'Medium', 'Count nodes where the path from root has no greater value.'),
       p('Validate Binary Search Tree', 'Medium', 'Check if a binary tree is a valid BST.'),
       p('Kth Smallest Element in a BST', 'Medium', 'Find the kth smallest element in a BST.'),
