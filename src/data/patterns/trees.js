@@ -952,6 +952,86 @@ export const trees = {
           ]
         }
       },
-      p('Serialize and Deserialize Binary Tree', 'Hard', 'Convert a tree to a string and reconstruct it back.'),
+      {
+        id: 'serialize-and-deserialize-binary-tree',
+        title: 'Serialize and Deserialize Binary Tree',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/serialize-and-deserialize-binary-tree/description/',
+        definition: 'Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link. Design an algorithm to serialize and deserialize a binary tree.',
+        examples: [
+          { input: 'root = [1,2,3,null,null,4,5]', output: '[1,2,3,null,null,4,5]' },
+          { input: 'root = []', output: '[]' }
+        ],
+        optimal: {
+          idea: 'Breadth-First Search (Level-Order Queue Serialization & Deserialization):\n\n• Serialize: Use a Queue to traverse level-by-level. If node is null, append "N,"; otherwise append node.val + "," and enqueue its left and right children.\n• Deserialize: Split the comma-separated string into a values array. Rebuild the root using values[0], then use a Queue to iteratively attach left and right children using two advancing pointer steps per parent node.',
+          code: `public class Codec {
+    public String serialize(TreeNode root) {
+        if(root == null) return "";
+
+        StringBuilder ans = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if(node == null){
+                ans.append("N,");
+                continue;
+            }
+
+            ans.append(node.val + ",");
+            queue.offer(node.left);
+            queue.offer(node.right);
+        }
+
+        return ans.toString();
+    }
+
+    public TreeNode deserialize(String data) {
+        if(data.equals("")) return null;
+
+        String values[] = data.split(",");
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.parseInt(values[0]));
+        queue.add(root);
+
+        int i=1;
+        while(!queue.isEmpty()){
+            TreeNode parent = queue.poll();
+            
+            if(!values[i].equals("N")){
+                TreeNode leftNode = new TreeNode(Integer.parseInt(values[i]));
+                parent.left = leftNode;
+                queue.offer(leftNode);
+            }
+            i++;
+
+            if(!values[i].equals("N")){
+                TreeNode rightNode = new TreeNode(Integer.parseInt(values[i]));
+                parent.right = rightNode;
+                queue.offer(rightNode);
+            }
+            i++;
+        }
+
+        return root;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Both serialize and deserialize visit each node and token exactly once.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary memory for the serialized string buffer, token array, and BFS queue.',
+          walkthrough: [
+            "Serialize: Return empty string if root == null. Level-order traverse with Queue, appending 'N,' for nulls and node.val + ',' for non-nulls.",
+            "Deserialize: Return null if string is empty. Split string by comma into values array.",
+            "Parse root = new TreeNode(Integer.parseInt(values[0])) and enqueue into queue.",
+            "Initialize index pointer i = 1 to iterate through tokens.",
+            "Poll parent: if values[i] != 'N', construct leftNode, attach parent.left = leftNode, and enqueue leftNode. Increment i.",
+            "If values[i] != 'N', construct rightNode, attach parent.right = rightNode, and enqueue rightNode. Increment i.",
+            "Return root once all tokens have been processed."
+          ]
+        }
+      },
     ]
   };
