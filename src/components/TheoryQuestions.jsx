@@ -1,8 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  ChevronDown,
-  ChevronRight,
-} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { theoryQuestions } from '../data/theoryQuestions';
 
 // Curated comparison table for Question 1
@@ -82,26 +79,27 @@ export default function TheoryQuestions() {
               {/* Question Row Header */}
               <div
                 onClick={() => toggleQuestion(q.id)}
-                className={`flex px-4 sm:px-6 py-4 items-center gap-3 sm:gap-4 w-full cursor-pointer select-none transition-colors ${
+                className={`w-full px-4 sm:px-6 py-4 flex items-center justify-between gap-3 sm:gap-4 transition-colors select-none cursor-pointer ${
                   isExpanded ? 'bg-accent/40' : 'hover:bg-accent/20'
                 }`}
               >
-                {/* Clean Number without box or gradient */}
-                <span className="font-mono text-sm font-semibold text-muted-foreground shrink-0 select-none">
-                  #{q.number}
-                </span>
+                <div className="flex-1 flex items-center gap-3 sm:gap-4 min-w-0">
+                  {/* Clean Number without box or gradient */}
+                  <span className="font-mono text-sm font-semibold text-muted-foreground shrink-0 select-none">
+                    Q{q.number}.
+                  </span>
+                  <h2 className="text-sm sm:text-base font-medium text-foreground leading-snug">
+                    {q.question}
+                  </h2>
+                </div>
 
-                {/* Question Title */}
-                <span className="font-medium text-sm sm:text-base text-foreground flex-1 leading-snug">
-                  {q.question}
-                </span>
-
-                {/* Chevron Toggle */}
-                {isExpanded ? (
-                  <ChevronDown className="text-muted-foreground size-4 shrink-0" />
-                ) : (
-                  <ChevronRight className="text-muted-foreground size-4 shrink-0" />
-                )}
+                <div className="shrink-0 text-muted-foreground">
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isExpanded ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
               </div>
 
               {/* Expanded Answer Content */}

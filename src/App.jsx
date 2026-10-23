@@ -3,7 +3,6 @@ import { Menu } from 'lucide-react';
 import { patterns } from './data/problems';
 import { vaultSubjects, getVaultSubjectById } from './data/vault';
 import Sidebar from './components/Sidebar';
-import WorkspaceOverview from './components/WorkspaceOverview';
 import DsaPatternsHub from './components/DsaPatternsHub';
 import ProblemList from './components/ProblemList';
 import ProblemDetail from './components/ProblemDetail';
@@ -16,10 +15,10 @@ import PasswordGate from './components/PasswordGate';
 function resolveInitialState() {
   const hash = window.location.hash.replace('#', '').trim();
 
-  // 1. Overview
-  if (!hash || hash === 'overview') {
+  // 1. Default / Theory
+  if (!hash || hash === 'overview' || hash === 'theory' || hash === 'theory-questions') {
     return {
-      viewMode: 'overview',
+      viewMode: 'theory',
       patternId: patterns[0]?.id || '',
       problem: null,
       vaultSubjectId: null,
@@ -94,7 +93,7 @@ function resolveInitialState() {
   }
 
   return {
-    viewMode: 'overview',
+    viewMode: 'theory',
     patternId: patterns[0]?.id || '',
     problem: null,
     vaultSubjectId: null,
@@ -266,21 +265,16 @@ export default function App() {
 
   // Unified Navigation Router
   const handleNavigate = (target) => {
-    if (target === 'overview') {
-      setViewMode('overview');
+    if (target === 'overview' || target === 'theory') {
+      setViewMode('theory');
       setActiveProblem(null);
       setActiveVaultSubjectId(null);
-      window.location.hash = '#overview';
+      window.location.hash = '#theory';
     } else if (target === 'dsa-patterns') {
       setViewMode('dsa-hub');
       setActiveProblem(null);
       setActiveVaultSubjectId(null);
       window.location.hash = '#dsa-patterns';
-    } else if (target === 'theory') {
-      setViewMode('theory');
-      setActiveProblem(null);
-      setActiveVaultSubjectId(null);
-      window.location.hash = '#theory';
     } else if (target === 'vault') {
       setViewMode('vault');
       setActiveProblem(null);
@@ -325,20 +319,14 @@ export default function App() {
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '').trim();
-      if (!hash || hash === 'overview') {
-        setViewMode('overview');
+      if (!hash || hash === 'overview' || hash === 'theory' || hash === 'theory-questions') {
+        setViewMode('theory');
         setActiveProblem(null);
         setActiveVaultSubjectId(null);
         return;
       }
       if (hash === 'dsa-patterns' || hash === 'patterns') {
         setViewMode('dsa-hub');
-        setActiveProblem(null);
-        setActiveVaultSubjectId(null);
-        return;
-      }
-      if (hash === 'theory' || hash === 'theory-questions') {
-        setViewMode('theory');
         setActiveProblem(null);
         setActiveVaultSubjectId(null);
         return;
@@ -423,15 +411,13 @@ export default function App() {
 
   // Current view identifier for Sidebar active state
   const sidebarCurrentView = useMemo(() => {
-    if (viewMode === 'overview') return 'overview';
-    if (viewMode === 'dsa-hub') return 'dsa-patterns';
     if (viewMode === 'theory') return 'theory';
-    if (viewMode === 'vault') return 'vault-cn';
+    if (viewMode === 'dsa-hub') return 'dsa-patterns';
     if (viewMode === 'vault-subject' && activeVaultSubjectId) {
       return 'vault-' + activeVaultSubjectId;
     }
     if (viewMode === 'dsa') return 'dsa-patterns';
-    return 'overview';
+    return 'theory';
   }, [viewMode, activeVaultSubjectId]);
 
   return (
@@ -474,28 +460,8 @@ export default function App() {
 
             {/* Main Content Area (reduced top gap) */}
             <main className="px-4 sm:px-8 pt-3 sm:pt-4 pb-12 flex-1">
-              {viewMode === 'overview' ? (
-                <WorkspaceOverview
-                  totalStats={totalStats}
-                  moduleStats={moduleStats}
-                  recentTopics={[
-                    { title: 'TCP vs UDP', subject: 'Computer Networks', route: 'vault-cn' },
-                    { title: 'ACID Properties & Isolation Levels', subject: 'DBMS', route: 'vault-dbms' },
-                    { title: 'Process vs Thread & Context Switching', subject: 'Operating Systems', route: 'vault-os' },
-                    { title: 'Binary Search on Answer', subject: 'DSA Patterns', route: 'dsa-patterns' },
-                  ]}
-                  continueTopic={{
-                    title: 'TCP Handshake & Connection Teardown',
-                    subtitle: 'Core CS / Computer Networks',
-                    revisedCount: vaultSubjects.find(s => s.id === 'cn')?.questions.filter(q => revisedVaultQuestions.has(q.id)).length || 1,
-                    totalCount: vaultSubjects.find(s => s.id === 'cn')?.questions.length || 7,
-                    percentage: Math.round(((vaultSubjects.find(s => s.id === 'cn')?.questions.filter(q => revisedVaultQuestions.has(q.id)).length || 1) / (vaultSubjects.find(s => s.id === 'cn')?.questions.length || 7)) * 100),
-                    target: 'vault-cn',
-                  }}
-                  onResumeSession={() => handleNavigate('vault-cn')}
-                  onOpenCommand={() => setCommandOpen(true)}
-                  onNavigate={handleNavigate}
-                />
+              {viewMode === 'theory' ? (
+                <TheoryQuestions />
               ) : viewMode === 'dsa-hub' ? (
                 <DsaPatternsHub
                   patterns={patterns}
@@ -508,8 +474,6 @@ export default function App() {
                     window.scrollTo({ top: 0, behavior: 'instant' });
                   }}
                 />
-              ) : viewMode === 'theory' ? (
-                <TheoryQuestions />
               ) : viewMode === 'vault' ? (
                 <VaultHub
                   onSelectSubject={(id) => handleNavigate('vault-' + id)}
@@ -518,9 +482,6 @@ export default function App() {
               ) : viewMode === 'vault-subject' && activeVaultSubject ? (
                 <VaultSubjectView
                   subject={activeVaultSubject}
-                  onBack={() => handleNavigate('overview')}
-                  revisedQuestionIds={revisedVaultQuestions}
-                  onToggleRevised={handleToggleVaultRevised}
                 />
               ) : activeProblem ? (
                 <ProblemDetail
