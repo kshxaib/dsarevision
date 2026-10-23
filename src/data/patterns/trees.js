@@ -771,7 +771,82 @@ export const trees = {
           ]
         }
       },
-      p('Kth Smallest Element in a BST', 'Medium', 'Find the kth smallest element in a BST.'),
+      {
+        id: 'kth-smallest-element-in-a-bst',
+        title: 'Kth Smallest Element in a BST',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/',
+        definition: 'Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.',
+        examples: [
+          { input: 'root = [3,1,4,null,2], k = 1', output: '1' },
+          { input: 'root = [5,3,6,2,4,null,null,1], k = 3', output: '3' }
+        ],
+        brute: {
+          idea: 'Full Inorder Traversal Collection:\n\n• Inorder traversal of a BST visits nodes in strictly sorted ascending order.\n• Traverse the entire tree and store all node values in inorderList.\n• Return the element at index k - 1 (since k is 1-indexed).',
+          code: `class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        List<Integer> inorderList = new ArrayList<>();
+        inorder(root, inorderList);
+
+        return inorderList.get(k-1);        
+    }
+
+    private void inorder(TreeNode node, List<Integer> inorderList){
+        if(node == null) return;
+
+        inorder(node.left, inorderList);
+        inorderList.add(node.val);
+        inorder(node.right, inorderList);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits all n nodes to populate the inorder list.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary list storage to hold all tree elements.',
+          walkthrough: [
+            "Initialize List<Integer> inorderList.",
+            "Traverse tree via inorder(root, inorderList) appending node.val.",
+            "Return inorderList.get(k - 1)."
+          ]
+        },
+        optimal: {
+          idea: 'Inorder Traversal with Counter and Early Stop:\n\n• Maintain a 2-element array result[] where result[0] tracks visited node count and result[1] stores the target element.\n• Traverse left subtree, then increment result[0]++.\n• When result[0] == k, assign result[1] = node.val and return.\n• Avoids storing all elements in an auxiliary list.',
+          code: `class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        int result[] = new int[2];  //[0]: counter, [1]: element
+        inorder(root, result, k);
+
+        return result[1];        
+    }
+
+    private void inorder(TreeNode node, int result[], int k){
+        if(node == null) return;
+
+        inorder(node.left, result, k);
+        result[0]++;
+
+        if(result[0] == k){
+            result[1] = node.val;
+            return;
+        }
+
+        inorder(node.right, result, k);
+    }
+}`,
+          time: 'O(h + k)',
+          timeDesc: '• Stops traversal as soon as the k-th node is reached without scanning remaining nodes.\n• Total Time: O(h + k)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
+          walkthrough: [
+            "Initialize int result[] = new int[2] where result[0] is counter and result[1] holds answer.",
+            "Call inorder(root, result, k).",
+            "In inorder: Traverse node.left, then increment result[0]++.",
+            "If result[0] == k, assign result[1] = node.val and return.",
+            "Otherwise traverse node.right.",
+            "Return result[1]."
+          ]
+        }
+      },
       p('Construct Binary Tree From Preorder and Inorder Traversal', 'Medium', 'Build a tree from preorder and inorder traversal arrays.'),
       p('Binary Tree Maximum Path Sum', 'Hard', 'Find the maximum path sum in a binary tree.'),
       p('Serialize and Deserialize Binary Tree', 'Hard', 'Convert a tree to a string and reconstruct it back.'),
