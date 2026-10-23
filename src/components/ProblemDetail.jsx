@@ -203,13 +203,14 @@ export default function ProblemDetail({
                   href={problem.leetcodeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center h-8 px-2.5 text-xs font-medium rounded-md bg-ink-surface border border-ink-border text-ink-muted hover:text-amber-accent hover:border-amber-accent/40 hover:bg-ink-elevated transition-colors"
+                  className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-ink-surface border border-ink-border hover:border-amber-accent/50 hover:bg-ink-elevated transition-colors"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 mr-1.5 text-amber-accent" />
-                  {problem.leetcodeUrl.includes('neetcode.io') ? 'NeetCode' : 'LeetCode'}
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" fill="#FFA116" />
+                  </svg>
                 </a>
               </TooltipTrigger>
-              <TooltipContent>{problem.leetcodeUrl.includes('neetcode.io') ? 'Open on NeetCode' : 'Open on LeetCode'}</TooltipContent>
+              <TooltipContent>{problem.leetcodeUrl.includes('neetcode.io') ? 'NeetCode' : 'LeetCode'}</TooltipContent>
             </Tooltip>
           )}
 
@@ -220,15 +221,15 @@ export default function ProblemDetail({
                   href={problem.youtubeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center h-8 px-2.5 text-xs font-medium rounded-md bg-ink-surface border border-ink-border text-ink-muted hover:text-red-400 hover:border-red-500/40 hover:bg-ink-elevated transition-colors"
+                  className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-ink-surface border border-ink-border hover:border-red-500/50 hover:bg-ink-elevated transition-colors"
                 >
-                  <svg className="w-3.5 h-3.5 mr-1.5 text-red-500 fill-current" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" fill="#FF0000" />
+                    <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FFFFFF" />
                   </svg>
-                  YouTube
                 </a>
               </TooltipTrigger>
-              <TooltipContent>Watch video explanation</TooltipContent>
+              <TooltipContent>YouTube</TooltipContent>
             </Tooltip>
           )}
 
@@ -237,14 +238,13 @@ export default function ProblemDetail({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 text-xs bg-ink-surface border-ink-border text-ink-muted hover:text-ink-text hover:border-ink-faint hover:bg-ink-elevated"
+                className="h-8 w-8 p-0 inline-flex items-center justify-center bg-ink-surface border-ink-border text-ink-muted hover:text-ink-text hover:border-ink-faint hover:bg-ink-elevated transition-colors"
                 onClick={handleCopyLink}
               >
-                {linkCopied ? <CheckCircle2 className="w-3.5 h-3.5 text-easy mr-1.5" /> : <LinkIcon className="w-3.5 h-3.5 mr-1.5" />}
-                {linkCopied ? 'Copied' : 'Copy link'}
+                {linkCopied ? <CheckCircle2 className="w-4 h-4 text-easy" /> : <LinkIcon className="w-4 h-4" />}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Copy problem share link</TooltipContent>
+            <TooltipContent>{linkCopied ? 'Copied!' : 'Copy link'}</TooltipContent>
           </Tooltip>
 
           <Button

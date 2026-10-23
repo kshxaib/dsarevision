@@ -195,6 +195,124 @@ export const tries = {
         ]
       }
     },
-    p('Word Search II', 'Hard', 'Find all words from a dictionary that exist in a 2D board.')
+    {
+      id: 'word-search-ii',
+      title: 'Word Search II',
+      difficulty: 'Hard',
+      leetcodeUrl: 'https://leetcode.com/problems/word-search-ii/description/',
+      youtubeUrl: 'https://www.youtube.com/watch?v=DMP2bqW6URA',
+      definition: 'Given an m x n board of characters and a list of strings words, return all words on the board. Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.',
+      examples: [
+        {
+          input: 'board = [\n  ["o","a","a","n"],\n  ["e","t","a","e"],\n  ["i","h","k","r"],\n  ["i","f","l","v"]\n],\nwords = ["oath","pea","eat","rain"]',
+          output: '["eat","oath"]',
+          explanation: 'Both "eat" and "oath" can be constructed by sequentially neighboring cells on the board.'
+        },
+        {
+          input: 'board = [\n  ["a","b"],\n  ["c","d"]\n],\nwords = ["abcb"]',
+          output: '[]',
+          explanation: 'The same cell cannot be reused, so "abcb" cannot be formed.'
+        }
+      ],
+      optimal: {
+        idea: 'Insert all dictionary words into a Trie, storing the full word at each leaf node (curr.word). Then, run a 4-directional DFS backtracking search across the grid starting at any cell whose character matches a root child in the Trie. Marking visited cells with "#" prevents revisiting cells in the current path. When curr.isEnd is true, add the word to ans and set curr.isEnd = false to prevent duplicate entries.',
+        code: `class Solution {
+    public List<String> findWords(char[][] board, String[] words) {
+        int n = board.length;
+        int m = board[0].length;
+
+        List<String> ans = new ArrayList<>();
+
+        for (String word : words) {
+            insert(word);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int index = board[i][j] - 'a';
+
+                if (root.children[index] != null) {
+                    TrieNode curr = root;
+                    findWord(board, i, j, curr, ans);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    public void findWord(char board[][], int i, int j, TrieNode curr, List<String> ans) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return;
+        }
+
+        if (board[i][j] == '#' || curr.children[board[i][j] - 'a'] == null) {
+            return;
+        }
+
+        curr = curr.children[board[i][j] - 'a'];
+
+        if (curr.isEnd == true) {
+            ans.add(curr.word);
+            curr.isEnd = false;
+        }
+
+        char temp = board[i][j];
+        board[i][j] = '#';
+
+        findWord(board, i + 1, j, curr, ans);
+        findWord(board, i - 1, j, curr, ans);
+        findWord(board, i, j + 1, curr, ans);
+        findWord(board, i, j - 1, curr, ans);
+
+        board[i][j] = temp;
+    }
+
+    class TrieNode {
+        TrieNode children[];
+        boolean isEnd;
+        String word;
+
+        TrieNode() {
+            children = new TrieNode[26];
+            isEnd = false;
+            word = "";
+        }
+    }
+
+    TrieNode root = new TrieNode();
+
+    public void insert(String word) {
+        TrieNode curr = root;
+
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+
+            if (curr.children[index] == null) {
+                curr.children[index] = new TrieNode();
+            }
+
+            curr = curr.children[index];
+        }
+
+        curr.word = word;
+        curr.isEnd = true;
+    }
+}`,
+        time: 'O(M * N * 4 * 3^(L-1) + W * L)',
+        timeDesc: '• Trie Building: O(W * L) where W is the number of words and L is the maximum word length.\n• Backtracking Search: From each cell (M * N), DFS explores up to 4 directions initially and 3 thereafter up to depth L, heavily pruned by Trie branches.',
+        space: 'O(W * L + L)',
+        spaceDesc: '• O(W * L) space in the Trie to store all dictionary words.\n• O(L) space for the recursive call stack during DFS backtracking (bounded by the max word length L).',
+        walkthrough: [
+          'Design TrieNode with children[26], boolean isEnd, and String word so matched words can be directly retrieved at the leaf without rebuilding the string.',
+          'insert(word): Standard Trie insertion; on the terminal node, store curr.word = word and curr.isEnd = true.',
+          'In findWords(), insert all words into the Trie. Then scan every cell (i, j) on the grid.',
+          'If root.children[board[i][j] - \'a\'] is not null, start findWord(board, i, j, root, ans).',
+          'In findWord(): Check boundaries and visited status (#). If curr.children[ch - \'a\'] is null, prune and backtrack immediately.',
+          'Advance curr down to curr.children[ch - \'a\']. If curr.isEnd is true, add curr.word to ans and set curr.isEnd = false to avoid duplicate word additions.',
+          'Mark board[i][j] = \'#\', recurse into all 4 neighboring cells (up, down, left, right), and backtrack by restoring board[i][j] = temp.'
+        ]
+      }
+    }
   ]
 };
