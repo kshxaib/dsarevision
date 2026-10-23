@@ -901,7 +901,57 @@ export const trees = {
           ]
         }
       },
-      p('Binary Tree Maximum Path Sum', 'Hard', 'Find the maximum path sum in a binary tree.'),
+      {
+        id: 'binary-tree-maximum-path-sum',
+        title: 'Binary Tree Maximum Path Sum',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/binary-tree-maximum-path-sum/description/',
+        definition: 'A path in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge connecting them. A node can only appear at most once. Given the root of a binary tree, return the maximum path sum of any non-empty path.',
+        examples: [
+          { input: 'root = [1,2,3]', output: '6' },
+          { input: 'root = [-10,9,20,null,null,15,7]', output: '42' }
+        ],
+        optimal: {
+          idea: 'Post-order DFS with Negative Path Pruning:\n\n• For each node, compute the max path gain from left and right subtrees using Math.max(0, ...), ignoring negative branches.\n• The max path curving through current node as root is currentPathSum = leftSum + rightSum + node.val (updates ans[0]).\n• Return node.val + Math.max(leftSum, rightSum) to parent because the parent path can only continue through one branch.',
+          code: `class Solution {
+    public int maxPathSum(TreeNode root) {
+        int ans[] = new int[1];
+        ans[0] = Integer.MIN_VALUE;
+
+        findMaxPath(root, ans);
+        return ans[0];
+    }
+
+    private int findMaxPath(TreeNode node, int ans[]) {
+        if (node == null) {
+            return 0;
+        }
+
+        int leftSum = Math.max(0, findMaxPath(node.left, ans));
+        int rightSum = Math.max(0, findMaxPath(node.right, ans));
+
+        int currentPathSum = leftSum + rightSum + node.val;
+        ans[0] = Math.max(ans[0], currentPathSum);
+
+        return node.val + Math.max(leftSum, rightSum);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Visits every node in the binary tree exactly once.\n• Total Time: O(n)',
+          space: 'O(h)',
+          spaceDesc: 'O(h) call stack memory where h is tree height (O(log n) balanced, O(n) skewed).',
+          walkthrough: [
+            "Initialize int ans[] = new int[1] with ans[0] = Integer.MIN_VALUE to track global maximum.",
+            "Call findMaxPath(root, ans).",
+            "Base case: If node == null, return 0.",
+            "Recursively calculate leftSum and rightSum, ignoring negative sums using Math.max(0, ...).",
+            "Compute current path sum curving through current node: currentPathSum = leftSum + rightSum + node.val.",
+            "Update global max: ans[0] = Math.max(ans[0], currentPathSum).",
+            "Return node.val + Math.max(leftSum, rightSum) to parent.",
+            "Return ans[0]."
+          ]
+        }
+      },
       p('Serialize and Deserialize Binary Tree', 'Hard', 'Convert a tree to a string and reconstruct it back.'),
     ]
   };
