@@ -724,7 +724,53 @@ export const trees = {
           ]
         }
       },
-      p('Validate Binary Search Tree', 'Medium', 'Check if a binary tree is a valid BST.'),
+      {
+        id: 'validate-binary-search-tree',
+        title: 'Validate Binary Search Tree',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/validate-binary-search-tree/description/',
+        definition: 'Given the root of a binary tree, determine if it is a valid binary search tree (BST). The left subtree of a node contains only keys strictly less than the node key, the right subtree contains only keys strictly greater than the node key, and both left and right subtrees must also be valid BSTs.',
+        examples: [
+          { input: 'root = [2,1,3]', output: 'true' },
+          { input: 'root = [5,1,4,null,null,3,6]', output: 'false' }
+        ],
+        optimal: {
+          idea: 'Inorder Traversal Strictly Increasing Property:\n\n• An inorder traversal (Left → Root → Right) of any valid BST visits nodes in strictly ascending sorted order.\n• Collect all node values in inorderList and check that each element is strictly greater than its predecessor.\n• If any adjacent pair satisfies inorderList.get(i) <= inorderList.get(i-1), the tree is not a valid BST (return false).',
+          code: `class Solution {
+    public boolean isValidBST(TreeNode root) {
+        List<Integer> inorderList = new ArrayList<>();
+        inorderTraversal(root, inorderList);   
+
+        for(int i=1; i<inorderList.size(); i++){
+            if(inorderList.get(i) <= inorderList.get(i-1)){
+                return false;
+            }
+        }  
+
+        return true;
+    }
+
+    private void inorderTraversal(TreeNode node, List<Integer> inorderList){
+        if(node == null) return;
+
+        inorderTraversal(node.left, inorderList);
+        inorderList.add(node.val);
+        inorderTraversal(node.right, inorderList);
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Inorder traversal visits every node once and the verification scan runs in O(n).\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary memory for storing the inorder list plus O(h) recursion call stack.',
+          walkthrough: [
+            "Initialize List<Integer> inorderList.",
+            "Call inorderTraversal(root, inorderList) using Left -> Root -> Right order.",
+            "Loop through inorderList from index 1 to end.",
+            "If inorderList.get(i) <= inorderList.get(i - 1), return false.",
+            "Return true if all elements are strictly increasing."
+          ]
+        }
+      },
       p('Kth Smallest Element in a BST', 'Medium', 'Find the kth smallest element in a BST.'),
       p('Construct Binary Tree From Preorder and Inorder Traversal', 'Medium', 'Build a tree from preorder and inorder traversal arrays.'),
       p('Binary Tree Maximum Path Sum', 'Hard', 'Find the maximum path sum in a binary tree.'),
