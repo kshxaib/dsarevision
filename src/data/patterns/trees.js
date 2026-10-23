@@ -847,7 +847,60 @@ export const trees = {
           ]
         }
       },
-      p('Construct Binary Tree From Preorder and Inorder Traversal', 'Medium', 'Build a tree from preorder and inorder traversal arrays.'),
+      {
+        id: 'construct-binary-tree-from-preorder-and-inorder-traversal',
+        title: 'Construct Binary Tree From Preorder and Inorder Traversal',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/',
+        definition: 'Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.',
+        examples: [
+          { input: 'preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]', output: '[3,9,20,null,null,15,7]' },
+          { input: 'preorder = [-1], inorder = [-1]', output: '[-1]' }
+        ],
+        optimal: {
+          idea: 'Divide and Conquer with HashMap Index Lookup:\n\n• The first element in preorder segment is always the root of the current subtree.\n• Lookup root location in inorder array using a HashMap in O(1) time.\n• Elements to the left of inRoot form the left subtree (count = inLeftNums = inRoot - inStart), and elements to the right form the right subtree.\n• Recursively construct root.left and root.right with partitioned index ranges.',
+          code: `class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        Map<Integer, Integer> inorderIndexMap = new HashMap<>();
+        for(int i=0; i<inorder.length; i++){
+            inorderIndexMap.put(inorder[i], i);
+        }        
+
+        TreeNode root = buildTree(inorderIndexMap, preorder, 0, preorder.length -1, inorder, 0, inorder.length -1);
+        return root;
+    }
+
+    private TreeNode buildTree(Map<Integer, Integer> inorderIndexMap, int preorder[], int preStart, int preEnd,  int inorder[], int inStart, int inEnd){
+        if(preStart > preEnd || inStart > inEnd) return null;
+
+        TreeNode root = new TreeNode(preorder[preStart]);
+
+        int inRoot = inorderIndexMap.get(preorder[preStart]);
+        int inLeftNums = inRoot - inStart;
+
+        root.left = buildTree(inorderIndexMap, preorder, preStart +1, preStart + inLeftNums, inorder, inStart, inRoot -1);
+
+        root.right = buildTree(inorderIndexMap, preorder, preStart + inLeftNums +1, preEnd, inorder, inRoot +1, inEnd);
+
+        return root;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Building the HashMap takes O(n) and each node is constructed in O(1) time.\n• Total Time: O(n)',
+          space: 'O(n)',
+          spaceDesc: 'O(n) auxiliary memory for HashMap storing inorder indices plus O(h) recursion stack.',
+          walkthrough: [
+            "Store all inorder elements and their indices in inorderIndexMap for O(1) lookup.",
+            "Call recursive helper with initial boundaries [0, preorder.length - 1] and [0, inorder.length - 1].",
+            "Base case: If preStart > preEnd or inStart > inEnd, return null.",
+            "Create root node from preorder[preStart].",
+            "Locate inRoot in HashMap and calculate inLeftNums = inRoot - inStart.",
+            "Recursively construct root.left using left subtree segments.",
+            "Recursively construct root.right using right subtree segments.",
+            "Return root."
+          ]
+        }
+      },
       p('Binary Tree Maximum Path Sum', 'Hard', 'Find the maximum path sum in a binary tree.'),
       p('Serialize and Deserialize Binary Tree', 'Hard', 'Convert a tree to a string and reconstruct it back.'),
     ]
