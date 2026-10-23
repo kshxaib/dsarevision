@@ -481,7 +481,67 @@ export const trees = {
           ]
         }
       },
-      p('Binary Tree Level Order Traversal', 'Medium', 'Traverse the tree level by level (BFS).'),
+      {
+        id: 'binary-tree-level-order-traversal',
+        title: 'Binary Tree Level Order Traversal',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/binary-tree-level-order-traversal/description/',
+        definition: 'Given the root of a binary tree, return the level order traversal of its nodes values (from left to right, level by level).',
+        examples: [
+          { input: 'root = [3,9,20,null,null,15,7]', output: '[[3],[9,20],[15,7]]' },
+          { input: 'root = [1]', output: '[[1]]' },
+          { input: 'root = []', output: '[]' }
+        ],
+        optimal: {
+          idea: 'Breadth-First Search (Queue Level-by-Level Traversal):\n\n• Use a Queue to process nodes level by level.\n• For each level, record queue.size() as currLvlSize.\n• Iterate currLvlSize times: dequeue node, add its value to currLvl, and enqueue non-null left and right children.\n• Append each completed level list currLvl to the final result ans.',
+          code: `class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+
+        if(root == null) return ans;
+
+        queue.offer(root);
+
+        while(!queue.isEmpty()){
+            int currLvlSize = queue.size();
+            List<Integer> currLvl = new ArrayList<>();
+
+            for(int i=0; i<currLvlSize; i++){
+                TreeNode node = queue.poll();
+
+                if(node.left != null){
+                    queue.offer(node.left);
+                }
+
+                if(node.right != null){
+                    queue.offer(node.right);
+                }
+
+                currLvl.add(node.val);
+            }
+
+            ans.add(currLvl);
+        }       
+
+        return ans;
+    }
+}`,
+          time: 'O(n)',
+          timeDesc: '• Every node in the binary tree is enqueued and dequeued exactly once.\n• Total Time: O(n)',
+          space: 'O(w)',
+          spaceDesc: 'O(w) queue memory where w is the maximum width of the tree (up to n/2 in a complete tree).',
+          walkthrough: [
+            "Initialize Queue<TreeNode> queue and List<List<Integer>> ans.",
+            "If root == null, return ans.",
+            "Enqueue root into queue.",
+            "While queue is not empty, get current level count: currLvlSize = queue.size().",
+            "Loop currLvlSize times: poll current node, enqueue left and right children if present, and add node.val to currLvl.",
+            "Append completed level list currLvl to ans.",
+            "Return ans once queue is emptied."
+          ]
+        }
+      },
       p('Binary Tree Right Side View', 'Medium', 'Return the values visible from the right side of the tree.'),
       p('Count Good Nodes in Binary Tree', 'Medium', 'Count nodes where the path from root has no greater value.'),
       p('Validate Binary Search Tree', 'Medium', 'Check if a binary tree is a valid BST.'),
