@@ -164,7 +164,59 @@ export const heapPriorityQueue = {
           ]
         }
       },
-      p('Kth Largest Element in a Stream', 'Easy', 'Design a class to find the kth largest element in a stream.'),
+      {
+        id: 'kth-largest-element-in-a-stream',
+        title: 'Kth Largest Element in a Stream',
+        difficulty: 'Easy',
+        leetcodeUrl: 'https://leetcode.com/problems/kth-largest-element-in-a-stream/description/',
+        definition: 'Design a class to find the kth largest element in a stream. Note that it is the kth largest element in the sorted order, not the kth distinct element. Implement the KthLargest class:\n• KthLargest(int k, int[] nums) Initializes the object with the integer k and the stream of integers nums.\n• int add(int val) Appends the integer val to the stream and returns the element representing the kth largest element in the stream.',
+        examples: [
+          {
+            input: '["KthLargest", "add", "add", "add", "add", "add"]\n[[3, [4, 5, 8, 2]], [3], [5], [10], [9], [4]]',
+            output: '[null, 4, 5, 5, 8, 8]',
+            explanation: 'KthLargest kthLargest = new KthLargest(3, [4, 5, 8, 2]);\nkthLargest.add(3);   // return 4\nkthLargest.add(5);   // return 5\nkthLargest.add(10);  // return 5\nkthLargest.add(9);   // return 8\nkthLargest.add(4);   // return 8'
+          }
+        ],
+        optimal: {
+          idea: 'Maintain a Min-Heap of size at most k. The smallest element among the top k largest is always at the root (pq.peek()). When adding a new value, if the heap has fewer than k elements or val > pq.peek(), insert val and evict the minimum if size exceeds k.',
+          code: `class KthLargest {
+    PriorityQueue<Integer> pq;
+    int k;
+
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        pq = new PriorityQueue<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            add(nums[i]);
+        }
+    }
+    
+    public int add(int val) {
+        if (pq.size() < k || val > pq.peek()) {
+            pq.add(val);
+
+            if (pq.size() > k) {
+                pq.remove();
+            }
+        }
+
+        return pq.peek();
+    }
+}`,
+          time: 'Constructor: O(N log k), add: O(log k)',
+          timeDesc: '• Constructor: Calls add() for N elements, taking O(N log k) time.\n• add(val): In the worst case, one push and one pop on a heap of size k: O(log k) time.',
+          space: 'O(k)',
+          spaceDesc: '• The Min-Heap contains at most k elements at any point.',
+          walkthrough: [
+            'Maintain a Min-Heap PriorityQueue<Integer> pq and the threshold size k.',
+            'Constructor: Initialize the Min-Heap and insert all initial nums using the add() method.',
+            'add(val): If the heap holds fewer than k elements, or val is greater than pq.peek(), add val to pq.',
+            'If pq.size() exceeds k after insertion, remove the root element with pq.remove() so the heap stays at size k.',
+            'Return pq.peek(), which is the kth largest element overall.'
+          ]
+        }
+      },
       p('Task Scheduler', 'Medium', 'Find minimum intervals to execute all tasks with cooldown.'),
       p('Find Median from Data Stream', 'Hard', 'Find the median from continuously arriving numbers.'),
       p('Design Twitter', 'Medium', 'Design a simplified Twitter with follow, unfollow, post, and feed.'),
