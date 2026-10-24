@@ -112,7 +112,58 @@ export const heapPriorityQueue = {
           ]
         }
       },
-      p('K Closest Points to Origin', 'Medium', 'Find the k closest points to the origin.'),
+      {
+        id: 'k-closest-points-to-origin',
+        title: 'K Closest Points to Origin',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/k-closest-points-to-origin/description/',
+        youtubeUrl: 'https://www.youtube.com/watch?v=rI2EBUEMfTk',
+        definition: 'Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0). The distance between two points on the X-Y plane is the Euclidean distance (i.e., √(x1 - x2)² + (y1 - y2)²). You may return the answer in any order.',
+        examples: [
+          {
+            input: 'points = [[1,3],[-2,2]], k = 1',
+            output: '[[-2,2]]',
+            explanation: 'The distance between (1, 3) and origin is sqrt(10).\nThe distance between (-2, 2) and origin is sqrt(8).\nSince sqrt(8) < sqrt(10), (-2, 2) is closer to the origin.'
+          },
+          {
+            input: 'points = [[3,3],[5,-1],[-2,4]], k = 2',
+            output: '[[3,3],[-2,4]]',
+            explanation: 'The answer [[-2,4],[3,3]] would also be accepted.'
+          }
+        ],
+        optimal: {
+          idea: 'Use squared Euclidean distance (x² + y²) to avoid expensive sqrt computations. Store coordinates in a Min-Heap configured with a custom lambda comparator comparing distance from the origin. Insert all points, then extract the top k points with pq.poll().',
+          code: `class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a[0] * a[0] + a[1] * a[1], b[0] * b[0] + b[1] * b[1])
+        );
+
+        for (int point[] : points) {
+            pq.add(point);
+        }
+
+        int result[][] = new int[k][2];
+        for (int i = 0; i < k; i++) {
+            result[i] = pq.poll();
+        }
+
+        return result;
+    }
+}`,
+          time: 'O(N log N)',
+          timeDesc: '• Adding all N points to the Min-Heap: O(N log N)\n• Extracting the top k points: O(k log N)\n• Overall Time Complexity: O(N log N).',
+          space: 'O(N)',
+          spaceDesc: '• The PriorityQueue holds all N points in memory.',
+          walkthrough: [
+            'Initialize a Min-Heap PriorityQueue<int[]> with a custom comparator comparing Euclidean distance: Integer.compare(a[0]*a[0] + a[1]*a[1], b[0]*b[0] + b[1]*b[1]).',
+            'Iterate through points and add each coordinate pair [x, y] to the heap.',
+            'Create a 2D result array of dimensions k x 2.',
+            'Loop k times and assign result[i] = pq.poll(), retrieving points in ascending order of distance from origin.',
+            'Return the populated result array.'
+          ]
+        }
+      },
       p('Kth Largest Element in a Stream', 'Easy', 'Design a class to find the kth largest element in a stream.'),
       p('Task Scheduler', 'Medium', 'Find minimum intervals to execute all tasks with cooldown.'),
       p('Find Median from Data Stream', 'Hard', 'Find the median from continuously arriving numbers.'),
