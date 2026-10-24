@@ -63,6 +63,7 @@ export const heapPriorityQueue = {
         title: 'Last Stone Weight',
         difficulty: 'Easy',
         leetcodeUrl: 'https://leetcode.com/problems/last-stone-weight/description/',
+        youtubeUrl: 'https://www.youtube.com/watch?v=8txOQt0ZwTg',
         definition: 'You are given an array of integers stones where stones[i] is the weight of the ith stone. We play a game with the stones. On each turn, we choose the heaviest two stones with weights x and y with x <= y. If x == y, both stones are destroyed. If x != y, the stone of weight x is destroyed, and the stone of weight y has new weight y - x. At the end of the game, there is at most one stone left. Return the weight of the last remaining stone. If there are no stones left, return 0.',
         examples: [
           {
