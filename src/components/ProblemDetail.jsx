@@ -145,12 +145,10 @@ function IdeaSection({ idea }) {
   const lines = parseIdeaToLines(idea);
 
   return (
-    <div className="rounded-lg border border-ink-border bg-ink-surface/60 p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider">
-          Intuition & Approach
-        </span>
-      </div>
+    <div className="my-2">
+      <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-2">
+        Intuition & Approach
+      </p>
 
       <div className="space-y-2 text-sm text-ink-muted leading-relaxed">
         {lines.map((line, idx) => {
@@ -250,21 +248,15 @@ function ApproachContent({ approach, image }) {
       {(approach.time || approach.space) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
           {approach.time && (
-            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5">
-              <p className="text-[10px] font-semibold text-ink-subtle uppercase tracking-wider">Time Complexity</p>
-              <p className="text-sm font-mono font-bold text-ink-text leading-tight mt-0.5">{approach.time}</p>
-              {approach.timeDesc && (
-                <p className="text-xs text-ink-muted/90 mt-1.5 leading-normal whitespace-pre-line">{approach.timeDesc}</p>
-              )}
+            <div className="flex items-center gap-2 rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs">
+              <span className="text-ink-subtle font-medium">Time Complexity:</span>
+              <span className="font-mono font-bold text-ink-text">{approach.time}</span>
             </div>
           )}
           {approach.space && (
-            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5">
-              <p className="text-[10px] font-semibold text-ink-subtle uppercase tracking-wider">Space Complexity</p>
-              <p className="text-sm font-mono font-bold text-ink-text leading-tight mt-0.5">{approach.space}</p>
-              {approach.spaceDesc && (
-                <p className="text-xs text-ink-muted/90 mt-1.5 leading-normal whitespace-pre-line">{approach.spaceDesc}</p>
-              )}
+            <div className="flex items-center gap-2 rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs">
+              <span className="text-ink-subtle font-medium">Space Complexity:</span>
+              <span className="font-mono font-bold text-ink-text">{approach.space}</span>
             </div>
           )}
         </div>

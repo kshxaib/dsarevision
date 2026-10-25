@@ -2,6 +2,7 @@ import { p } from '../helper.js';
 import subsetsTree from '@/assets/images/backtracking/Recursion Tree_ Generating All Subsets.png';
 import combinationSumTree from '@/assets/images/backtracking/Combination Sum Recursion Tree.png';
 import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combination Sum II Recursion Tree.png';
+import permutationsTree from '@/assets/images/backtracking/Colorful Permutation Recursion Tree.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -44,13 +45,13 @@ export const backtracking = {
 
     public void generateAns(int nums[], List<List<Integer>> ans, List<Integer> curr, int index) {
         if (index == nums.length) {
-            ans.add(new ArrayList<>(curr));
+            ans.add(new ArrayList<>(curr)); // : O(N) copy into answer
             return;
         }
 
         // Include choice
         curr.add(nums[index]);
-        generateAns(nums, ans, curr, index + 1);
+        generateAns(nums, ans, curr, index + 1); // : 2^N recursion paths
 
         // Exclude choice (Backtrack)
         curr.remove(curr.size() - 1);
@@ -58,17 +59,7 @@ export const backtracking = {
     }
 }`,
         time: 'O(N * 2^N)',
-        timeDesc: '• There are 2^N total subsets for N unique elements.\n• Copying each subset of size up to N into the answer list takes O(N) time.\n• Total Time Complexity: O(N * 2^N).',
-        space: 'O(N)',
-        spaceDesc: '• O(N) recursion stack depth and O(N) auxiliary space for the curr list (excluding output storage).',
-        walkthrough: [
-          'Initialize the result list ans and a temporary list curr to track elements in the current subset path.',
-          'Start recursion from index 0: generateAns(nums, ans, curr, 0).',
-          'Base case: When index == nums.length, a complete subset choice has been made. Add new ArrayList<>(curr) to ans and return.',
-          'Include choice: Append nums[index] to curr and recursively call generateAns(nums, ans, curr, index + 1).',
-          'Exclude choice: Undo the inclusion via curr.remove(curr.size() - 1) and call generateAns(nums, ans, curr, index + 1) without including nums[index].',
-          'Return ans containing all 2^N subsets.'
-        ]
+        space: 'O(N)'
       }
     },
     {
@@ -113,7 +104,7 @@ export const backtracking = {
     public void findCombinations(int candidates[], List<List<Integer>> ans, List<Integer> curr, int index, int target) {
         if (index == candidates.length) {
             if (target == 0) {
-                ans.add(new ArrayList<>(curr));
+                ans.add(new ArrayList<>(curr)); // : O(K) copy into answer
             }
             return;
         }
@@ -123,27 +114,17 @@ export const backtracking = {
             curr.add(candidates[index]);
             target = target - candidates[index];
 
-            findCombinations(candidates, ans, curr, index, target);
+            findCombinations(candidates, ans, curr, index, target); // : recurse with reuse
             curr.remove(curr.size() - 1);
             target = target + candidates[index];
         }
 
         // Skip choice (advance to next candidate)
-        findCombinations(candidates, ans, curr, index + 1, target);
+        findCombinations(candidates, ans, curr, index + 1, target); // : recurse skip
     }
 }`,
         time: 'O(2^(target / min) * K)',
-        timeDesc: '• The recursion tree depth is bounded by T = target / min(candidates).\n• At each node, we branch into pick or skip (up to 2 choices), yielding O(2^T) operations.\n• Copying valid combinations of average length K into ans takes O(K) time.',
-        space: 'O(target / min)',
-        spaceDesc: '• The maximum recursion call stack depth and curr list size is target / min(candidates).',
-        walkthrough: [
-          'Initialize ans and curr, and start recursion with index = 0 and target.',
-          'Base case: If index reaches candidates.length, check if target == 0. If so, add new ArrayList<>(curr) to ans and return.',
-          'Pick choice: If candidates[index] <= target, append candidates[index] to curr, reduce target, and recurse staying at the same index.',
-          'Backtrack: Remove the last element from curr and restore target.',
-          'Skip choice: Recurse to index + 1 with the same target to explore combinations without this element.',
-          'Return ans containing all unique combinations.'
-        ]
+        space: 'O(target / min)'
       }
     },
     {
@@ -183,11 +164,11 @@ export const backtracking = {
 
     public void findCombinations(int candidates[], List<List<Integer>> ans, List<Integer> curr, int index, int target) {
         if (target == 0) {
-            ans.add(new ArrayList<>(curr));
+            ans.add(new ArrayList<>(curr)); // : O(K) copy into answer
             return;
         }
 
-        for (int i = index; i < candidates.length; i++) {
+        for (int i = index; i < candidates.length; i++) { // : O(N) loop
             // Skip duplicates at the same tree depth
             if (i > index && candidates[i] == candidates[i - 1]) {
                 continue;
@@ -197,7 +178,7 @@ export const backtracking = {
                 curr.add(candidates[i]);
                 target = target - candidates[i];
 
-                findCombinations(candidates, ans, curr, i + 1, target);
+                findCombinations(candidates, ans, curr, i + 1, target); // : recurse next index
                 curr.remove(curr.size() - 1);
                 target = target + candidates[i];
             }
@@ -205,22 +186,73 @@ export const backtracking = {
     }
 }`,
         time: 'O(2^N * K)',
-        timeDesc: '• Sorting takes O(N log N).\n• In the worst case, each element can either be chosen or skipped, yielding up to 2^N combinations.\n• Deep-copying combinations of average size K into ans takes O(K) time.\n• Total Time Complexity: O(2^N * K).',
-        space: 'O(K)',
-        spaceDesc: '• O(K) auxiliary recursion depth and curr list storage where K <= N (excluding output storage).',
-        walkthrough: [
-          'Sort the candidates array so identical numbers are grouped together.',
-          'Initialize ans and curr, and invoke findCombinations(candidates, ans, curr, 0, target).',
-          'Base case: If target == 0, add a new ArrayList<>(curr) snapshot to ans and return.',
-          'Loop i from index to candidates.length - 1.',
-          'Duplicate prevention: If i > index && candidates[i] == candidates[i - 1], skip candidate[i] to avoid identical subtrees.',
-          'If candidates[i] <= target, add candidates[i] to curr, decrement target, and recurse to i + 1 (single-use constraint).',
-          'Backtrack by removing the last element and restoring target.',
-          'Return ans containing all unique combinations.'
-        ]
+        space: 'O(K)'
       }
     },
-    p('Permutations', 'Medium', 'Generate all permutations of an array of distinct integers.'),
+    {
+      id: 'permutations',
+      title: 'Permutations',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/permutations/description/',
+      image: {
+        url: permutationsTree,
+        title: 'Dry Run'
+      },
+      definition: 'Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.',
+      examples: [
+        {
+          input: 'nums = [1,2,3]',
+          output: '[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]',
+          explanation: 'All 3! = 6 possible permutations of [1,2,3].'
+        },
+        {
+          input: 'nums = [0,1]',
+          output: '[[0,1],[1,0]]',
+          explanation: 'All 2! = 2 possible permutations of [0,1].'
+        },
+        {
+          input: 'nums = [1]',
+          output: '[[1]]',
+          explanation: 'A single element has exactly 1 permutation.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Backtracking with Visited State Array\n• **State Tracking:** Use a boolean array `used[]` of size `nums.length` to keep track of elements already picked in the current permutation.\n• **Loop and Branching:** In each recursive call, loop `i` from `0` to `nums.length - 1`:\n  1. If `used[i]` is true, skip `nums[i]` since it is already in `curr`.\n  2. Otherwise, add `nums[i]` to `curr`, mark `used[i] = true`, and recurse.\n  3. Backtrack by removing `nums[i]` from `curr` and resetting `used[i] = false`.\n• **Base Case:** When `curr.size() == nums.length`, a full permutation has been formed. Add `new ArrayList<>(curr)` to `ans` and return.',
+        code: `class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
+
+        generateAns(nums, ans, curr, used);
+        return ans;
+    }
+
+    public void generateAns(int[] nums, List<List<Integer>> ans, List<Integer> curr, boolean[] used) {
+        if (curr.size() == nums.length) {
+            ans.add(new ArrayList<>(curr)); // : O(N) copy into answer
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) { // : O(N) loop at each level
+            if (used[i]) {
+                continue;
+            }
+
+            curr.add(nums[i]);
+            used[i] = true;
+
+            generateAns(nums, ans, curr, used); // : O(N!) permutation paths
+
+            curr.remove(curr.size() - 1);
+            used[i] = false;
+        }
+    }
+}`,
+        time: 'O(N! * N)',
+        space: 'O(N)'
+      }
+    },
     p('Subsets II', 'Medium', 'Generate all subsets, handling duplicate elements.'),
     p('Letter Combinations of a Phone Number', 'Medium', 'Generate all letter combinations from phone keypad digits.'),
     {
