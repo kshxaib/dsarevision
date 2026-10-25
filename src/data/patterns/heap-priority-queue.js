@@ -217,7 +217,80 @@ export const heapPriorityQueue = {
           ]
         }
       },
-      p('Task Scheduler', 'Medium', 'Find minimum intervals to execute all tasks with cooldown.'),
+      {
+        id: 'task-scheduler',
+        title: 'Task Scheduler',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/task-scheduler/description/',
+        youtubeUrl: 'https://www.youtube.com/watch?v=rYh-Kkbzsnw',
+        definition: 'Given a characters array tasks, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle. However, there is a non-negative integer n that represents the cooldown period between two same tasks, meaning there must be at least n units of time between any two identical tasks. Return the least number of units of time that the CPU will take to finish all the given tasks.',
+        examples: [
+          {
+            input: 'tasks = ["A","A","A","B","B","B"], n = 2',
+            output: '8',
+            explanation: 'A -> B -> idle -> A -> B -> idle -> A -> B\nThere are at least 2 units of time between identical tasks. Total intervals = 8.'
+          },
+          {
+            input: 'tasks = ["A","C","A","B","D","B"], n = 1',
+            output: '6',
+            explanation: 'A -> B -> C -> A -> D -> B\nNo idle units are needed because cooldown is 1. Total intervals = 6.'
+          }
+        ],
+        optimal: {
+          idea: 'Greedily schedule the most frequent tasks first using a Max-Heap. In each cycle of length (n + 1), poll up to (n + 1) highest-frequency tasks, decrement their remaining count, and re-add them if non-zero. If the heap becomes empty, add the exact tasks executed (temp.size()); otherwise, add the full (n + 1) frame including any idle slots.',
+          code: `class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char task : tasks) {
+            map.put(task, map.getOrDefault(task, 0) + 1);   
+        }
+
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        for (int count : map.values()) {
+            maxHeap.add(count);
+        }
+
+        int time = 0;
+        while (!maxHeap.isEmpty()) {
+            List<Integer> temp = new ArrayList<>();
+
+            // if we add A then we can place A again at n+1 place
+            for (int i = 1; i <= n + 1; i++) {
+                if (!maxHeap.isEmpty()) {
+                    int freq = maxHeap.poll();
+                    freq--;
+
+                    temp.add(freq);
+                }
+            }
+
+            for (int i = 0; i < temp.size(); i++) {
+                if (temp.get(i) > 0) {
+                    maxHeap.add(temp.get(i));
+                }
+            }
+
+            time += maxHeap.isEmpty() ? temp.size() : n + 1;
+        }
+
+        return time;
+    }
+}`,
+          time: 'O(N)',
+          timeDesc: '• Counting frequencies: O(N) where N is the total number of tasks.\n• Heap operations: limited to at most 26 unique characters, so each round takes O(26 log 26) = O(1).\n• Overall Time Complexity: O(N).',
+          space: 'O(1)',
+          spaceDesc: '• HashMap, Max-Heap, and temp list store at most 26 elements (uppercase English alphabet).',
+          walkthrough: [
+            'Count task frequencies using a HashMap<Character, Integer>.',
+            'Insert all frequency values into a Max-Heap PriorityQueue<Integer>(Collections.reverseOrder()).',
+            'Process in rounds of (n + 1) slots (the minimum gap needed before repeating a task).',
+            'In each round, poll up to (n + 1) most frequent tasks, decrement their frequency by 1, and record them in a temp list.',
+            'Push all remaining tasks with count > 0 from temp back into the Max-Heap.',
+            'If maxHeap is empty, add temp.size() to time (the final round needs no trailing idles); otherwise add (n + 1).',
+            'Return total time.'
+          ]
+        }
+      },
       p('Find Median from Data Stream', 'Hard', 'Find the median from continuously arriving numbers.'),
       p('Design Twitter', 'Medium', 'Design a simplified Twitter with follow, unfollow, post, and feed.'),
     ]
