@@ -302,6 +302,10 @@ export default function App() {
   // DSA Problem selection
   const handleSelectProblem = (prob) => {
     setViewMode('dsa');
+    const parent = patterns.find((p) => p.problems.some((pr) => pr.id === prob.id));
+    if (parent) {
+      setActivePatternId(parent.id);
+    }
     setActiveProblem(prob);
     setActiveVaultSubjectId(null);
     window.location.hash = '#' + prob.id;
@@ -310,8 +314,13 @@ export default function App() {
 
   const handleBackToPattern = () => {
     setViewMode('dsa');
+    const targetPattern = activeProblem
+      ? patterns.find((p) => p.problems.some((pr) => pr.id === activeProblem.id))
+      : null;
+    const targetId = targetPattern?.id || activePatternId;
+    setActivePatternId(targetId);
     setActiveProblem(null);
-    window.location.hash = '#' + activePatternId;
+    window.location.hash = '#' + targetId;
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -369,7 +378,6 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  const activePattern = patterns.find((p) => p.id === activePatternId) || patterns[0];
   const currentProblem = useMemo(() => {
     if (!activeProblem) return null;
     for (const pat of patterns) {
@@ -378,6 +386,14 @@ export default function App() {
     }
     return activeProblem;
   }, [activeProblem]);
+
+  const activePattern = useMemo(() => {
+    if (currentProblem) {
+      const parent = patterns.find((p) => p.problems.some((pr) => pr.id === currentProblem.id));
+      if (parent) return parent;
+    }
+    return patterns.find((p) => p.id === activePatternId) || patterns[0];
+  }, [currentProblem, activePatternId]);
 
   const activeVaultSubject = activeVaultSubjectId
     ? getVaultSubjectById(activeVaultSubjectId)

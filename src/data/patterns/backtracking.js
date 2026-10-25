@@ -5,6 +5,7 @@ import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combinati
 import permutationsTree from '@/assets/images/backtracking/Colorful Permutation Recursion Tree.png';
 import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursion Tree Infographic.png';
 import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree Infographic.png';
+import parenthesesTree from '@/assets/images/backtracking/Colorful Parentheses Recursion Tree Infographic.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -372,13 +373,25 @@ export const backtracking = {
       title: 'Generate Parentheses',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/generate-parentheses/description/',
+      image: {
+        url: parenthesesTree,
+        title: 'Dry Run'
+      },
       definition: 'Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.',
       examples: [
-        { input: 'n = 3', output: '["((()))","(()())","(())()","()(())","()()()"]' },
-        { input: 'n = 1', output: '["()"]' }
+        {
+          input: 'n = 3',
+          output: '["((()))","(()())","(())()","()(())","()()()"]',
+          explanation: 'All 5 valid combinations of 3 pairs of parentheses (Catalan number C3 = 5).'
+        },
+        {
+          input: 'n = 1',
+          output: '["()"]',
+          explanation: 'Only 1 valid combination of 1 pair of parentheses.'
+        }
       ],
       optimal: {
-        idea: '• **Pattern:** Constrained Backtracking (State Validation Invariant)\n• **Invariant Rules:**\n  1. **Add \'(\':** Valid whenever `open < n` (we have opening brackets remaining).\n  2. **Add \')\':** Valid only when `close < open` (ensures every closing bracket pairs with an existing open bracket).\n• **Pruning:** Invalid branches are pruned before recursion starts; every formed prefix is guaranteed valid.\n• **Base Case:** When `s.length() == 2 * n`, a valid well-formed parenthesis sequence is complete; add `s` to `ans`.',
+        idea: '• **Pattern:** Constrained Backtracking with Invariant Validation\n• **Decision Rules:**\n  1. **Add \'(\':** Valid only when `open < n` (we have open brackets available to place).\n  2. **Add \')\':** Valid only when `close < open` (every closing bracket must pair with an already opened bracket).\n• **Pruning:** Invalid prefixes are never explored, keeping every recursion branch strictly well-formed.\n• **Base Case:** When `s.length() == 2 * n`, all `2 * n` brackets have been placed. Add `s` to `ans` and return.',
         code: `class Solution {
     public List<String> generateParenthesis(int n) {
         List<String> ans = new ArrayList<>();
@@ -387,34 +400,22 @@ export const backtracking = {
     }
 
     public void generateAns(List<String> ans, String s, int open, int close, int n) {
-        // Base case: formed a valid string of length 2*n
         if (s.length() == 2 * n) {
-            ans.add(s);
+            ans.add(s); // : O(N) copy valid string
             return;
         }
 
-        // Add '(' only if we have not used all n opening brackets
         if (open < n) {
-            generateAns(ans, s + "(", open + 1, close, n);
+            generateAns(ans, s + "(", open + 1, close, n); // : branch adding '('
         }
 
-        // Add ')' only if it will match an existing unclosed '('
         if (close < open) {
-            generateAns(ans, s + ")", open, close + 1, n);
+            generateAns(ans, s + ")", open, close + 1, n); // : branch adding ')'
         }
     }
 }`,
-        time: 'O(4^n / √n)',
-        timeDesc: '• The number of valid parentheses combinations is given by the n-th Catalan number: C_n = (1 / (n + 1)) * (2n choose n) ≈ O(4^n / (n^(1.5))).\n• Generating and appending each string takes O(n) time.\n• Total Time: O(4^n / √n)',
-        space: 'O(n)',
-        spaceDesc: 'O(n) auxiliary recursion stack space for maximum depth 2n.',
-        walkthrough: [
-          'Initialize an empty list ans and call generateAns(ans, "", 0, 0, n).',
-          'Base condition: if s.length() == 2 * n, a complete valid combination is formed; add s to ans and return.',
-          'If open < n: we can safely add an opening bracket "(", increment open by 1, and recurse.',
-          'If close < open: we can safely add a closing bracket ")" to pair with an unclosed "(", increment close by 1, and recurse.',
-          'Return ans containing all well-formed parentheses combinations.'
-        ]
+        time: 'O(4^N / √N)',
+        space: 'O(N)'
       }
     },
     p('Palindrome Partitioning', 'Medium', 'Partition a string into all possible palindrome substrings.'),
