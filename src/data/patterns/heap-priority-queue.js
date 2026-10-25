@@ -346,6 +346,146 @@ export const heapPriorityQueue = {
           ]
         }
       },
-      p('Design Twitter', 'Medium', 'Design a simplified Twitter with follow, unfollow, post, and feed.'),
+      {
+        id: 'design-twitter',
+        title: 'Design Twitter',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/design-twitter/description/',
+        youtubeUrl: 'https://www.youtube.com/watch?v=tH051S6aM5M',
+        definition: 'Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and see the 10 most recent tweets in the user\'s news feed. Implement the Twitter class:\n• Twitter() Initializes your twitter object.\n• void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId.\n• List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user\'s news feed. Each item must be posted by users who the user followed or by the user themself, ordered from most recent to least recent.\n• void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.\n• void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.',
+        examples: [
+          {
+            input: '["Twitter", "postTweet", "getNewsFeed", "follow", "postTweet", "getNewsFeed", "unfollow", "getNewsFeed"]\n[[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]',
+            output: '[null, null, [5], null, null, [6, 5], null, [5]]',
+            explanation: 'Twitter twitter = new Twitter();\ntwitter.postTweet(1, 5); // User 1 posts tweet 5.\ntwitter.getNewsFeed(1);  // User 1\'s news feed returns [5].\ntwitter.follow(1, 2);    // User 1 follows user 2.\ntwitter.postTweet(2, 6); // User 2 posts tweet 6.\ntwitter.getNewsFeed(1);  // User 1\'s news feed returns [6, 5] (tweet 6 was posted after tweet 5).\ntwitter.unfollow(1, 2);  // User 1 unfollows user 2.\ntwitter.getNewsFeed(1);  // User 1\'s news feed returns [5], since user 1 no longer follows user 2.'
+          }
+        ],
+        optimal: {
+          idea: 'Model Tweet with a global timestamp and descending Comparable order. Each User maintains their own LinkedList of tweets (inserted at head for recent-first order) and a HashSet of followees. To retrieve the news feed, gather up to 10 most recent tweets from each followee and the user themself into a Max-Heap PriorityQueue, then poll at most 10 items.',
+          code: `class Tweet implements Comparable<Tweet> {
+    int tweetId;
+    int time;
+
+    Tweet(int tweetId, int time) {
+        this.tweetId = tweetId;
+        this.time = time;
+    }
+
+    @Override
+    public int compareTo(Tweet newTweet) {
+        return newTweet.time - this.time;   // descending order
+    }
+}
+
+class User {
+    int userId;
+    HashSet<Integer> followees;
+    List<Tweet> tweets;
+
+    User(int userId) {
+        this.userId = userId;
+        followees = new HashSet<>();
+        tweets = new LinkedList<>();
+    }
+}
+
+class Twitter {
+    HashMap<Integer, User> userMap;
+    int timeCounter;
+
+    public Twitter() {
+        userMap = new HashMap<>();
+        timeCounter = 0;
+    }
+    
+    public void postTweet(int userId, int tweetId) {
+        if (!userMap.containsKey(userId)) {
+            userMap.put(userId, new User(userId));
+        }
+
+        User user = userMap.get(userId);
+        timeCounter++;
+        Tweet newTweet = new Tweet(tweetId, timeCounter);
+        user.tweets.add(0, newTweet);
+    }
+    
+    public List<Integer> getNewsFeed(int userId) {
+        if (!userMap.containsKey(userId)) {
+            return new ArrayList<>();
+        }
+
+        PriorityQueue<Tweet> pq = new PriorityQueue<>();
+        User user = userMap.get(userId);
+
+        for (int followee : user.followees) {
+            int count = 0;
+
+            for (Tweet tweet : userMap.get(followee).tweets) {
+                pq.offer(tweet);
+                count++;
+
+                if (count == 10) {
+                    break;
+                }
+            }
+        }
+
+        int count = 0;
+        for (Tweet tweet : user.tweets) {
+            pq.offer(tweet);
+            count++;
+
+            if (count == 10) {
+                break;
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+        int countLatestTweets = 0;
+
+        while (!pq.isEmpty() && countLatestTweets < 10) {
+            result.add(pq.poll().tweetId);
+            countLatestTweets++;
+        }
+
+        return result;
+    }
+    
+    public void follow(int followerId, int followeeId) {
+        if (!userMap.containsKey(followerId)) {
+            userMap.put(followerId, new User(followerId));
+        }
+
+        if (!userMap.containsKey(followeeId)) {
+            userMap.put(followeeId, new User(followeeId));
+        }
+
+        User user = userMap.get(followerId);
+        user.followees.add(followeeId);
+    }
+    
+    public void unfollow(int followerId, int followeeId) {
+        if (!userMap.containsKey(followerId) || !userMap.containsKey(followeeId)) {
+            return;
+        }
+
+        User user = userMap.get(followerId);
+        user.followees.remove(followeeId);
+    }
+}`,
+          time: 'postTweet: O(1), follow/unfollow: O(1), getNewsFeed: O(F log(10 * F))',
+          timeDesc: '• postTweet: O(1) inserting at index 0 of the user list.\n• follow / unfollow: O(1) HashSet add and remove.\n• getNewsFeed: Offers at most 10 tweets for each of F followees into a PriorityQueue, then polls at most 10: O(F * log(F)).',
+          space: 'O(U + T + F)',
+          spaceDesc: '• U users in the HashMap, T total tweets stored, and F total follower relationships.',
+          walkthrough: [
+            'Design Tweet with tweetId, global timestamp time, and Comparable sorted descending by time.',
+            'Design User with userId, followees HashSet<Integer>, and tweets LinkedList<Tweet>.',
+            'postTweet: Increment timeCounter, create a new Tweet, and prepend it (add(0, tweet)) to the user\'s list.',
+            'getNewsFeed: Scan up to 10 most recent tweets from each user in user.followees, plus the user\'s own tweets, inserting them into a Max-Heap PriorityQueue<Tweet>.',
+            'Poll up to 10 times from the Max-Heap to collect the 10 most recent tweet IDs in order.',
+            'follow / unfollow: Ensure both users exist, then add or remove the followeeId from user.followees.'
+          ]
+        }
+      }
     ]
   };
