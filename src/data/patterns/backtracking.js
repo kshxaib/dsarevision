@@ -5,7 +5,65 @@ export const backtracking = {
   name: 'Backtracking',
   icon: '🔙',
   problems: [
-    p('Subsets', 'Medium', 'Generate all possible subsets of a set of distinct integers.'),
+    {
+      id: 'subsets',
+      title: 'Subsets',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/subsets/description/',
+      definition: 'Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
+      examples: [
+        {
+          input: 'nums = [1,2,3]',
+          output: '[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]',
+          explanation: 'All subsets are generated from distinct elements, including the empty set and the entire array.'
+        },
+        {
+          input: 'nums = [0]',
+          output: '[[],[0]]',
+          explanation: 'The power set contains the empty set and [0].'
+        }
+      ],
+      optimal: {
+        idea: 'Use an Include / Exclude backtracking pattern. At each index, branch into two decisions: include nums[index] into the current subset and recurse, then backtrack by removing it and recurse without it. Once index reaches nums.length, record a deep copy of the subset into ans.',
+        code: `class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+
+        generateAns(nums, ans, curr, 0);
+
+        return ans;
+    }
+
+    public void generateAns(int nums[], List<List<Integer>> ans, List<Integer> curr, int index) {
+        if (index == nums.length) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+
+        // Include choice
+        curr.add(nums[index]);
+        generateAns(nums, ans, curr, index + 1);
+
+        // Exclude choice (Backtrack)
+        curr.remove(curr.size() - 1);
+        generateAns(nums, ans, curr, index + 1);
+    }
+}`,
+        time: 'O(N * 2^N)',
+        timeDesc: '• There are 2^N total subsets for N unique elements.\n• Copying each subset of size up to N into the answer list takes O(N) time.\n• Total Time Complexity: O(N * 2^N).',
+        space: 'O(N)',
+        spaceDesc: '• O(N) recursion stack depth and O(N) auxiliary space for the curr list (excluding output storage).',
+        walkthrough: [
+          'Initialize the result list ans and a temporary list curr to track elements in the current subset path.',
+          'Start recursion from index 0: generateAns(nums, ans, curr, 0).',
+          'Base case: When index == nums.length, a complete subset choice has been made. Add new ArrayList<>(curr) to ans and return.',
+          'Include choice: Append nums[index] to curr and recursively call generateAns(nums, ans, curr, index + 1).',
+          'Exclude choice: Undo the inclusion via curr.remove(curr.size() - 1) and call generateAns(nums, ans, curr, index + 1) without including nums[index].',
+          'Return ans containing all 2^N subsets.'
+        ]
+      }
+    },
     p('Combination Sum', 'Medium', 'Find all combinations that sum to target (elements reusable).'),
     p('Combination Sum II', 'Medium', 'Find combinations that sum to target (each element used once).'),
     p('Permutations', 'Medium', 'Generate all permutations of an array of distinct integers.'),
