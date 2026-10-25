@@ -370,6 +370,15 @@ export default function App() {
   }, []);
 
   const activePattern = patterns.find((p) => p.id === activePatternId) || patterns[0];
+  const currentProblem = useMemo(() => {
+    if (!activeProblem) return null;
+    for (const pat of patterns) {
+      const found = pat.problems.find((pr) => pr.id === activeProblem.id);
+      if (found) return found;
+    }
+    return activeProblem;
+  }, [activeProblem]);
+
   const activeVaultSubject = activeVaultSubjectId
     ? getVaultSubjectById(activeVaultSubjectId)
     : null;
@@ -483,15 +492,15 @@ export default function App() {
                 <VaultSubjectView
                   subject={activeVaultSubject}
                 />
-              ) : activeProblem ? (
+              ) : currentProblem ? (
                 <ProblemDetail
-                  problem={activeProblem}
+                  problem={currentProblem}
                   patternName={activePattern?.name || ''}
                   onBack={handleBackToPattern}
                   allProblems={activePattern?.problems || []}
                   onSelectProblem={handleSelectProblem}
-                  isRevised={revisedProblems.has(activeProblem.id)}
-                  onToggleRevised={() => handleToggleRevised(activeProblem.id)}
+                  isRevised={revisedProblems.has(currentProblem.id)}
+                  onToggleRevised={() => handleToggleRevised(currentProblem.id)}
                 />
               ) : (
                 <ProblemList

@@ -1,4 +1,7 @@
 import { p } from '../helper.js';
+import subsetsTree from '@/assets/images/backtracking/Recursion Tree_ Generating All Subsets.png';
+import combinationSumTree from '@/assets/images/backtracking/Combination Sum Recursion Tree.png';
+import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combination Sum II Recursion Tree.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -10,6 +13,10 @@ export const backtracking = {
       title: 'Subsets',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/subsets/description/',
+      image: {
+        url: subsetsTree,
+        title: 'Dry Run'
+      },
       definition: 'Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
       examples: [
         {
@@ -24,7 +31,7 @@ export const backtracking = {
         }
       ],
       optimal: {
-        idea: 'Use an Include / Exclude backtracking pattern. At each index, branch into two decisions: include nums[index] into the current subset and recurse, then backtrack by removing it and recurse without it. Once index reaches nums.length, record a deep copy of the subset into ans.',
+        idea: '• **Pattern:** Include or Exclude Backtracking (Pick or Skip)\n• **Decision at each step:** At each `index`, explore two branching paths:\n  1. **Include:** Add `nums[index]` to the current subset (`curr`) and recurse to `index + 1`.\n  2. **Exclude (Backtrack):** Undo the choice by removing `nums[index]` from `curr` and recurse without it.\n• **Base Case:** When `index == nums.length`, all elements have been evaluated. Capture a snapshot (`new ArrayList<>(curr)`) into `ans`.',
         code: `class Solution {
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -69,6 +76,10 @@ export const backtracking = {
       title: 'Combination Sum',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/combination-sum/description/',
+      image: {
+        url: combinationSumTree,
+        title: 'Dry Run'
+      },
       definition: 'Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order. The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.',
       examples: [
         {
@@ -88,7 +99,7 @@ export const backtracking = {
         }
       ],
       optimal: {
-        idea: 'Backtracking with unlimited reuse: At each index, if candidates[index] <= target, pick candidates[index], decrease target, and recurse on the same index so it can be reused. Then backtrack by popping from curr and restoring target. Finally, branch by skipping candidates[index] and advancing to index + 1.',
+        idea: '• **Pattern:** Backtracking with Unlimited Element Reuse\n• **Decision at each step:** At each candidate, branch into two choices:\n  1. **Pick (Reuse):** If `candidates[index] <= target`, add it to `curr`, subtract from `target`, and recurse on the SAME `index`.\n  2. **Backtrack:** Remove the last added number from `curr` and restore `target`.\n  3. **Skip (Next candidate):** Advance to `index + 1` with unchanged `target` to explore combinations without this element.\n• **Base Case:** If `target == 0`, save `new ArrayList<>(curr)` into `ans` and return. If `index == candidates.length`, terminate the branch.',
         code: `class Solution {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -135,7 +146,80 @@ export const backtracking = {
         ]
       }
     },
-    p('Combination Sum II', 'Medium', 'Find combinations that sum to target (each element used once).'),
+    {
+      id: 'combination-sum-ii',
+      title: 'Combination Sum II',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/combination-sum-ii/description/',
+      image: {
+        url: combinationSum2Tree,
+        title: 'Dry Run'
+      },
+      definition: 'Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination. The solution set must not contain duplicate combinations.',
+      examples: [
+        {
+          input: 'candidates = [10,1,2,7,6,1,5], target = 8',
+          output: '[\n  [1,1,6],\n  [1,2,5],\n  [1,7],\n  [2,6]\n]',
+          explanation: 'All unique combinations where each element is used at most once and elements sum to 8.'
+        },
+        {
+          input: 'candidates = [2,5,2,1,2], target = 5',
+          output: '[\n  [1,2,2],\n  [5]\n]',
+          explanation: 'Sorted candidates are [1,2,2,2,5]. Only unique combinations summing to 5 are included.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Backtracking with Duplicate Pruning (Single-Use Elements)\n• **Pre-sorting:** Sort `candidates` in ascending order so identical values are adjacent.\n• **Duplicate Pruning:** Loop `i` from `index` to `candidates.length - 1`. If `i > index && candidates[i] == candidates[i - 1]`, skip `candidates[i]` to avoid duplicate decision branches at the same recursion depth.\n• **State Transition:** If `candidates[i] <= target`, add it to `curr`, decrement `target`, and recurse to `i + 1` (preventing reuse).\n• **Backtrack:** Remove the element from `curr` and restore `target`.\n• **Base Case:** When `target == 0`, record `new ArrayList<>(curr)` into `ans` and return.',
+        code: `class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        Arrays.sort(candidates);
+        int index = 0;
+
+        findCombinations(candidates, ans, curr, index, target);
+        return ans;
+    }
+
+    public void findCombinations(int candidates[], List<List<Integer>> ans, List<Integer> curr, int index, int target) {
+        if (target == 0) {
+            ans.add(new ArrayList<>(curr));
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            // Skip duplicates at the same tree depth
+            if (i > index && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+
+            if (candidates[i] <= target) {
+                curr.add(candidates[i]);
+                target = target - candidates[i];
+
+                findCombinations(candidates, ans, curr, i + 1, target);
+                curr.remove(curr.size() - 1);
+                target = target + candidates[i];
+            }
+        }
+    }
+}`,
+        time: 'O(2^N * K)',
+        timeDesc: '• Sorting takes O(N log N).\n• In the worst case, each element can either be chosen or skipped, yielding up to 2^N combinations.\n• Deep-copying combinations of average size K into ans takes O(K) time.\n• Total Time Complexity: O(2^N * K).',
+        space: 'O(K)',
+        spaceDesc: '• O(K) auxiliary recursion depth and curr list storage where K <= N (excluding output storage).',
+        walkthrough: [
+          'Sort the candidates array so identical numbers are grouped together.',
+          'Initialize ans and curr, and invoke findCombinations(candidates, ans, curr, 0, target).',
+          'Base case: If target == 0, add a new ArrayList<>(curr) snapshot to ans and return.',
+          'Loop i from index to candidates.length - 1.',
+          'Duplicate prevention: If i > index && candidates[i] == candidates[i - 1], skip candidate[i] to avoid identical subtrees.',
+          'If candidates[i] <= target, add candidates[i] to curr, decrement target, and recurse to i + 1 (single-use constraint).',
+          'Backtrack by removing the last element and restoring target.',
+          'Return ans containing all unique combinations.'
+        ]
+      }
+    },
     p('Permutations', 'Medium', 'Generate all permutations of an array of distinct integers.'),
     p('Subsets II', 'Medium', 'Generate all subsets, handling duplicate elements.'),
     p('Letter Combinations of a Phone Number', 'Medium', 'Generate all letter combinations from phone keypad digits.'),
@@ -150,7 +234,7 @@ export const backtracking = {
         { input: 'n = 1', output: '["()"]' }
       ],
       optimal: {
-        idea: 'Use backtracking: maintain counts of used open and close brackets. Only add "(" if open < n, and only add ")" if close < open (to ensure every close bracket matches an existing open bracket). This guarantees that every generated string of length 2n is valid, completely avoiding invalid branches.',
+        idea: '• **Pattern:** Constrained Backtracking (State Validation Invariant)\n• **Invariant Rules:**\n  1. **Add \'(\':** Valid whenever `open < n` (we have opening brackets remaining).\n  2. **Add \')\':** Valid only when `close < open` (ensures every closing bracket pairs with an existing open bracket).\n• **Pruning:** Invalid branches are pruned before recursion starts; every formed prefix is guaranteed valid.\n• **Base Case:** When `s.length() == 2 * n`, a valid well-formed parenthesis sequence is complete; add `s` to `ans`.',
         code: `class Solution {
     public List<String> generateParenthesis(int n) {
         List<String> ans = new ArrayList<>();

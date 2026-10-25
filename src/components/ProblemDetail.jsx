@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { ArrowLeft, Copy, CheckCircle2, Link as LinkIcon, Check, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Copy, CheckCircle2, Link as LinkIcon, Check, ChevronDown } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import StepWalkthrough from './StepWalkthrough';
 
 const diffColorClass = {
   Easy: 'text-easy',
@@ -85,7 +84,147 @@ function CodeBlock({ code }) {
   );
 }
 
-function ApproachContent({ approach }) {
+function formatInline(text) {
+  if (!text) return '';
+  const parts = [];
+  const regex = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+  let match;
+  let lastIndex = 0;
+  let key = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    const token = match[0];
+    if (token.startsWith('**') && token.endsWith('**')) {
+      parts.push(
+        <strong key={key++} className="font-semibold text-ink-text">
+          {token.slice(2, -2)}
+        </strong>
+      );
+    } else if (token.startsWith('`') && token.endsWith('`')) {
+      parts.push(
+        <code key={key++} className="px-1.5 py-0.5 rounded bg-ink-elevated text-ink-text border border-ink-border/60 font-mono text-xs">
+          {token.slice(1, -1)}
+        </code>
+      );
+    }
+    lastIndex = match.index + token.length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+  return parts.length > 0 ? parts : text;
+}
+
+function parseIdeaToLines(idea) {
+  if (!idea) return [];
+  // If text already has newlines or bullet markers, preserve its explicit structure
+  if (idea.includes('\n') || idea.includes('•')) {
+    return idea.split('\n');
+  }
+
+  // If it's a single long sentence / paragraph, intelligently break into structured bullet points
+  const sentences = idea.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g);
+  if (sentences && sentences.length > 1) {
+    return sentences
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map((s, idx) => {
+        return idx === 0 ? `• **Core Idea:** ${s}` : `• ${s}`;
+      });
+  }
+
+  return [idea];
+}
+
+function IdeaSection({ idea }) {
+  if (!idea) return null;
+
+  const lines = parseIdeaToLines(idea);
+
+  return (
+    <div className="rounded-lg border border-ink-border bg-ink-surface/60 p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider">
+          Intuition & Approach
+        </span>
+      </div>
+
+      <div className="space-y-2 text-sm text-ink-muted leading-relaxed">
+        {lines.map((line, idx) => {
+          const trimmed = line.trim();
+          if (!trimmed) {
+            return <div key={idx} className="h-1.5" />;
+          }
+
+          // Indented sub-bullets
+          const isSub = line.startsWith('  ') || line.startsWith('\t');
+          const isBullet = trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*');
+          const isNumbered = /^\d+\.\s/.test(trimmed);
+
+          if (isSub) {
+            const clean = trimmed.replace(/^(•|-|\*|\d+\.)\s*/, '');
+            const numPrefix = trimmed.match(/^(\d+\.)\s*/);
+            return (
+              <div key={idx} className="flex items-start gap-2.5 ml-5 text-[13px]">
+                {numPrefix ? (
+                  <span className="text-[11px] font-mono font-medium text-ink-subtle shrink-0 mt-0.5">
+                    {numPrefix[1]}
+                  </span>
+                ) : (
+                  <span className="w-1.5 h-1.5 rounded-full bg-ink-subtle mt-2 shrink-0" />
+                )}
+                <span className="flex-1 text-ink-muted">{formatInline(clean)}</span>
+              </div>
+            );
+          }
+
+          if (isBullet) {
+            const clean = trimmed.replace(/^(•|-|\*)\s*/, '');
+            return (
+              <div key={idx} className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-ink-subtle mt-2 shrink-0" />
+                <span className="flex-1 text-ink-text/90 font-normal">{formatInline(clean)}</span>
+              </div>
+            );
+          }
+
+          if (isNumbered) {
+            const numMatch = trimmed.match(/^(\d+)\.\s*(.*)/);
+            return (
+              <div key={idx} className="flex items-start gap-2.5">
+                <span className="text-xs font-mono font-medium text-ink-muted shrink-0 mt-0.5">
+                  {numMatch[1]}.
+                </span>
+                <span className="flex-1 text-ink-text/90 font-normal">{formatInline(numMatch[2])}</span>
+              </div>
+            );
+          }
+
+          // Header lines ending with colon or starting with 'Pattern:'
+          if (trimmed.endsWith(':') || trimmed.toLowerCase().startsWith('pattern:')) {
+            return (
+              <p key={idx} className="font-semibold text-ink-text text-sm pt-1">
+                {formatInline(trimmed)}
+              </p>
+            );
+          }
+
+          // Standard paragraph line
+          return (
+            <p key={idx} className="text-ink-muted">
+              {formatInline(trimmed)}
+            </p>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ApproachContent({ approach, image }) {
   if (!approach || (!approach.idea && !approach.code)) {
     return (
       <p className="text-ink-subtle italic text-sm py-4">
@@ -97,10 +236,7 @@ function ApproachContent({ approach }) {
   return (
     <div className="space-y-4 py-1">
       {approach.idea && (
-        <div>
-          <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1.5">Idea</p>
-          <p className="text-ink-muted text-sm leading-relaxed whitespace-pre-line">{approach.idea}</p>
-        </div>
+        <IdeaSection idea={approach.idea} />
       )}
       {approach.code && (
         <div>
@@ -108,35 +244,84 @@ function ApproachContent({ approach }) {
           <CodeBlock code={approach.code} />
         </div>
       )}
-      {approach.walkthrough && (
-        <StepWalkthrough walkthrough={approach.walkthrough} />
+      {image && (
+        <DiagramSection image={image} />
       )}
       {(approach.time || approach.space) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
           {approach.time && (
-            <Card className="bg-ink-elevated border-ink-border">
-              <CardContent className="p-4">
-                <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Time Complexity</p>
-                <p className="text-base font-mono font-bold text-ink-text">{approach.time}</p>
-                {approach.timeDesc && (
-                  <p className="text-xs text-ink-subtle mt-1.5 leading-relaxed whitespace-pre-line">{approach.timeDesc}</p>
-                )}
-              </CardContent>
-            </Card>
+            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5">
+              <p className="text-[10px] font-semibold text-ink-subtle uppercase tracking-wider">Time Complexity</p>
+              <p className="text-sm font-mono font-bold text-ink-text leading-tight mt-0.5">{approach.time}</p>
+              {approach.timeDesc && (
+                <p className="text-xs text-ink-muted/90 mt-1.5 leading-normal whitespace-pre-line">{approach.timeDesc}</p>
+              )}
+            </div>
           )}
           {approach.space && (
-            <Card className="bg-ink-elevated border-ink-border">
-              <CardContent className="p-4">
-                <p className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-1">Space Complexity</p>
-                <p className="text-base font-mono font-bold text-ink-text">{approach.space}</p>
-                {approach.spaceDesc && (
-                  <p className="text-xs text-ink-subtle mt-1.5 leading-relaxed whitespace-pre-line">{approach.spaceDesc}</p>
-                )}
-              </CardContent>
-            </Card>
+            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5">
+              <p className="text-[10px] font-semibold text-ink-subtle uppercase tracking-wider">Space Complexity</p>
+              <p className="text-sm font-mono font-bold text-ink-text leading-tight mt-0.5">{approach.space}</p>
+              {approach.spaceDesc && (
+                <p className="text-xs text-ink-muted/90 mt-1.5 leading-normal whitespace-pre-line">{approach.spaceDesc}</p>
+              )}
+            </div>
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function DiagramSection({ image }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const imageUrl = typeof image === 'string' ? image : image.url;
+
+  return (
+    <div className="my-3 rounded-lg border border-ink-border hover:border-ink-faint bg-ink-surface transition-colors overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-ink-elevated transition-colors cursor-pointer select-none group"
+      >
+        <span className="text-[13px] font-medium text-ink-muted group-hover:text-ink-text transition-colors">
+          Dry Run
+        </span>
+
+        <div className="flex items-center gap-1.5 text-xs text-ink-subtle group-hover:text-ink-muted font-medium transition-colors">
+          <span>{isOpen ? 'Hide dry run' : 'View dry run'}</span>
+          <ChevronDown
+            className={`w-4 h-4 transition-transform duration-200 ease-in-out ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* Smooth CSS Grid Collapse / Expand */}
+      <div
+        className={`grid transition-all duration-200 ease-in-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="p-3 border-t border-ink-border bg-[#0a0a0a]">
+            <a
+              href={imageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block cursor-zoom-in"
+              title="Open full size in new tab"
+            >
+              <img
+                src={imageUrl}
+                alt="Recursion Tree"
+                className="max-h-[650px] w-auto max-w-full rounded object-contain mx-auto"
+                loading="lazy"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -300,8 +485,15 @@ export default function ProblemDetail({
         </div>
       )}
 
-      {/* Approaches Tabs - Dynamically render only existing approaches */}
-      {approachList.length > 0 && (
+      {/* Approaches Section - Only show tabs/header if more than 1 approach exists */}
+      {approachList.length === 1 ? (
+        <div className="mb-8">
+          <ApproachContent
+            approach={approachList[0].data}
+            image={problem.image || approachList[0].data?.image}
+          />
+        </div>
+      ) : approachList.length > 1 ? (
         <div className="mb-8">
           <h3 className="text-[11px] font-semibold text-ink-subtle uppercase tracking-wider mb-3">Approaches</h3>
           <Tabs key={`${problem.id}-${approachList.map(a => a.id).join('-')}`} defaultValue={approachList[0].id} className="w-full">
@@ -319,13 +511,16 @@ export default function ProblemDetail({
             <div className="mt-4">
               {approachList.map(app => (
                 <TabsContent key={app.id} value={app.id} className="mt-0">
-                  <ApproachContent approach={app.data} />
+                  <ApproachContent
+                    approach={app.data}
+                    image={problem.image || app.data?.image}
+                  />
                 </TabsContent>
               ))}
             </div>
           </Tabs>
         </div>
-      )}
+      ) : null}
 
       {/* Up Next Section */}
       {upNext.length > 0 && (
