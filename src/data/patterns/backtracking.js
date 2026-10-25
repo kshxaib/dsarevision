@@ -3,6 +3,7 @@ import subsetsTree from '@/assets/images/backtracking/Recursion Tree_ Generating
 import combinationSumTree from '@/assets/images/backtracking/Combination Sum Recursion Tree.png';
 import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combination Sum II Recursion Tree.png';
 import permutationsTree from '@/assets/images/backtracking/Colorful Permutation Recursion Tree.png';
+import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursion Tree Infographic.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -253,7 +254,57 @@ export const backtracking = {
         space: 'O(N)'
       }
     },
-    p('Subsets II', 'Medium', 'Generate all subsets, handling duplicate elements.'),
+    {
+      id: 'subsets-ii',
+      title: 'Subsets II',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/subsets-ii/description/',
+      image: {
+        url: subsets2Tree,
+        title: 'Dry Run'
+      },
+      definition: 'Given an integer array nums that may contain duplicates, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
+      examples: [
+        {
+          input: 'nums = [1,2,2]',
+          output: '[[],[1],[1,2],[1,2,2],[2],[2,2]]',
+          explanation: 'All unique subsets formed from array with duplicate elements.'
+        },
+        {
+          input: 'nums = [0]',
+          output: '[[],[0]]',
+          explanation: 'The power set contains the empty set and [0].'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Backtracking with Duplicate Pruning\n• **Pre-sorting:** Sort `nums` first so identical values are adjacent.\n• **Subset Snapshot:** Add `new ArrayList<>(curr)` to `ans` at the start of each recursive call.\n• **Loop and Pruning:** Iterate `i` from `index` to `nums.length - 1`:\n  1. If `i > index && nums[i] == nums[i - 1]`, skip `nums[i]` to avoid duplicate subsets at the same depth.\n  2. Otherwise, add `nums[i]` to `curr`, recurse with `i + 1`, and backtrack by removing the last element.',
+        code: `class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums); // : O(N log N) sorting
+
+        findSubsets(nums, ans, new ArrayList<>(), 0);
+        return ans;
+    }
+
+    public void findSubsets(int[] nums, List<List<Integer>> ans, List<Integer> curr, int index) {
+        ans.add(new ArrayList<>(curr)); // : O(N) copy into answer
+
+        for (int i = index; i < nums.length; i++) { // : O(N) loop
+            if (i > index && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            curr.add(nums[i]);
+            findSubsets(nums, ans, curr, i + 1); // : 2^N recursion paths
+            curr.remove(curr.size() - 1);
+        }
+    }
+}`,
+        time: 'O(N * 2^N)',
+        space: 'O(N)'
+      }
+    },
     p('Letter Combinations of a Phone Number', 'Medium', 'Generate all letter combinations from phone keypad digits.'),
     {
       id: 'generate-parentheses',
