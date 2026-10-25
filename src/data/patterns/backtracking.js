@@ -4,6 +4,7 @@ import combinationSumTree from '@/assets/images/backtracking/Combination Sum Rec
 import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combination Sum II Recursion Tree.png';
 import permutationsTree from '@/assets/images/backtracking/Colorful Permutation Recursion Tree.png';
 import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursion Tree Infographic.png';
+import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree Infographic.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -305,7 +306,67 @@ export const backtracking = {
         space: 'O(N)'
       }
     },
-    p('Letter Combinations of a Phone Number', 'Medium', 'Generate all letter combinations from phone keypad digits.'),
+    {
+      id: 'letter-combinations-of-a-phone-number',
+      title: 'Letter Combinations of a Phone Number',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/',
+      image: {
+        url: phoneTree,
+        title: 'Dry Run'
+      },
+      definition: 'Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order. A mapping of digits to letters is just like on telephone buttons.',
+      examples: [
+        {
+          input: 'digits = "23"',
+          output: '["ad","ae","af","bd","be","bf","cd","ce","cf"]',
+          explanation: 'All combinations formed by choosing one letter from "abc" (2) and one letter from "def" (3).'
+        },
+        {
+          input: 'digits = ""',
+          output: '[]',
+          explanation: 'Empty input string returns an empty list.'
+        },
+        {
+          input: 'digits = "2"',
+          output: '["a","b","c"]',
+          explanation: 'Single digit returns its mapped characters.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Multi-Branch Recursive Backtracking\n• **Keypad Mapping:** Use an array `map` where index `2` maps to `"abc"`, `3` to `"def"`, up to `9` mapping to `"wxyz"`.\n• **Branching Choices:** At recursion level `index`, look up `letters = map[currNum]`. Loop through each character:\n  1. Append character to `curr`.\n  2. Recurse with `index + 1` for the next digit.\n  3. Backtrack by removing the last character from `curr`.\n• **Base Case:** When `index == digits.length()`, snapshot `curr.toString()` into `ans` and return.\n• **Edge Case:** If `digits` is empty, return an empty list immediately.',
+        code: `class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> ans = new ArrayList<>();
+
+        if (digits.length() == 0) return ans; // : O(1) edge case
+
+        String[] map = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+        findCombinations(ans, new StringBuilder(), digits, map, 0);
+        return ans;
+    }
+
+    public void findCombinations(List<String> ans, StringBuilder curr, String digits, String[] map, int index) {
+        if (index == digits.length()) {
+            ans.add(curr.toString()); // : O(N) copy formed string
+            return;
+        }
+
+        int currNum = digits.charAt(index) - '0';
+        String letters = map[currNum];
+
+        for (int i = 0; i < letters.length(); i++) { // : O(K) loop where K <= 4
+            curr.append(letters.charAt(i));
+            findCombinations(ans, curr, digits, map, index + 1); // : 4^N recursion paths
+            curr.deleteCharAt(curr.length() - 1);
+        }
+    }
+}`,
+        time: 'O(4^N * N)',
+        space: 'O(N)'
+      }
+    },
     {
       id: 'generate-parentheses',
       title: 'Generate Parentheses',
