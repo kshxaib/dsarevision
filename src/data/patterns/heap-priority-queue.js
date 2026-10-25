@@ -291,7 +291,61 @@ export const heapPriorityQueue = {
           ]
         }
       },
-      p('Find Median from Data Stream', 'Hard', 'Find the median from continuously arriving numbers.'),
+      {
+        id: 'find-median-from-data-stream',
+        title: 'Find Median from Data Stream',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/find-median-from-data-stream/description/',
+        definition: 'The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values. Implement the MedianFinder class:\n• MedianFinder() initializes the MedianFinder object.\n• void addNum(int num) adds the integer num from the data stream to the data structure.\n• double findMedian() returns the median of all elements so far. Answers within 10⁻⁵ of the actual answer will be accepted.',
+        examples: [
+          {
+            input: '["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]\n[[], [1], [2], [], [3], []]',
+            output: '[null, null, null, 1.5, null, 2.0]',
+            explanation: 'MedianFinder medianFinder = new MedianFinder();\nmedianFinder.addNum(1);    // arr = [1]\nmedianFinder.addNum(2);    // arr = [1, 2]\nmedianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)\nmedianFinder.addNum(3);    // arr = [1, 2, 3]\nmedianFinder.findMedian(); // return 2.0'
+          }
+        ],
+        optimal: {
+          idea: 'Use the Two-Heaps pattern: a Max-Heap for the smaller half of numbers and a Min-Heap for the larger half. For each incoming number, push to maxHeap and pass its maximum to minHeap. If minHeap grows larger than maxHeap, rebalance by pushing minHeap.poll() back to maxHeap. This ensures maxHeap holds either the same number of elements or one more than minHeap, allowing O(1) median retrieval.',
+          code: `class MedianFinder {
+    PriorityQueue<Integer> maxHeap;
+    PriorityQueue<Integer> minHeap;
+
+    public MedianFinder() {
+        maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        minHeap = new PriorityQueue<>();
+    }
+    
+    public void addNum(int num) {
+        maxHeap.offer(num);
+
+        minHeap.offer(maxHeap.poll());
+
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.offer(minHeap.poll());
+        }
+    }
+    
+    public double findMedian() {
+        if (maxHeap.size() == minHeap.size()) {
+            return (maxHeap.peek() + minHeap.peek()) / 2.0;
+        }
+
+        return maxHeap.peek();
+    }
+}`,
+          time: 'addNum: O(log N), findMedian: O(1)',
+          timeDesc: '• addNum(num): Constant number of heap offer/poll operations on heaps of size N/2, taking O(log N) time.\n• findMedian(): Directly reads peek() of one or both heaps in O(1) time.',
+          space: 'O(N)',
+          spaceDesc: '• All N numbers in the stream are stored across the two heaps.',
+          walkthrough: [
+            'Maintain two heaps: maxHeap for the lower half and minHeap for the upper half.',
+            'addNum(num): Offer num to maxHeap, then transfer the largest lower-half value (maxHeap.poll()) to minHeap.',
+            'Balance: If minHeap has more elements than maxHeap, transfer minHeap.poll() to maxHeap. This guarantees maxHeap.size() >= minHeap.size().',
+            'findMedian(): If sizes are equal, the median is the arithmetic mean of both tops: (maxHeap.peek() + minHeap.peek()) / 2.0.',
+            'If sizes are unequal (odd total count), maxHeap contains the exact median element at maxHeap.peek().'
+          ]
+        }
+      },
       p('Design Twitter', 'Medium', 'Design a simplified Twitter with follow, unfollow, post, and feed.'),
     ]
   };
