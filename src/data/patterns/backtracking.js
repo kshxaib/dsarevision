@@ -64,7 +64,77 @@ export const backtracking = {
         ]
       }
     },
-    p('Combination Sum', 'Medium', 'Find all combinations that sum to target (elements reusable).'),
+    {
+      id: 'combination-sum',
+      title: 'Combination Sum',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/combination-sum/description/',
+      definition: 'Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order. The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.',
+      examples: [
+        {
+          input: 'candidates = [2,3,6,7], target = 7',
+          output: '[[2,2,3],[7]]',
+          explanation: '2 and 3 are candidates, and 2 + 2 + 3 = 7 (2 is used multiple times). 7 = 7. These are the only two combinations.'
+        },
+        {
+          input: 'candidates = [2,3,5], target = 8',
+          output: '[[2,2,2,2],[2,3,3],[3,5]]',
+          explanation: 'All unique combinations summing to 8.'
+        },
+        {
+          input: 'candidates = [2], target = 1',
+          output: '[]',
+          explanation: 'No combinations possible.'
+        }
+      ],
+      optimal: {
+        idea: 'Backtracking with unlimited reuse: At each index, if candidates[index] <= target, pick candidates[index], decrease target, and recurse on the same index so it can be reused. Then backtrack by popping from curr and restoring target. Finally, branch by skipping candidates[index] and advancing to index + 1.',
+        code: `class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        int index = 0;
+
+        findCombinations(candidates, ans, curr, index, target);
+        return ans;
+    }
+
+    public void findCombinations(int candidates[], List<List<Integer>> ans, List<Integer> curr, int index, int target) {
+        if (index == candidates.length) {
+            if (target == 0) {
+                ans.add(new ArrayList<>(curr));
+            }
+            return;
+        }
+
+        // Pick choice (reusable: stay at same index)
+        if (candidates[index] <= target) {
+            curr.add(candidates[index]);
+            target = target - candidates[index];
+
+            findCombinations(candidates, ans, curr, index, target);
+            curr.remove(curr.size() - 1);
+            target = target + candidates[index];
+        }
+
+        // Skip choice (advance to next candidate)
+        findCombinations(candidates, ans, curr, index + 1, target);
+    }
+}`,
+        time: 'O(2^(target / min) * K)',
+        timeDesc: '• The recursion tree depth is bounded by T = target / min(candidates).\n• At each node, we branch into pick or skip (up to 2 choices), yielding O(2^T) operations.\n• Copying valid combinations of average length K into ans takes O(K) time.',
+        space: 'O(target / min)',
+        spaceDesc: '• The maximum recursion call stack depth and curr list size is target / min(candidates).',
+        walkthrough: [
+          'Initialize ans and curr, and start recursion with index = 0 and target.',
+          'Base case: If index reaches candidates.length, check if target == 0. If so, add new ArrayList<>(curr) to ans and return.',
+          'Pick choice: If candidates[index] <= target, append candidates[index] to curr, reduce target, and recurse staying at the same index.',
+          'Backtrack: Remove the last element from curr and restore target.',
+          'Skip choice: Recurse to index + 1 with the same target to explore combinations without this element.',
+          'Return ans containing all unique combinations.'
+        ]
+      }
+    },
     p('Combination Sum II', 'Medium', 'Find combinations that sum to target (each element used once).'),
     p('Permutations', 'Medium', 'Generate all permutations of an array of distinct integers.'),
     p('Subsets II', 'Medium', 'Generate all subsets, handling duplicate elements.'),
