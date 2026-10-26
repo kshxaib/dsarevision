@@ -498,6 +498,8 @@ export default function App() {
                     window.location.hash = '#' + patId;
                     window.scrollTo({ top: 0, behavior: 'instant' });
                   }}
+                  onSelectProblem={handleSelectProblem}
+                  onToggleRevised={handleToggleRevised}
                 />
               ) : viewMode === 'vault' ? (
                 <VaultHub

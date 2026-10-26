@@ -1,7 +1,13 @@
 import { useState, useMemo } from 'react';
-import { Search, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowUpRight, Check, ExternalLink } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
+
+const diffColorClass = {
+  Easy: 'text-easy',
+  Medium: 'text-medium',
+  Hard: 'text-hard',
+};
 
 const patternDescriptions = {
   'arrays-hashing': 'Organize data for constant-time access and lookup.',
@@ -28,15 +34,47 @@ export default function DsaPatternsHub({
   patterns,
   revisedProblems = new Set(),
   onSelectPattern,
+  onSelectProblem,
+  onToggleRevised,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  // Filter patterns and their problems
-  const filteredPatterns = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+  const q = searchQuery.trim().toLowerCase();
 
+  // All individual problems matching search and filters across all patterns
+  const allMatchingProblems = useMemo(() => {
+    if (!q) return [];
+
+    const list = [];
+    patterns.forEach((pat) => {
+      pat.problems.forEach((prob) => {
+        const titleMatches = prob.title.toLowerCase().includes(q);
+        const defMatches = prob.definition ? prob.definition.toLowerCase().includes(q) : false;
+        if (!titleMatches && !defMatches) return;
+
+        if (difficultyFilter !== 'all' && prob.difficulty.toLowerCase() !== difficultyFilter) {
+          return;
+        }
+
+        const isRev = revisedProblems.has(prob.id);
+        if (statusFilter === 'revised' && !isRev) return;
+        if (statusFilter === 'remaining' && isRev) return;
+
+        list.push({
+          ...prob,
+          patternId: pat.id,
+          patternName: pat.name,
+          patternIcon: pat.icon,
+        });
+      });
+    });
+    return list;
+  }, [patterns, q, difficultyFilter, statusFilter, revisedProblems]);
+
+  // Filter patterns and their problem statistics
+  const filteredPatterns = useMemo(() => {
     return patterns
       .map((pat) => {
         const desc = patternDescriptions[pat.id] || 'Algorithmic problem-solving pattern.';
@@ -46,7 +84,8 @@ export default function DsaPatternsHub({
         const matchingProblems = pat.problems.filter((prob) => {
           if (q && !matchesPatName) {
             const titleMatches = prob.title.toLowerCase().includes(q);
-            if (!titleMatches) return false;
+            const defMatches = prob.definition ? prob.definition.toLowerCase().includes(q) : false;
+            if (!titleMatches && !defMatches) return false;
           }
 
           if (difficultyFilter !== 'all' && prob.difficulty.toLowerCase() !== difficultyFilter) {
@@ -74,11 +113,12 @@ export default function DsaPatternsHub({
           hardCount,
           revCount,
           percentage,
-          visible: (q || difficultyFilter !== 'all' || statusFilter !== 'all') ? matchingProblems.length > 0 : true,
+          matchingProblemCount: matchingProblems.length,
+          visible: (q || difficultyFilter !== 'all' || statusFilter !== 'all') ? (matchesPatName || matchingProblems.length > 0) : true,
         };
       })
       .filter((p) => p.visible);
-  }, [patterns, searchQuery, difficultyFilter, statusFilter, revisedProblems]);
+  }, [patterns, q, difficultyFilter, statusFilter, revisedProblems]);
 
   return (
     <div className="mx-auto pt-2 pb-10 px-4 sm:px-6 max-w-6xl animate-fadeIn">
@@ -129,7 +169,107 @@ export default function DsaPatternsHub({
         </div>
       </div>
 
-      {/* 2-Column Grid */}
+      {/* If searching, display Matching Problems Section */}
+      {q && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <span>Matching Problems</span>
+              <span className="px-2 py-0.5 rounded-full text-[11px] bg-muted text-foreground font-mono">
+                {allMatchingProblems.length}
+              </span>
+            </h2>
+          </div>
+
+          {allMatchingProblems.length > 0 ? (
+            <div className="border border-border rounded-xl overflow-hidden divide-y divide-border bg-card shadow-xs">
+              {allMatchingProblems.map((problem) => {
+                const isRevised = revisedProblems.has(problem.id);
+                return (
+                  <div
+                    key={problem.id}
+                    onClick={() => onSelectProblem?.(problem)}
+                    className="w-full text-left group flex items-center gap-3 px-4 py-3 hover:bg-muted/40 transition-colors cursor-pointer"
+                  >
+                    {/* Tick / Checkbox */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleRevised?.(problem.id);
+                      }}
+                      title={isRevised ? 'Mark as unrevised' : 'Mark as revised'}
+                      className="w-5 h-5 flex items-center justify-center shrink-0 cursor-pointer text-muted-foreground hover:text-foreground"
+                    >
+                      {isRevised ? (
+                        <Check className="w-4 h-4 text-[#2cbb5d] stroke-[2.8]" />
+                      ) : (
+                        <div className="w-3.5 h-3.5 rounded-sm border border-border group-hover:border-muted-foreground transition-colors" />
+                      )}
+                    </button>
+
+                    {/* Title & Pattern & Definition */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors">
+                          {problem.title}
+                        </span>
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-muted text-muted-foreground border border-border inline-flex items-center gap-1">
+                          {problem.patternIcon && <span>{problem.patternIcon}</span>}
+                          <span>{problem.patternName}</span>
+                        </span>
+                        {problem.leetcodeUrl && (
+                          <a
+                            href={problem.leetcodeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title={problem.leetcodeUrl.includes('neetcode.io') ? 'Open on NeetCode' : 'Open on LeetCode'}
+                            className="text-muted-foreground hover:text-foreground p-0.5 rounded transition-colors inline-flex items-center"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
+
+                      {problem.definition && (
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate max-w-xl">
+                          {problem.definition}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Difficulty */}
+                    <span
+                      className={`text-xs font-medium shrink-0 ${diffColorClass[problem.difficulty] || 'text-muted-foreground'}`}
+                    >
+                      {problem.difficulty}
+                    </span>
+
+                    <ArrowUpRight className="text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all size-4 shrink-0" />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="py-6 px-4 rounded-xl border border-dashed border-border bg-card/40 text-center text-xs text-muted-foreground">
+              No problem titles found matching "{searchQuery.trim()}".
+            </div>
+          )}
+
+          {/* Section header for Patterns */}
+          <div className="mt-8 mb-3 px-1">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <span>Matching Patterns</span>
+              <span className="px-2 py-0.5 rounded-full text-[11px] bg-muted text-foreground font-mono">
+                {filteredPatterns.length}
+              </span>
+            </h2>
+          </div>
+        </div>
+      )}
+
+      {/* 2-Column Grid of Patterns */}
       <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
         {filteredPatterns.map((pat) => (
           <div
@@ -139,8 +279,9 @@ export default function DsaPatternsHub({
           >
             <div className="flex justify-between items-start gap-3">
               <div>
-                <h2 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
-                  {pat.name}
+                <h2 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors flex items-center gap-1.5">
+                  {pat.icon && <span>{pat.icon}</span>}
+                  <span>{pat.name}</span>
                 </h2>
                 <p className="text-muted-foreground text-xs mt-1 leading-relaxed">
                   {pat.description}
@@ -168,7 +309,7 @@ export default function DsaPatternsHub({
           </div>
         ))}
 
-        {filteredPatterns.length === 0 && (
+        {filteredPatterns.length === 0 && (!q || allMatchingProblems.length === 0) && (
           <div className="col-span-full py-12 text-center text-muted-foreground text-sm border border-dashed border-border rounded-xl">
             No patterns or problems found matching your filters.
           </div>
@@ -177,3 +318,4 @@ export default function DsaPatternsHub({
     </div>
   );
 }
+
