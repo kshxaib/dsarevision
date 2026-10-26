@@ -7,6 +7,7 @@ import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursio
 import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree Infographic.png';
 import parenthesesTree from '@/assets/images/backtracking/Colorful Parentheses Recursion Tree Infographic.png';
 import palindromeTree from '@/assets/images/backtracking/Palindrome Partitioning Recursion Tree.png';
+import wordSearchTree from '@/assets/images/backtracking/Word Search Recursion Tree Infographic.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -484,7 +485,80 @@ export const backtracking = {
         space: 'O(N)'
       }
     },
-    p('Word Search', 'Medium', 'Search for a word in a 2D board of characters.'),
+    {
+      id: 'word-search',
+      title: 'Word Search',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/word-search/description/',
+      image: {
+        url: wordSearchTree,
+        title: 'Dry Run'
+      },
+      definition: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.',
+      examples: [
+        {
+          input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"',
+          output: 'true',
+          explanation: 'The word "ABCCED" can be traced following sequentially adjacent cells.'
+        },
+        {
+          input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"',
+          output: 'true',
+          explanation: 'The word "SEE" exists in the grid.'
+        },
+        {
+          input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"',
+          output: 'false',
+          explanation: 'Cannot reuse the same cell twice.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** 2D Grid Backtracking with In-Place Visited Marking\n• **Starting Points:** Iterate through each cell `(i, j)` on the `N x M` board. When `board[i][j] == word.charAt(0)`, initiate recursive search.\n• **Base Case:** If `k == word.length()`, all characters in `word` have matched successfully. Return `true`.\n• **Boundary and Match Check:** Return `false` if `(i, j)` is out of bounds or `board[i][j] != word.charAt(k)`.\n• **In-Place Marking:** Temporarily save `temp = board[i][j]` and overwrite with `\'#\'` to mark the cell as visited without extra memory.\n• **4-Directional Exploration:** Recurse in 4 directions (down, up, right, left) for the next character `k + 1`.\n• **Backtrack:** Restore `board[i][j] = temp` to allow other path combinations to use the cell.',
+        code: `class Solution {
+    public boolean exist(char[][] board, String word) {
+        int n = board.length;
+        int m = board[0].length;
+
+        for (int i = 0; i < n; i++) { // : O(N) loop rows
+            for (int j = 0; j < m; j++) { // : O(M) loop cols
+                if (board[i][j] == word.charAt(0)) {
+                    if (search(board, word, n, m, i, j, 0)) { // : search from (i, j)
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean search(char[][] board, String word, int n, int m, int i, int j, int k) {
+        if (k == word.length()) {
+            return true;
+        }
+
+        if (i < 0 || j < 0 || i >= n || j >= m || board[i][j] != word.charAt(k)) {
+            return false;
+        }
+
+        char temp = board[i][j];
+        board[i][j] = '#'; // : mark visited in-place
+
+        // 4-directional exploration: at most 3 choices per step
+        boolean down = search(board, word, n, m, i + 1, j, k + 1);
+        boolean up = search(board, word, n, m, i - 1, j, k + 1);
+        boolean right = search(board, word, n, m, i, j + 1, k + 1);
+        boolean left = search(board, word, n, m, i, j - 1, k + 1);
+
+        board[i][j] = temp; // : backtrack restore cell
+
+        return down || up || right || left;
+    }
+}`,
+        time: 'O(N * M * 3^L)',
+        space: 'O(L)'
+      }
+    },
     p('N Queens', 'Hard', 'Place n queens on an n×n chessboard with no conflicts.')
   ]
 };
