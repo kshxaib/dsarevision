@@ -806,7 +806,75 @@ export const graphs = {
           spaceDesc: '• Adjacency list requires O(V + 2E) space to store all nodes and bidirectional edges.\n• boolean visited array and recursion stack each require O(V) space in worst case.\n• Total Space: O(V + E) auxiliary space.'
         }
       },
-      p('Graph Valid Tree', 'Medium', 'Check if an undirected graph forms a valid tree.'),
+      {
+        id: 'graph-valid-tree',
+        title: 'Graph Valid Tree',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://neetcode.io/problems/valid-tree',
+        image: null,
+        definition: 'Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree. A valid tree must be fully connected and contain no cycles.',
+        examples: [
+          {
+            input: 'n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]',
+            output: 'true',
+            explanation: 'All 5 nodes are connected and there are exactly 4 edges with no cycles, forming a valid tree.'
+          },
+          {
+            input: 'n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]',
+            output: 'false',
+            explanation: 'The edges [1,2], [2,3], and [1,3] form a cycle.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Graph Theory Tree Property and DFS Connectivity\n• **Tree Condition:** In graph theory, an undirected graph is a valid tree if and only if it has exactly `n - 1` edges and is fully connected with no disconnected components.\n• **Edge Count Check:** If `edges.length != n - 1`, return false immediately (fewer edges means disconnected, more edges means a cycle is guaranteed).\n• **DFS Reachability:** Build the undirected adjacency list and start DFS from node 0 to traverse all reachable nodes.\n• **Connectivity Verification:** Check the `visited` array. If every node from 0 to `n - 1` is visited, the graph is a single connected component and thus a valid tree.',
+          code: `class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if (edges.length != n - 1) {
+            return false;
+        }
+
+        List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i < n; i++) { // : O(V) initialize nodes
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : edges) { // : O(E) build undirected edges
+            int u = edge[0];
+            int v = edge[1];
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        boolean visited[] = new boolean[n]; // : O(V) visited array
+
+        dfs(adj, visited, 0); // : traverse from root node 0
+
+        for (boolean isVisited : visited) { // : O(V) check all nodes connected
+            if (!isVisited) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void dfs(List<List<Integer>> adj, boolean[] visited, int node) {
+        visited[node] = true;
+
+        for (int neighbor : adj.get(node)) { // : explore neighboring nodes
+            if (!visited[neighbor]) {
+                dfs(adj, visited, neighbor);
+            }
+        }
+    }
+}`,
+          time: 'O(V + E)',
+          timeDesc: '• Building the graph and scanning edges takes O(V + E) time.\n• DFS visits each node and verifies connectivity in O(V + E) where E equals V - 1.\n• Total Time: O(V + E) or simply O(V) for a valid tree structure.',
+          space: 'O(V + E)',
+          spaceDesc: '• Adjacency list requires O(V + 2E) space for nodes and undirected edges.\n• boolean visited array and recursion call stack each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
+        }
+      },
       p('Redundant Connection', 'Medium', 'Find the edge that creates a cycle in an undirected graph.'),
       p('Word Ladder', 'Hard', 'Find shortest transformation sequence from begin to end word.'),
     ]
