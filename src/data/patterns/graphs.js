@@ -875,7 +875,76 @@ export const graphs = {
           spaceDesc: '• Adjacency list requires O(V + 2E) space for nodes and undirected edges.\n• boolean visited array and recursion call stack each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
         }
       },
-      p('Redundant Connection', 'Medium', 'Find the edge that creates a cycle in an undirected graph.'),
+      {
+        id: 'redundant-connection',
+        title: 'Redundant Connection',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/redundant-connection/description/',
+        image: null,
+        definition: 'In this problem, a tree is an undirected graph that is connected and has no cycles. You are given a graph that started as a tree with n nodes labeled from 1 to n, with one additional edge added. The added edge has two different vertices chosen from 1 to n, and was not an edge that already existed. The graph is represented as an array edges of length n where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the graph. Return an edge that can be removed so that the resulting graph is a tree of n nodes. If there are multiple answers, return the answer that occurs last in the input.',
+        examples: [
+          {
+            input: 'edges = [[1,2],[1,3],[2,3]]',
+            output: '[2,3]',
+            explanation: 'Removing [2,3] breaks the cycle and restores a valid tree structure.'
+          },
+          {
+            input: 'edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]',
+            output: '[1,4]',
+            explanation: 'Both [1,2], [2,3], [3,4], and [1,4] form a cycle. [1,4] occurs later in the input and is returned.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Incremental Graph Construction and DFS Cycle Detection\n• **Cycle Condition:** Before adding an undirected edge `[u, v]` to our graph, check whether a path already exists between `u` and `v`.\n• **DFS Connectivity Check:** For each edge `[u, v]`, run `dfs(adj, visited, u, v)`. If `dfs` finds that `v` is already reachable from `u`, then adding this edge would create a cycle. Since we process edges in order, this edge is the redundant connection.\n• **Incremental Edge Addition:** If no path exists between `u` and `v`, add `u <-> v` to the adjacency list and proceed to the next edge.',
+          code: `class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        int n = edges.length;
+
+        List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i <= n; i++) { // : O(V) 1-based indexing
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : edges) { // : iterate through input edges
+            int u = edge[0];
+            int v = edge[1];
+
+            boolean visited[] = new boolean[n + 1]; // : O(V) visited array per edge
+            if (dfs(adj, visited, u, v)) { // : check if u and v already connected
+                return edge;
+            }
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        return new int[] {};
+    }
+
+    private boolean dfs(List<List<Integer>> adj, boolean[] visited, int u, int v) {
+        visited[u] = true;
+
+        if (u == v) {
+            return true;
+        }
+
+        for (int neighbor : adj.get(u)) { // : explore neighbors
+            if (!visited[neighbor]) {
+                if (dfs(adj, visited, neighbor, v)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;   
+    }
+}`,
+          time: 'O(N^2)',
+          timeDesc: '• There are N edges in total.\n• For each edge, a DFS traversal is run across the current graph which takes up to O(N) time.\n• Total Time: O(N^2) where N is the number of edges and vertices.',
+          space: 'O(N)',
+          spaceDesc: '• Adjacency list stores at most N nodes and N edges taking O(N) space.\n• Visited boolean array and DFS recursion stack each take O(N) memory.\n• Total Space: O(N) auxiliary space.'
+        }
+      },
       p('Word Ladder', 'Hard', 'Find shortest transformation sequence from begin to end word.'),
     ]
   };
