@@ -741,7 +741,71 @@ export const graphs = {
           spaceDesc: '• Adjacency list requires O(V + E) space for vertices and edges.\n• In-degree array, BFS queue, and order array each require O(V) space.\n• Total Space: O(V + E) auxiliary space.'
         }
       },
-      p('Number of Connected Components in an Undirected Graph', 'Medium', 'Count connected components in an undirected graph.'),
+      {
+        id: 'number-of-connected-components-in-an-undirected-graph',
+        title: 'Number of Connected Components in an Undirected Graph',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://neetcode.io/problems/count-connected-components',
+        image: null,
+        definition: 'You have a graph of n nodes labeled from 0 to n - 1. You are given an integer n and an array edges where edges[i] = [ai, bi] indicates that there is an undirected edge between ai and bi in the graph. Return the number of connected components in the graph.',
+        examples: [
+          {
+            input: 'n = 5, edges = [[0,1],[1,2],[3,4]]',
+            output: '2',
+            explanation: 'Component 1 is {0, 1, 2} and Component 2 is {3, 4}. Total = 2.'
+          },
+          {
+            input: 'n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]',
+            output: '1',
+            explanation: 'All 5 nodes are connected together in a single component.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Undirected Graph DFS Connected Components\n• **Graph Construction:** Build an undirected adjacency list from the given edges by adding both `u -> v` and `v -> u`.\n• **Visited Array:** Maintain a `boolean visited[]` array initialized to false to keep track of explored nodes.\n• **Component Counting:** Loop through all nodes from 0 to `n - 1`. If node `i` is unvisited, it marks the discovery of a new connected component. Increment `count++` and trigger `dfs(i)`.\n• **DFS Traversal:** In `dfs`, mark the current node as visited and recursively visit all unvisited neighbors, fully covering the component.',
+          code: `class Solution {
+    public int countComponents(int n, int[][] edges) {
+        List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i < n; i++) { // : O(V) initialize nodes
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : edges) { // : O(E) build undirected edges
+            int u = edge[0];
+            int v = edge[1];
+
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+
+        boolean visited[] = new boolean[n]; // : O(V) visited array
+        int count = 0;
+
+        for (int i = 0; i < n; i++) { // : O(V) scan each node
+            if (!visited[i]) {
+                dfs(adj, visited, i); // : traverse connected component
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private void dfs(List<List<Integer>> adj, boolean[] visited, int node) {
+        visited[node] = true;
+
+        for (int neighbor : adj.get(node)) { // : explore neighboring nodes
+            if (!visited[neighbor]) {
+                dfs(adj, visited, neighbor);
+            }
+        }
+    }
+}`,
+          time: 'O(V + E)',
+          timeDesc: '• Building the undirected adjacency list takes O(V + E) time.\n• DFS visits each vertex once and checks each edge twice across all neighbor lists.\n• Total Time: O(V + E) where V is n and E is edges length.',
+          space: 'O(V + E)',
+          spaceDesc: '• Adjacency list requires O(V + 2E) space to store all nodes and bidirectional edges.\n• boolean visited array and recursion stack each require O(V) space in worst case.\n• Total Space: O(V + E) auxiliary space.'
+        }
+      },
       p('Graph Valid Tree', 'Medium', 'Check if an undirected graph forms a valid tree.'),
       p('Redundant Connection', 'Medium', 'Find the edge that creates a cycle in an undirected graph.'),
       p('Word Ladder', 'Hard', 'Find shortest transformation sequence from begin to end word.'),
