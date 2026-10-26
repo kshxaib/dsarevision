@@ -378,7 +378,105 @@ export const graphs = {
           spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Distances are written directly into the grid in place without extra visited memory.\n• Total Space: O(N * M) auxiliary space for the queue.'
         }
       },
-      p('Pacific Atlantic Water Flow', 'Medium', 'Find cells that can flow water to both Pacific and Atlantic oceans.'),
+      {
+        id: 'pacific-atlantic-water-flow',
+        title: 'Pacific Atlantic Water Flow',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/pacific-atlantic-water-flow/description/',
+        image: null,
+        definition: 'There is an m x n rectangular island that borders both the Pacific Ocean and Atlantic Ocean. The Pacific Ocean touches the island\'s top and left edges, and the Atlantic Ocean touches the island\'s bottom and right edges. Rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell\'s height is less than or equal to the current cell\'s height. Water can flow from any cell adjacent to an ocean into the ocean. Return a 2D list of grid coordinates result where result[i] = [ri, ci] denotes that rain water can flow from cell (ri, ci) to both the Pacific and Atlantic oceans.',
+        examples: [
+          {
+            input: 'heights = [\n  [1,2,2,3,5],\n  [3,2,3,4,4],\n  [2,4,5,3,1],\n  [6,7,1,4,5],\n  [5,1,1,2,4]\n]',
+            output: '[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]',
+            explanation: 'Water from these coordinates can flow uphill to both Pacific (top or left) and Atlantic (bottom or right).'
+          },
+          {
+            input: 'heights = [[1]]',
+            output: '[[0,0]]',
+            explanation: 'The single cell touches both oceans directly.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Reverse Multi-Source BFS from Ocean Borders\n• **Reverse Flow Intuition:** Instead of checking if water from every cell can reach both oceans (which is repetitive), flow water in reverse: start from ocean borders and move inland to cells with equal or greater height (`heights[newRow][newCol] >= heights[row][col]`).\n• **Two Queues and Visited Sets:** Initialize `pQueue` and `pacific[N][M]` for Pacific (top and left borders), and `aQueue` and `atlantic[N][M]` for Atlantic (bottom and right borders).\n• **Multi-Source BFS Expansion:** Run BFS independently for Pacific and Atlantic. Water can spread to a neighbor if it has not been visited and its height is greater than or equal to current height.\n• **Intersection:** Iterate through all cells `(i, j)`. If both `pacific[i][j]` and `atlantic[i][j]` are true, water from that cell can reach both oceans. Add `[i, j]` to the result list.',
+          code: `class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        int n = heights.length;
+        int m = heights[0].length;
+
+        boolean[][] pacific = new boolean[n][m]; // : O(N * M) visited pacific
+        boolean[][] atlantic = new boolean[n][m]; // : O(N * M) visited atlantic
+
+        Queue<int[]> pQueue = new LinkedList<>(); // : O(N * M) queue space
+        Queue<int[]> aQueue = new LinkedList<>(); // : O(N * M) queue space
+
+        // Pacific: top and left borders
+        // Atlantic: bottom and right borders
+        for (int i = 0; i < n; i++) { // : O(N) left and right borders
+            addCell(pQueue, pacific, i, 0);
+            addCell(aQueue, atlantic, i, m - 1);
+        }
+
+        for (int j = 0; j < m; j++) { // : O(M) top and bottom borders
+            addCell(pQueue, pacific, 0, j);
+            addCell(aQueue, atlantic, n - 1, j);
+        }
+
+        bfs(heights, pQueue, pacific); // : multi-source BFS from Pacific
+        bfs(heights, aQueue, atlantic); // : multi-source BFS from Atlantic
+
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) { // : O(N) check overlap rows
+            for (int j = 0; j < m; j++) { // : O(M) check overlap cols
+                if (pacific[i][j] && atlantic[i][j]) {
+                    result.add(Arrays.asList(i, j));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void addCell(Queue<int[]> queue, boolean[][] visited, int row, int col) {
+        if (!visited[row][col]) {
+            visited[row][col] = true;
+            queue.offer(new int[]{row, col});
+        }
+    }
+
+    private void bfs(int[][] heights, Queue<int[]> queue, boolean[][] visited) {
+        int n = heights.length;
+        int m = heights[0].length;
+
+        int[] dRow = {-1, 1, 0, 0};
+        int[] dCol = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) { // : reverse BFS traversal
+            int[] cell = queue.poll();
+            int row = cell[0];
+            int col = cell[1];
+
+            for (int k = 0; k < 4; k++) { // : 4-directional reverse flow
+                int newRow = row + dRow[k];
+                int newCol = col + dCol[k];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && !visited[newRow][newCol] &&
+                    heights[newRow][newCol] >= heights[row][col]) {
+
+                    visited[newRow][newCol] = true;
+                    queue.offer(new int[]{newRow, newCol});
+                }
+            }
+        }
+    }
+}`,
+          time: 'O(N * M)',
+          timeDesc: '• Each cell is visited at most once per BFS for both Pacific and Atlantic oceans.\n• Intersection check loops through all cells in the N x M grid.\n• Total Time: O(N * M) where N is rows and M is columns.',
+          space: 'O(N * M)',
+          spaceDesc: '• boolean matrices pacific[N][M] and atlantic[N][M] take O(N * M) memory.\n• BFS queues hold at most O(N * M) cells in the worst case.\n• Total Space: O(N * M) auxiliary space.'
+        }
+      },
       p('Surrounded Regions', 'Medium', 'Capture all surrounded regions on a board.'),
       p('Course Schedule', 'Medium', 'Determine if all courses can be finished (cycle detection).'),
       p('Course Schedule II', 'Medium', 'Find a valid order to take all courses (topological sort).'),
