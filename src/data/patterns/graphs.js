@@ -3,6 +3,7 @@ import numIslandsTree from '@/assets/images/graph/DFS Recursion Tree for Number 
 import maxAreaTree from '@/assets/images/graph/DFS Recursion Tree_ Max Island Area.png';
 import cloneGraphTree from '@/assets/images/graph/BFS Clone Graph Infographic.png';
 import rottingOrangesTree from '@/assets/images/graph/Rotting Oranges BFS Step-by-Step Infographic.png';
+import islandsAndTreasureTree from '@/assets/images/graph/Multi-Source BFS_ Treasure Distances.png';
 
 export const graphs = {
     id: 'graphs',
@@ -311,7 +312,72 @@ export const graphs = {
           spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Grid is modified in place to mark visited rotten oranges without extra boolean array.\n• Total Space: O(N * M) auxiliary space for the queue.'
         }
       },
-      p('Walls and Gates', 'Medium', 'Fill each empty room with distance to its nearest gate.'),
+      {
+        id: 'islands-and-treasure',
+        title: 'Islands and Treasure',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://neetcode.io/problems/islands-and-treasure',
+        image: {
+          url: islandsAndTreasureTree,
+          title: 'Dry Run'
+        },
+        definition: 'You are given an m x n 2D grid initialized with these possible values: -1 representing a water cell or obstacle, 0 representing a treasure chest, and 2147483647 (Integer.MAX_VALUE) representing an empty land cell. Fill each empty land cell with the distance to its nearest treasure chest. If it is impossible to reach a treasure chest, it should remain 2147483647.',
+        examples: [
+          {
+            input: 'grid = [\n  [2147483647,-1,0,2147483647],\n  [2147483647,2147483647,2147483647,-1],\n  [2147483647,-1,2147483647,-1],\n  [0,-1,2147483647,2147483647]\n]',
+            output: '[\n  [3,-1,0,1],\n  [2,2,1,-1],\n  [1,-1,2,-1],\n  [0,-1,3,4]\n]',
+            explanation: 'Empty land cells are filled with the shortest distance to their nearest treasure chest (value 0).'
+          },
+          {
+            input: 'grid = [\n  [0,-1],\n  [2147483647,2147483647]\n]',
+            output: '[\n  [0,-1],\n  [1,2]\n]',
+            explanation: 'Starting from the chest at (0,0), distance increases by 1 for adjacent empty rooms.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Multi-Source BFS on 2D Grid\n• **Queue Initialization:** Find all treasure chests (`grid[i][j] == 0`) and enqueue their coordinates simultaneously as starting sources for multi-source BFS.\n• **Shortest Distance Expansion:** Pop each cell `(row, col)` and check its 4 adjacent neighbors (up, down, left, right).\n• **Cell Update:** If a neighbor is valid and is an empty land cell (`grid[newRow][newCol] == Integer.MAX_VALUE`), update its distance to `grid[row][col] + 1` and push it into the queue.\n• **Optimality:** Since BFS explores layer by layer, the first time an empty land cell is reached from any chest, it is guaranteed to have the minimum shortest distance.',
+          code: `class Solution {
+    public void islandsAndTreasure(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+
+        Queue<int[]> queue = new LinkedList<>(); // : O(N * M) queue space
+
+        for (int i = 0; i < n; i++) { // : O(N) loop rows
+            for (int j = 0; j < m; j++) { // : O(M) loop cols
+                if (grid[i][j] == 0) {
+                    queue.offer(new int[] {i, j}); // : enqueue all treasure chests
+                }
+            }
+        }
+
+        while (!queue.isEmpty()) { // : multi-source BFS traversal
+            int cell[] = queue.poll();
+            int row = cell[0];
+            int col = cell[1];
+
+            int dRow[] = {1, -1, 0, 0};
+            int dCol[] = {0, 0, -1, 1};
+
+            for (int i = 0; i < 4; i++) { // : explore 4 adjacent directions
+                int newRow = row + dRow[i];
+                int newCol = col + dCol[i];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && grid[newRow][newCol] == Integer.MAX_VALUE) {
+                    grid[newRow][newCol] = grid[row][col] + 1; // : update shortest distance
+
+                    queue.offer(new int[] {newRow, newCol});
+                }
+            }
+        }    
+    }
+}`,
+          time: 'O(N * M)',
+          timeDesc: '• Initial grid scan visits every cell to enqueue treasure chests.\n• Each land cell is visited and updated at most once via multi-source BFS.\n• Total Time: O(N * M) where N and M are grid dimensions.',
+          space: 'O(N * M)',
+          spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Distances are written directly into the grid in place without extra visited memory.\n• Total Space: O(N * M) auxiliary space for the queue.'
+        }
+      },
       p('Pacific Atlantic Water Flow', 'Medium', 'Find cells that can flow water to both Pacific and Atlantic oceans.'),
       p('Surrounded Regions', 'Medium', 'Capture all surrounded regions on a board.'),
       p('Course Schedule', 'Medium', 'Determine if all courses can be finished (cycle detection).'),
