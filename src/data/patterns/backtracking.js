@@ -6,6 +6,7 @@ import permutationsTree from '@/assets/images/backtracking/Colorful Permutation 
 import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursion Tree Infographic.png';
 import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree Infographic.png';
 import parenthesesTree from '@/assets/images/backtracking/Colorful Parentheses Recursion Tree Infographic.png';
+import palindromeTree from '@/assets/images/backtracking/Palindrome Partitioning Recursion Tree.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -418,7 +419,71 @@ export const backtracking = {
         space: 'O(N)'
       }
     },
-    p('Palindrome Partitioning', 'Medium', 'Partition a string into all possible palindrome substrings.'),
+    {
+      id: 'palindrome-partitioning',
+      title: 'Palindrome Partitioning',
+      difficulty: 'Medium',
+      leetcodeUrl: 'https://leetcode.com/problems/palindrome-partitioning/description/',
+      image: {
+        url: palindromeTree,
+        title: 'Dry Run'
+      },
+      definition: 'Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.',
+      examples: [
+        {
+          input: 's = "aab"',
+          output: '[["a","a","b"],["aa","b"]]',
+          explanation: 'Both ["a","a","b"] and ["aa","b"] are valid partitions where each substring is a palindrome.'
+        },
+        {
+          input: 's = "a"',
+          output: '[["a"]]',
+          explanation: 'Single character string has only 1 partition.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Backtracking with Palindrome Substring Validation\n• **Decision at each step:** Starting at `index`, evaluate every possible partition end position `i` from `index` to `s.length() - 1`:\n  1. **Palindrome Check:** If `s.substring(index, i + 1)` is a palindrome, add it to `curr`.\n  2. **Recurse:** Call `findPartitions` starting from `i + 1` to partition the remaining suffix.\n  3. **Backtrack:** Remove the last added substring from `curr` and explore the next partition point `i`.\n• **Base Case:** When `index == s.length()`, the entire string has been partitioned into valid palindromes. Add a copy of `curr` to `ans` and return.\n• **Palindrome Helper:** Use two pointers (`index` and `i`) moving inward to verify symmetry in O(N) time.',
+        code: `class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> ans = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+
+        findPartitions(s, ans, curr, 0);
+        return ans;
+    }
+
+    public void findPartitions(String s, List<List<String>> ans, List<String> curr, int index) {
+        if (index == s.length()) {
+            ans.add(new ArrayList<>(curr)); // : O(N) copy valid partition into answer
+            return;
+        }
+
+        for (int i = index; i < s.length(); i++) { // : O(N) loop partition endpoints
+            if (isPalindrome(s, index, i)) {
+                curr.add(s.substring(index, i + 1));
+                findPartitions(s, ans, curr, i + 1); // : 2^N recursion paths
+                curr.remove(curr.size() - 1);
+            }
+        }
+    }
+
+    public boolean isPalindrome(String s, int index, int i) {
+        while (index < i) { // : O(N) palindrome check
+            if (s.charAt(index) != s.charAt(i)) {
+                return false;
+            }
+
+            index++;
+            i--;
+        }
+
+        return true;
+    }
+}`,
+        time: 'O(N * 2^N)',
+        space: 'O(N)'
+      }
+    },
     p('Word Search', 'Medium', 'Search for a word in a 2D board of characters.'),
     p('N Queens', 'Hard', 'Place n queens on an n×n chessboard with no conflicts.')
   ]
