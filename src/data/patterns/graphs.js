@@ -945,6 +945,79 @@ export const graphs = {
           spaceDesc: '• Adjacency list stores at most N nodes and N edges taking O(N) space.\n• Visited boolean array and DFS recursion stack each take O(N) memory.\n• Total Space: O(N) auxiliary space.'
         }
       },
-      p('Word Ladder', 'Hard', 'Find shortest transformation sequence from begin to end word.'),
+      {
+        id: 'word-ladder',
+        title: 'Word Ladder',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/word-ladder/description/',
+        image: null,
+        definition: 'A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that every adjacent pair of words differs by a single letter, and each si is in wordList. Note that beginWord does not need to be in wordList. Return the number of words in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.',
+        examples: [
+          {
+            input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]',
+            output: '5',
+            explanation: 'One shortest transformation sequence is "hit" -> "hot" -> "dot" -> "dog" -> "cog", which has 5 words.'
+          },
+          {
+            input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]',
+            output: '0',
+            explanation: 'The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Shortest Path via Level-by-Level BFS\n• **Fast Lookup Set:** Put all words into a `HashSet<String>`. If `endWord` is absent from the set, return 0 immediately.\n• **BFS Queue:** Initialize a queue with `beginWord` and set `steps = 1`. Remove words from the set when enqueued to mark them as visited and prevent cycles.\n• **Word Transformation:** Dequeue words level by level. For the current word, try mutating each character from \'a\' to \'z\'. If the transformed word is present in the set, push it to the queue and remove it from the set.\n• **Target Reached:** As soon as `curr.equals(endWord)`, return `steps`. If the queue becomes empty without reaching `endWord`, return 0.',
+          code: `class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> set = new HashSet<>(wordList); // : O(N * L) dictionary set
+
+        if (!set.contains(endWord)) {
+            return 0;
+        }
+
+        Queue<String> queue = new LinkedList<>(); // : O(N * L) queue space
+        queue.offer(beginWord);
+        set.remove(beginWord);
+
+        int steps = 1;
+        while (!queue.isEmpty()) { // : level-by-level BFS traversal
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) { // : process current level words
+                String curr = queue.poll();
+
+                if (curr.equals(endWord)) {
+                    return steps;
+                }
+
+                char arr[] = curr.toCharArray();   
+                for (int j = 0; j < arr.length; j++) { // : loop word length L
+                    char original = arr[j];
+
+                    for (char ch = 'a'; ch <= 'z'; ch++) { // : try 26 alphabet letters
+                        arr[j] = ch;
+
+                        String newWord = new String(arr);
+                        if (set.contains(newWord)) {
+                            queue.offer(newWord);
+                            set.remove(newWord);
+                        }
+                    }
+
+                    arr[j] = original;
+                }             
+            }
+
+            steps++;
+        }
+
+        return 0;
+    }
+}`,
+          time: 'O(N * L^2)',
+          timeDesc: '• In the worst case, all N words in the dictionary are processed by BFS once.\n• For each word of length L, trying 26 letters and building new candidate strings takes 26 * L^2 time.\n• Total Time: O(N * L^2) where N is word count and L is length of words.',
+          space: 'O(N * L)',
+          spaceDesc: '• HashSet stores all N words of length L taking O(N * L) memory.\n• BFS queue holds at most O(N) words taking O(N * L) space in worst case.\n• Total Space: O(N * L) auxiliary space.'
+        }
+      },
     ]
   };
