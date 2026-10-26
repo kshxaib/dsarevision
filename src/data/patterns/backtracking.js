@@ -8,6 +8,7 @@ import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree 
 import parenthesesTree from '@/assets/images/backtracking/Colorful Parentheses Recursion Tree Infographic.png';
 import palindromeTree from '@/assets/images/backtracking/Palindrome Partitioning Recursion Tree.png';
 import wordSearchTree from '@/assets/images/backtracking/Word Search Recursion Tree Infographic.png';
+import nQueensTree from '@/assets/images/backtracking/N-Queens Recursion Tree Diagram.png';
 
 export const backtracking = {
   id: 'backtracking',
@@ -64,7 +65,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(N * 2^N)',
-        space: 'O(N)'
+        timeDesc: '• 2^N total subsets generated across include or exclude decisions.\n• Copying each subset of size up to N into result takes O(N).\n• Total Time: O(N * 2^N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion call stack goes up to depth N.\n• curr list stores at most N elements.'
       }
     },
     {
@@ -129,7 +132,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(2^(target / min) * K)',
-        space: 'O(target / min)'
+        timeDesc: '• At each candidate we explore 2 choices: pick or skip.\n• Max recursion depth is target divided by the minimum candidate.\n• Copying valid combinations of average length K takes O(K).',
+        space: 'O(target / min)',
+        spaceDesc: '• Recursion stack reaches depth of at most target divided by min candidate.\n• curr list holds at most (target divided by min) elements.'
       }
     },
     {
@@ -190,8 +195,10 @@ export const backtracking = {
         }
     }
 }`,
-        time: 'O(2^N * K)',
-        space: 'O(K)'
+        time: 'O(N log N + 2^N * K)',
+        timeDesc: '• Sorting candidates initially takes O(N log N).\n• At most 2^N combination branches explored without reuse.\n• Copying each valid combination of length K takes O(K).',
+        space: 'O(K)',
+        spaceDesc: '• Recursion tree depth bounded by K (target combination length).\n• curr list holds at most K elements during backtracking.'
       }
     },
     {
@@ -255,7 +262,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(N! * N)',
-        space: 'O(N)'
+        timeDesc: '• Total N! unique permutations formed from N distinct numbers.\n• At each recursive depth the for loop runs up to N times.\n• Copying each permutation of size N into result takes O(N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion call stack reaches maximum depth of N.\n• boolean used[] array of size N tracks visited state.'
       }
     },
     {
@@ -305,8 +314,10 @@ export const backtracking = {
         }
     }
 }`,
-        time: 'O(N * 2^N)',
-        space: 'O(N)'
+        time: 'O(N log N + N * 2^N)',
+        timeDesc: '• Sorting nums takes O(N log N) to group duplicate values.\n• Recursion tree explores at most 2^N unique subsets with pruning.\n• Copying each subset of size up to N into answer list takes O(N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion tree reaches maximum depth of N.\n• curr list holds at most N elements.'
       }
     },
     {
@@ -367,7 +378,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(4^N * N)',
-        space: 'O(N)'
+        timeDesc: '• Up to 4 letter choices per digit, producing up to 4^N combinations.\n• Loop runs at most 4 times at each recursion level.\n• Converting each StringBuilder of length N to string takes O(N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion call stack depth equals N (digits.length).\n• StringBuilder curr maintains at most N characters.'
       }
     },
     {
@@ -417,7 +430,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(4^N / √N)',
-        space: 'O(N)'
+        timeDesc: '• Total valid bracket combinations is given by the N-th Catalan number.\n• Bounded asymptotically by 4^N divided by (N * √N).\n• Generating and appending each valid string of length 2N takes O(N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion call stack reaches maximum depth of 2 * N.\n• Space to store the current prefix string.'
       }
     },
     {
@@ -482,7 +497,9 @@ export const backtracking = {
     }
 }`,
         time: 'O(N * 2^N)',
-        space: 'O(N)'
+        timeDesc: '• String of length N has 2^(N - 1) possible partition configurations.\n• Checking if a substring is a palindrome takes up to O(N) using two pointers.\n• Substring creation and copy takes O(N).',
+        space: 'O(N)',
+        spaceDesc: '• Recursion stack reaches maximum depth of N.\n• curr list holds at most N partition substrings.'
       }
     },
     {
@@ -556,9 +573,92 @@ export const backtracking = {
     }
 }`,
         time: 'O(N * M * 3^L)',
-        space: 'O(L)'
+        timeDesc: '• Outer loops check all N * M starting board cells.\n• Backtracking explores at most 3 non-visited directions up to word length L.\n• Total worst case: O(N * M * 3^L).',
+        space: 'O(L)',
+        spaceDesc: '• Recursion call stack depth matches word length L.\n• Board visited state is marked in-place with \'#\', using O(1) auxiliary space.'
       }
     },
-    p('N Queens', 'Hard', 'Place n queens on an n×n chessboard with no conflicts.')
+    {
+      id: 'n-queens',
+      title: 'N Queens',
+      difficulty: 'Hard',
+      leetcodeUrl: 'https://leetcode.com/problems/n-queens/description/',
+      image: {
+        url: nQueensTree,
+        title: 'Dry Run'
+      },
+      definition: 'The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other. Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order. Each solution contains a distinct board configuration of the n-queens placement, where "Q" and "." both indicate a queen and an empty space, respectively.',
+      examples: [
+        {
+          input: 'n = 4',
+          output: '[[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]',
+          explanation: 'There exist two distinct solutions to the 4-queens puzzle.'
+        },
+        {
+          input: 'n = 1',
+          output: '[["Q"]]',
+          explanation: 'A 1x1 board with one queen is trivially valid.'
+        }
+      ],
+      optimal: {
+        idea: '• **Pattern:** Row-by-Row Constrained Backtracking\n• **Board Representation:** Initialize an `N x N` character board filled with `\'.\'`.\n• **Row-by-Row Progression:** Place exactly one queen per row. When processing row `row`, iterate column `col` from `0` to `n - 1`:\n  1. **Safety Check:** Check if `(row, col)` is safe by checking 3 attack directions: upper vertical column, upper-left diagonal, and upper-right diagonal (since rows below are empty, lower checks are unnecessary).\n  2. **Place Queen:** If safe, set `board[row][col] = \'Q\'` and recurse to `row + 1`.\n  3. **Backtrack:** Reset `board[row][col] = \'.\'` and continue exploring next column.\n• **Base Case:** When `row == n`, all `n` queens have been safely placed. Convert each board row into a String, add the configuration to `ans`, and return.',
+        code: `class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> ans = new ArrayList<>();
+        char board[][] = new char[n][n];
+
+        for (int i = 0; i < board.length; i++) { // : O(N^2) board init
+            for (int j = 0; j < board[0].length; j++) {
+                board[i][j] = '.';
+            }
+        }
+
+        findNQueens(board, ans, 0, n);
+
+        return ans;
+    }
+
+    public void findNQueens(char board[][], List<List<String>> ans, int row, int n) {
+        if (row == n) {
+            List<String> temp = new ArrayList<>();
+            for (int i = 0; i < board.length; i++) { // : O(N^2) board snapshot
+                temp.add(new String(board[i]));
+            }
+
+            ans.add(temp);
+            return;
+        }
+
+        for (int col = 0; col < board[0].length; col++) { // : O(N) column choices per row
+            if (isSafe(board, row, col)) {
+                board[row][col] = 'Q';
+                findNQueens(board, ans, row + 1, n); // : recurse next row
+                board[row][col] = '.';
+            }
+        }
+    }
+
+    public boolean isSafe(char board[][], int row, int col) {
+        for (int i = 0; i < row; i++) { // : O(N) upper column check
+            if (board[i][col] == 'Q') return false;
+        }
+
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) { // : O(N) upper-left diagonal
+            if (board[i][j] == 'Q') return false;
+        }
+
+        for (int i = row, j = col; i >= 0 && j < board[0].length; i--, j++) { // : O(N) upper-right diagonal
+            if (board[i][j] == 'Q') return false;
+        }
+
+        return true;
+    }
+}`,
+        time: 'O(N^2 + N! * N)',
+        timeDesc: '• Initializing N x N board with \'.\' takes O(N^2).\n• Row 0 has N choices, row 1 has at most N - 2 choices, giving O(N!) leaf states.\n• isSafe runs in O(N) and copying board takes O(N^2).',
+        space: 'O(N^2)',
+        spaceDesc: '• N x N character board matrix takes O(N^2) space.\n• Recursion call stack depth is O(N) (one frame per row).'
+      }
+    }
   ]
 };

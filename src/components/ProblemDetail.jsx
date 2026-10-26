@@ -248,15 +248,33 @@ function ApproachContent({ approach, image }) {
       {(approach.time || approach.space) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
           {approach.time && (
-            <div className="flex items-center gap-2 rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs">
-              <span className="text-ink-subtle font-medium">Time Complexity:</span>
-              <span className="font-mono font-bold text-ink-text">{approach.time}</span>
+            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-ink-subtle font-medium">Time Complexity:</span>
+                <span className="font-mono font-bold text-ink-text">{approach.time}</span>
+              </div>
+              {approach.timeDesc && (
+                <div className="text-[11px] text-ink-muted leading-relaxed space-y-0.5 pt-1 border-t border-ink-border/50">
+                  {approach.timeDesc.split('\n').filter(Boolean).map((line, i) => (
+                    <p key={i}>{formatInline(line)}</p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
           {approach.space && (
-            <div className="flex items-center gap-2 rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs">
-              <span className="text-ink-subtle font-medium">Space Complexity:</span>
-              <span className="font-mono font-bold text-ink-text">{approach.space}</span>
+            <div className="rounded-lg border border-ink-border bg-ink-surface/60 px-3.5 py-2.5 text-xs space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-ink-subtle font-medium">Space Complexity:</span>
+                <span className="font-mono font-bold text-ink-text">{approach.space}</span>
+              </div>
+              {approach.spaceDesc && (
+                <div className="text-[11px] text-ink-muted leading-relaxed space-y-0.5 pt-1 border-t border-ink-border/50">
+                  {approach.spaceDesc.split('\n').filter(Boolean).map((line, i) => (
+                    <p key={i}>{formatInline(line)}</p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
