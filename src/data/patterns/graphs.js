@@ -656,7 +656,91 @@ export const graphs = {
           spaceDesc: '• Adjacency list stores V vertices and E directed edges.\n• In-degree array and BFS queue each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
         }
       },
-      p('Course Schedule II', 'Medium', 'Find a valid order to take all courses (topological sort).'),
+      {
+        id: 'course-schedule-ii',
+        title: 'Course Schedule II',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/course-schedule-ii/description/',
+        image: null,
+        definition: 'There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai. Return the ordering of courses you should take to finish all courses. If there are many valid answers, return any of them. If it is impossible to finish all courses, return an empty array.',
+        examples: [
+          {
+            input: 'numCourses = 2, prerequisites = [[1,0]]',
+            output: '[0,1]',
+            explanation: 'To take course 1 you must have finished course 0. So the correct course order is [0,1].'
+          },
+          {
+            input: 'numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]',
+            output: '[0,2,1,3]',
+            explanation: 'There are multiple valid orderings. Both [0,1,2,3] and [0,2,1,3] are valid topological orders.'
+          },
+          {
+            input: 'numCourses = 1, prerequisites = []',
+            output: '[0]',
+            explanation: 'There is only one course with no prerequisites.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Topological Sort via Kahn Algorithm (BFS In-degree)\n• **Directed Graph:** Build an adjacency list `prerequisite -> course` and maintain an `indegree` array representing prerequisites required for each course.\n• **Seed Queue:** Enqueue all courses with `indegree == 0` (courses with no prerequisites that can be scheduled first).\n• **Topological Ordering:** Repeatedly dequeue `curr`, append to `order[index++]`, and decrement in-degrees of its dependent neighbors. When a neighbor reaches in-degree 0, enqueue it.\n• **Cycle Validation:** After processing, if `index == numCourses`, return `order`. If `index != numCourses`, a cycle prevents taking all courses, so return an empty array `new int[]{}`.',
+          code: `class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i < numCourses; i++) { // : O(V) initialize nodes
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : prerequisites) { // : O(E) build directed edges
+            int course = edge[0];
+            int prerequisite = edge[1];
+
+            // prerequisite -> course
+            adj.get(prerequisite).add(course);
+        }
+
+        int indegree[] = new int[numCourses]; // : O(V) in-degree array
+        for (int i = 0; i < numCourses; i++) { // : O(V + E) compute in-degrees
+            for (int neighbour : adj.get(i)) {
+                indegree[neighbour]++;
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>(); // : O(V) BFS queue
+        for (int i = 0; i < numCourses; i++) { // : O(V) find zero in-degree sources
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int order[] = new int[numCourses]; // : O(V) topological ordering output
+        int index = 0;
+        
+        while (!queue.isEmpty()) { // : Kahn algorithm BFS processing
+            int curr = queue.poll();
+            order[index] = curr;
+            index++;
+
+            for (int neighbour : adj.get(curr)) { // : decrement dependent courses
+                indegree[neighbour]--;
+                if (indegree[neighbour] == 0) {
+                    queue.offer(neighbour);
+                }
+            }
+        }
+
+        // cycle exists
+        if (index != numCourses) {
+            return new int[]{};
+        }
+
+        return order;
+    }
+}`,
+          time: 'O(V + E)',
+          timeDesc: '• Constructing the graph and calculating in-degrees takes O(V + E) time.\n• Kahn BFS visits every course and decrements each prerequisite edge exactly once.\n• Total Time: O(V + E) where V is numCourses and E is prerequisites count.',
+          space: 'O(V + E)',
+          spaceDesc: '• Adjacency list requires O(V + E) space for vertices and edges.\n• In-degree array, BFS queue, and order array each require O(V) space.\n• Total Space: O(V + E) auxiliary space.'
+        }
+      },
       p('Number of Connected Components in an Undirected Graph', 'Medium', 'Count connected components in an undirected graph.'),
       p('Graph Valid Tree', 'Medium', 'Check if an undirected graph forms a valid tree.'),
       p('Redundant Connection', 'Medium', 'Find the edge that creates a cycle in an undirected graph.'),
