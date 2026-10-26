@@ -1,6 +1,7 @@
 import { p } from '../helper.js';
 import numIslandsTree from '@/assets/images/graph/DFS Recursion Tree for Number of Islands.png';
 import maxAreaTree from '@/assets/images/graph/DFS Recursion Tree_ Max Island Area.png';
+import cloneGraphTree from '@/assets/images/graph/BFS Clone Graph Infographic.png';
 
 export const graphs = {
     id: 'graphs',
@@ -151,7 +152,75 @@ export const graphs = {
           spaceDesc: '• boolean visited[N][M] array takes O(N * M) memory.\n• Recursion call stack depth reaches at most O(N * M) in the worst case.'
         }
       },
-      p('Clone Graph', 'Medium', 'Deep copy an undirected graph.'),
+      {
+        id: 'clone-graph',
+        title: 'Clone Graph',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/clone-graph/description/',
+        image: {
+          url: cloneGraphTree,
+          title: 'Dry Run'
+        },
+        definition: 'Given a reference of a node in a connected undirected graph. Return a deep copy (clone) of the graph. Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.',
+        examples: [
+          {
+            input: 'adjList = [[2,4],[1,3],[2,4],[1,3]]',
+            output: '[[2,4],[1,3],[2,4],[1,3]]',
+            explanation: 'There are 4 nodes in the graph. 1 is connected to 2 and 4. 2 is connected to 1 and 3. 3 is connected to 2 and 4. 4 is connected to 1 and 3.'
+          },
+          {
+            input: 'adjList = [[]]',
+            output: '[[]]',
+            explanation: 'Graph has one node with val = 1 and no neighbors.'
+          },
+          {
+            input: 'adjList = []',
+            output: '[]',
+            explanation: 'Graph is empty with null node.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Graph BFS Traversal and Hash Map Cloning\n• **Hash Map Mapping:** Use a hash map `HashMap<Node, Node>` to map each original node to its cloned counterpart, avoiding infinite loops in cycles and redundant node creations.\n• **BFS Queue:** Initialize a queue with the starting node. Create the root clone and put `(node, clone)` into the map.\n• **Neighbor Cloning and Wiring:** Dequeue `curr`, iterate over each `neighbor`. If not yet visited (not in map), create `neighborClone`, save to map, and push to queue. Then connect `cloned.neighbors.add(neighborClone)`.\n• **Return Deep Copy:** Return the cloned start node after the queue becomes empty.',
+          code: `class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) { // : O(1) null check
+            return null;
+        }
+
+        HashMap<Node, Node> map = new HashMap<>(); // : O(V) space map original to clone
+        Queue<Node> queue = new LinkedList<>(); // : O(V) space BFS queue
+
+        Node clone = new Node(node.val); // : O(1) create root clone
+        map.put(node, clone); // : O(1) store visited clone
+        queue.offer(node); // : O(1) enqueue root
+
+        while (!queue.isEmpty()) { // : O(V) visits each vertex once
+            Node curr = queue.poll(); // : O(1) dequeue vertex
+
+            for (Node neighbor : curr.neighbors) { // : O(2E) iterates through all edge neighbors
+
+                if (!map.containsKey(neighbor)) { // : O(1) check if neighbor already cloned
+                    Node neighborClone = new Node(neighbor.val); // : O(1) clone new neighbor
+                    map.put(neighbor, neighborClone); // : O(1) map original to cloned neighbor
+                    queue.offer(neighbor); // : O(1) enqueue for BFS
+                }
+
+                Node cloned = map.get(curr); // : O(1) retrieve cloned current
+                Node neighborClone = map.get(neighbor); // : O(1) retrieve cloned neighbor
+
+                cloned.neighbors.add(neighborClone); // : O(1) establish cloned edge
+            }
+        }
+
+        return clone; // : O(1) return cloned root
+    }
+}`,
+          time: 'O(V + E)',
+          timeDesc: '• BFS visits every vertex V once and checks all incident edges 2E across neighbor lists.\n• Hash map lookups and node creations take O(1) average time.\n• Total Time: O(V + E) where V is vertices and E is edges.',
+          space: 'O(V)',
+          spaceDesc: '• Hash map stores a mapping for all V nodes.\n• BFS queue stores at most V nodes at any level.\n• Total Space: O(V) auxiliary space excluding cloned graph output.'
+        }
+      },
       p('Rotting Oranges', 'Medium', 'Find minimum time for all oranges to become rotten.'),
       p('Walls and Gates', 'Medium', 'Fill each empty room with distance to its nearest gate.'),
       p('Pacific Atlantic Water Flow', 'Medium', 'Find cells that can flow water to both Pacific and Atlantic oceans.'),
