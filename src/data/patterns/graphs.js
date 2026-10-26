@@ -477,7 +477,111 @@ export const graphs = {
           spaceDesc: '• boolean matrices pacific[N][M] and atlantic[N][M] take O(N * M) memory.\n• BFS queues hold at most O(N * M) cells in the worst case.\n• Total Space: O(N * M) auxiliary space.'
         }
       },
-      p('Surrounded Regions', 'Medium', 'Capture all surrounded regions on a board.'),
+      {
+        id: 'surrounded-regions',
+        title: 'Surrounded Regions',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/surrounded-regions/description/',
+        image: null,
+        definition: 'You are given an m x n matrix board containing letters \'X\' and \'O\'. Capture regions that are surrounded: connect adjacent \'O\' cells horizontally or vertically, and flip surrounded \'O\' regions to \'X\'. An \'O\' region is NOT surrounded if any of its cells touches the border of the board.',
+        examples: [
+          {
+            input: 'board = [\n  ["X","X","X","X"],\n  ["X","O","O","X"],\n  ["X","X","O","X"],\n  ["X","O","X","X"]\n]',
+            output: '[\n  ["X","X","X","X"],\n  ["X","X","X","X"],\n  ["X","X","X","X"],\n  ["X","O","X","X"]\n]',
+            explanation: 'Notice that an \'O\' should not be flipped if it is on the border, or if it is connected to an \'O\' on the border. The bottom \'O\' connects to the border so it stays \'O\'.'
+          },
+          {
+            input: 'board = [["X"]]',
+            output: '[["X"]]',
+            explanation: 'A single cell with \'X\' remains unchanged.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Boundary Multi-Source BFS\n• **Boundary Invariance:** Any \'O\' connected to the 4 borders cannot be surrounded. Instead of finding surrounded cells directly, protect all boundary-connected \'O\'s.\n• **Border Seeding:** Scan the 4 outer edges (first and last row, first and last column). For any \'O\', temporarily change it to \'#\' and enqueue its coordinates.\n• **Multi-Source BFS:** Explore 4 adjacent neighbors for each dequeued cell. Any neighbor with \'O\' is connected to a border \'O\', so mark it \'#\' and push it to the queue.\n• **Final Conversion:** Scan the whole board. Convert remaining \'O\' cells to \'X\' (since they are fully surrounded), and restore \'#\' cells back to \'O\' (the safe border regions).',
+          code: `class Solution {
+    public void solve(char[][] board) {
+        if (board == null || board.length == 0 || board[0].length == 0) {
+            return;
+        }
+
+        int n = board.length;
+        int m = board[0].length;
+
+        Queue<int[]> queue = new LinkedList<>(); // : O(N * M) queue space
+
+        // First and last row
+        for (int j = 0; j < m; j++) { // : O(M) top and bottom border
+            if (board[0][j] == 'O') {
+                addCell(0, j, board, queue);
+            }
+
+            if (board[n - 1][j] == 'O') {
+                addCell(n - 1, j, board, queue);
+            }
+        }
+
+        // First and last column
+        for (int i = 0; i < n; i++) { // : O(N) left and right border
+            if (board[i][0] == 'O') {
+                addCell(i, 0, board, queue);
+            }
+
+            if (board[i][m - 1] == 'O') {
+                addCell(i, m - 1, board, queue);
+            }
+        }
+
+        // BFS from all boundary 'O's
+        bfs(board, queue); // : multi-source BFS mark safe boundary components
+
+        // Convert remaining 'O's to 'X' and '#' back to 'O'
+        for (int i = 0; i < n; i++) { // : O(N) flip grid rows
+            for (int j = 0; j < m; j++) { // : O(M) flip grid cols
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == '#') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    private void addCell(int row, int col, char[][] board, Queue<int[]> queue) {
+        board[row][col] = '#';
+        queue.offer(new int[]{row, col});
+    }
+
+    private void bfs(char[][] board, Queue<int[]> queue) {
+        int n = board.length;
+        int m = board[0].length;
+
+        int[] dRow = {-1, 0, 1, 0};
+        int[] dCol = {0, 1, 0, -1};
+
+        while (!queue.isEmpty()) { // : BFS traversal
+            int[] cell = queue.poll();
+            int row = cell[0];
+            int col = cell[1];
+
+            for (int k = 0; k < 4; k++) { // : 4-directional spread
+                int newRow = row + dRow[k];
+                int newCol = col + dCol[k];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && board[newRow][newCol] == 'O') {
+                    // Mark before enqueueing to avoid duplicates
+                    board[newRow][newCol] = '#';
+                    queue.offer(new int[]{newRow, newCol});
+                }
+            }
+        }
+    }
+}`,
+          time: 'O(N * M)',
+          timeDesc: '• Boundary scan and final board sweep iterate across all cells in the N x M grid.\n• Each boundary-connected cell is enqueued and processed at most once during BFS.\n• Total Time: O(N * M) where N is rows and M is columns.',
+          space: 'O(N * M)',
+          spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Grid is modified in place using \'#\' without an auxiliary visited matrix.\n• Total Space: O(N * M) auxiliary space for the queue.'
+        }
+      },
       p('Course Schedule', 'Medium', 'Determine if all courses can be finished (cycle detection).'),
       p('Course Schedule II', 'Medium', 'Find a valid order to take all courses (topological sort).'),
       p('Number of Connected Components in an Undirected Graph', 'Medium', 'Count connected components in an undirected graph.'),
