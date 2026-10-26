@@ -297,6 +297,10 @@ function DiagramSection({ image }) {
           Dry Run
         </span>
 
+        <span className="text-[11px] text-ink-subtle font-normal">
+          just for reference
+        </span>
+
         <div className="flex items-center gap-1.5 text-xs text-ink-subtle group-hover:text-ink-muted font-medium transition-colors">
           <span>{isOpen ? 'Hide dry run' : 'View dry run'}</span>
           <ChevronDown
