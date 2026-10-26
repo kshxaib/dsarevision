@@ -582,7 +582,80 @@ export const graphs = {
           spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Grid is modified in place using \'#\' without an auxiliary visited matrix.\n• Total Space: O(N * M) auxiliary space for the queue.'
         }
       },
-      p('Course Schedule', 'Medium', 'Determine if all courses can be finished (cycle detection).'),
+      {
+        id: 'course-schedule',
+        title: 'Course Schedule',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/course-schedule/description/',
+        youtubeUrl: 'https://www.youtube.com/watch?v=Oa4Srx9mDqs',
+        image: null,
+        definition: 'There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai. Return true if you can finish all courses. Otherwise, return false.',
+        examples: [
+          {
+            input: 'numCourses = 2, prerequisites = [[1,0]]',
+            output: 'true',
+            explanation: 'To take course 1 you must finish course 0. So you can take 0 then 1.'
+          },
+          {
+            input: 'numCourses = 2, prerequisites = [[1,0],[0,1]]',
+            output: 'false',
+            explanation: 'To take course 1 you need 0, and to take 0 you need 1, creating a cyclic dependency.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Topological Sort via Kahn Algorithm (BFS In-degree)\n• **Graph Representation:** Build a directed adjacency list `prerequisite -> course` and compute the in-degree for each course (number of prerequisite dependencies needed).\n• **Zero In-degree Queue:** Enqueue all courses that have an in-degree of 0 (courses with no prerequisites that can be taken immediately).\n• **Kahn BFS Traversal:** Repeatedly dequeue a completed course, increment `count++`, and decrement the in-degree of all dependent neighbor courses.\n• **Cycle Detection:** When a neighbor in-degree reaches 0, push it to the queue. If `count == numCourses`, all courses can be finished without cycles; otherwise, a cycle exists.',
+          code: `class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+
+        for (int i = 0; i < numCourses; i++) { // : O(V) initialize graph nodes
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : prerequisites) { // : O(E) build directed edges
+            int course = edge[0];
+            int prerequisite = edge[1];
+
+            adj.get(prerequisite).add(course);  // prerequisite -> course
+        }
+
+        int indegree[] = new int[numCourses]; // : O(V) in-degree array
+        for (int i = 0; i < numCourses; i++) { // : O(V + E) calculate in-degrees
+            for (int neighbor : adj.get(i)) {
+                indegree[neighbor]++;
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>(); // : O(V) BFS queue
+        for (int i = 0; i < numCourses; i++) { // : O(V) find zero in-degree sources
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int count = 0;
+        while (!queue.isEmpty()) { // : Kahn algorithm BFS processing
+            int curr = queue.poll();
+            count++;
+
+            for (int neighbor : adj.get(curr)) { // : decrement dependent courses
+                indegree[neighbor]--;
+
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+        return count == numCourses;
+    }
+}`,
+          time: 'O(V + E)',
+          timeDesc: '• Building the graph and computing in-degrees traverses all V vertices and E prerequisites.\n• Kahn BFS visits every node once and decrements each directed edge exactly once.\n• Total Time: O(V + E) where V is numCourses and E is prerequisites length.',
+          space: 'O(V + E)',
+          spaceDesc: '• Adjacency list stores V vertices and E directed edges.\n• In-degree array and BFS queue each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
+        }
+      },
       p('Course Schedule II', 'Medium', 'Find a valid order to take all courses (topological sort).'),
       p('Number of Connected Components in an Undirected Graph', 'Medium', 'Count connected components in an undirected graph.'),
       p('Graph Valid Tree', 'Medium', 'Check if an undirected graph forms a valid tree.'),
