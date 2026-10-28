@@ -246,7 +246,79 @@ export const advancedGraphs = {
           spaceDesc: '• Min-heap priority queue can store up to V^2 edges in the worst case.\n• Visited boolean array requires O(V) memory.\n• Total Space: O(V^2) auxiliary space for the priority queue.'
         }
       },
-      p('Swim in Rising Water', 'Hard', 'Find minimum time to swim from top-left to bottom-right.'),
+      {
+        id: 'swim-in-rising-water',
+        title: 'Swim in Rising Water',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/swim-in-rising-water/description/',
+        image: null,
+        definition: 'You are given an n x n integer matrix grid where each cell (i, j) has elevation grid[i][j]. The rain starts to fall at time t = 0. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares is at most t. You can swim infinite distances in zero time. You must stay within the boundaries of the grid during your swim. Return the least time until you can reach the bottom right square (n - 1, n - 1) starting from the top left square (0, 0).',
+        examples: [
+          {
+            input: 'grid = [[0,2],[1,3]]',
+            output: '3',
+            explanation: 'At time 0, you are in (0,0). You cannot swim to any neighbor until t = 1, then t = 2, and finally at t = 3 the water rises enough to reach (1,1).'
+          },
+          {
+            input: 'grid = [\n  [0,1,2,3,4],\n  [24,23,22,21,5],\n  [12,13,14,15,16],\n  [11,17,18,19,20],\n  [10,9,8,7,6]\n]',
+            output: '16',
+            explanation: 'The optimal path follows the perimeter to reach (4,4) at time 16.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Modified Dijkstra Algorithm on 2D Grid (Minimax Path)\n• **Minimax Objective:** We want to reach the destination `(n - 1, n - 1)` while minimizing the maximum elevation encountered along the path.\n• **Min-Heap Priority Queue:** Store `[maxTimeSoFar, row, col]` in a min-heap priority queue, initialized with `[grid[0][0], 0, 0]`, along with a 2D boolean `visited[n][n]` array.\n• **Expansion with Monotonic Time:** Pop the state with the lowest maximum time. If already visited, skip it. If the bottom-right cell is reached, return `time` immediately.\n• **4-Directional Transitions:** For each unvisited adjacent cell `(newRow, newCol)`, the required time becomes `newTime = Math.max(time, grid[newRow][newCol])`. Push `[newTime, newRow, newCol]` to the priority queue.',
+          code: `class Solution {
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+
+        boolean visited[][] = new boolean[n][n]; // : O(N^2) visited matrix
+
+        // [maximum time so far, row, col]
+        PriorityQueue<int[]> pq = new PriorityQueue<>( // : min-heap ordered by elevation
+            (a, b) -> a[0] - b[0]
+        );
+
+        pq.offer(new int[] {grid[0][0], 0, 0});
+
+        int[] dRow = {-1, 1, 0, 0};
+        int[] dCol = {0, 0, -1, 1};
+
+        while (!pq.isEmpty()) { // : Dijkstra minimax expansion
+            int curr[] = pq.poll();
+            int time = curr[0];
+            int row = curr[1];
+            int col = curr[2];
+
+            if (visited[row][col]) {
+                continue;
+            }
+
+            visited[row][col] = true;
+
+            if (row == n - 1 && col == n - 1) {
+                return time;
+            }
+
+            for (int i = 0; i < 4; i++) { // : 4-directional neighbor exploration
+                int newRow = row + dRow[i];
+                int newCol = col + dCol[i];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < n && !visited[newRow][newCol]) {
+                    int newTime = Math.max(time, grid[newRow][newCol]);
+                    pq.offer(new int[]{newTime, newRow, newCol});
+                }
+            }
+        }
+
+        return -1;
+    }
+}`,
+          time: 'O(N^2 log N)',
+          timeDesc: '• There are N^2 cells in the grid, each added to the min-heap at most once.\n• Priority queue operations take O(log N^2) which simplifies to O(log N) time.\n• Total Time: O(N^2 log N) where N is grid side length.',
+          space: 'O(N^2)',
+          spaceDesc: '• boolean visited matrix of size N x N takes O(N^2) memory.\n• Priority queue holds at most O(N^2) cells at any time.\n• Total Space: O(N^2) auxiliary space.'
+        }
+      },
       p('Alien Dictionary', 'Hard', 'Derive character order from a sorted alien dictionary.'),
       p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
     ]
