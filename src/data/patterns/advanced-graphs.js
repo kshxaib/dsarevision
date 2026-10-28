@@ -182,7 +182,70 @@ export const advancedGraphs = {
           spaceDesc: '• Adjacency list requires O(V + E) space to store cities and flights.\n• BFS queue and cost array require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
         }
       },
-      p('Min Cost to Connect All Points', 'Medium', 'Find minimum cost to connect all points (MST).'),
+      {
+        id: 'min-cost-to-connect-all-points',
+        title: 'Min Cost to Connect All Points',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/min-cost-to-connect-all-points/description/',
+        image: null,
+        definition: 'You are given an array points representing integer coordinates of some points on a 2D-plane, where points[i] = [xi, yi]. The cost of connecting two points [xi, yi] and [xj, yj] is the manhattan distance between them: |xi - xj| + |yi - yj|, where |val| denotes the absolute value of val. Return the minimum cost to make all points connected. All points are connected if there is exactly one simple path between any two points.',
+        examples: [
+          {
+            input: 'points = [[0,0],[2,2],[3,10],[5,2],[7,0]]',
+            output: '20',
+            explanation: 'Connect points to form a minimum spanning tree: (0,0)-(2,2) cost 4, (2,2)-(5,2) cost 3, (5,2)-(7,0) cost 4, (3,10)-(5,2) cost 9. Total cost = 4 + 3 + 4 + 9 = 20.'
+          },
+          {
+            input: 'points = [[3,12],[-2,5],[-4,1]]',
+            output: '18',
+            explanation: 'Connect (-4,1)-(-2,5) cost 6 and (-2,5)-(3,12) cost 12. Total cost = 18.'
+          }
+        ],
+        optimal: {
+          idea: '• **Pattern:** Prim Algorithm for Minimum Spanning Tree (MST with Min-Heap)\n• **Greedy Cut Property:** Start from any point (point 0 with edge weight 0) and grow the MST by greedily picking the unvisited point with the smallest Manhattan distance to the current tree.\n• **Min-Heap Priority Queue:** Maintain a min-heap storing `[weight, node]` ordered by edge weight, along with a `boolean visited[]` array.\n• **MST Expansion:** Repeatedly pop the lowest-cost edge. If the node is already visited, discard it. Otherwise, mark `visited[node] = true`, accumulate `sum += wt`, and push all edges to unvisited neighbor points with their Manhattan distance.\n• **Termination:** Once all points are connected into the spanning tree, return the total accumulated `sum`.',
+          code: `class Solution {
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length;
+
+        int sum = 0;
+        boolean visited[] = new boolean[n]; // : O(V) visited array
+
+        // [weight, node]
+        PriorityQueue<int[]> pq = new PriorityQueue<>( // : min-heap ordered by edge weight
+            (a, b) -> a[0] - b[0]
+        );
+
+        pq.offer(new int[] {0, 0});
+
+        while (!pq.isEmpty()) { // : Prim algorithm MST expansion
+            int curr[] = pq.poll();
+            int wt = curr[0];
+            int node = curr[1];
+
+            if (visited[node]) {
+                continue;
+            }
+
+            visited[node] = true;
+            sum += wt;
+
+            for (int neighbor = 0; neighbor < n; neighbor++) { // : O(V) compute Manhattan distance to all neighbors
+                if (!visited[neighbor]) {
+                    int edgeWt = Math.abs(points[node][0] - points[neighbor][0]) + Math.abs(points[node][1] - points[neighbor][1]);
+                    pq.offer(new int[] {edgeWt, neighbor});
+                }
+            }
+        }
+
+        return sum;
+    }
+}`,
+          time: 'O(V^2 log V)',
+          timeDesc: '• There are V vertices and up to V^2 possible edges in the complete coordinate graph.\n• Each edge can be inserted into the min-heap taking O(log V) time per operation.\n• Total Time: O(V^2 log V) where V is points length.',
+          space: 'O(V^2)',
+          spaceDesc: '• Min-heap priority queue can store up to V^2 edges in the worst case.\n• Visited boolean array requires O(V) memory.\n• Total Space: O(V^2) auxiliary space for the priority queue.'
+        }
+      },
       p('Swim in Rising Water', 'Hard', 'Find minimum time to swim from top-left to bottom-right.'),
       p('Alien Dictionary', 'Hard', 'Derive character order from a sorted alien dictionary.'),
       p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
