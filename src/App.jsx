@@ -11,6 +11,7 @@ import VaultHub from './components/VaultHub';
 import VaultSubjectView from './components/VaultSubjectView';
 import CommandPalette from './components/CommandPalette';
 import PasswordGate from './components/PasswordGate';
+import AcademicStackProject from './components/projects/AcademicStackProject';
 
 function resolveInitialState() {
   const hash = window.location.hash.replace('#', '').trim();
@@ -67,6 +68,16 @@ function resolveInitialState() {
         vaultSubjectId: foundSub.id,
       };
     }
+  }
+
+  // 5b. Projects
+  if (hash === 'project-1' || hash === 'project-2') {
+    return {
+      viewMode: hash,
+      patternId: patterns[0]?.id || '',
+      problem: null,
+      vaultSubjectId: null,
+    };
   }
 
   // 6. Pattern or Problem
@@ -286,6 +297,11 @@ export default function App() {
       setActiveVaultSubjectId(subId);
       setActiveProblem(null);
       window.location.hash = '#' + target;
+    } else if (target === 'project-1' || target === 'project-2') {
+      setViewMode(target);
+      setActiveProblem(null);
+      setActiveVaultSubjectId(null);
+      window.location.hash = '#' + target;
     } else {
       // Check if target is a pattern
       const foundPat = patterns.find((p) => p.id === target);
@@ -355,6 +371,12 @@ export default function App() {
           setActiveProblem(null);
           return;
         }
+      }
+      if (hash === 'project-1' || hash === 'project-2') {
+        setViewMode(hash);
+        setActiveProblem(null);
+        setActiveVaultSubjectId(null);
+        return;
       }
       const foundPat = patterns.find((p) => p.id === hash);
       if (foundPat) {
@@ -431,6 +453,12 @@ export default function App() {
         breadcrumbPage: activePattern?.name || 'Patterns',
       };
     }
+    if (viewMode === 'project-1') {
+      return { breadcrumbSection: 'Projects', breadcrumbPage: 'Project 1: Academic Stack' };
+    }
+    if (viewMode === 'project-2') {
+      return { breadcrumbSection: 'Projects', breadcrumbPage: 'Project 2' };
+    }
     return { breadcrumbSection: 'Learning', breadcrumbPage: 'Overview' };
   }, [viewMode, activeVaultSubject, activeProblem, activePattern]);
 
@@ -440,6 +468,9 @@ export default function App() {
     if (viewMode === 'dsa-hub') return 'dsa-patterns';
     if (viewMode === 'vault-subject' && activeVaultSubjectId) {
       return 'vault-' + activeVaultSubjectId;
+    }
+    if (viewMode === 'project-1' || viewMode === 'project-2') {
+      return viewMode;
     }
     if (viewMode === 'dsa') return 'dsa-patterns';
     return 'theory';
@@ -520,6 +551,22 @@ export default function App() {
                   isRevised={revisedProblems.has(currentProblem.id)}
                   onToggleRevised={() => handleToggleRevised(currentProblem.id)}
                 />
+              ) : viewMode === 'project-1' ? (
+                <AcademicStackProject />
+              ) : viewMode === 'project-2' ? (
+                <div className="animate-fadeIn max-w-4xl py-6">
+                  <div className="mb-6 pb-4 border-b border-ink-border">
+                    <h1 className="text-2xl font-heading font-bold text-ink-text">
+                      Project 2
+                    </h1>
+                    <p className="text-xs text-ink-subtle mt-1 font-mono">
+                      Project Resource & Documentation
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-dashed border-ink-border bg-ink-surface/40 p-8 text-center text-sm text-ink-muted">
+                    Project 2 resources will be added here.
+                  </div>
+                </div>
               ) : (
                 <ProblemList
                   pattern={activePattern}

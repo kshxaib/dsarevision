@@ -234,6 +234,59 @@ export default function AppSidebar({
               </div>
             </div>
           </div>
+
+          {/* 5. Projects Section */}
+          <div>
+            <p className="font-medium text-muted-foreground text-xs tracking-wider px-2 pb-2">
+              PROJECTS
+            </p>
+            <div className="text-sidebar-foreground/80 text-sm flex flex-col gap-1">
+              <div
+                onClick={() => handleItemClick('project-1')}
+                className={navItemClass(currentView === 'project-1')}
+              >
+                {/* Folder Code Icon */}
+                <svg
+                  className={`size-4 shrink-0 transition-colors ${
+                    currentView === 'project-1' ? 'text-amber-accent' : 'text-muted-foreground'
+                  }`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+                  <path d="m10 12-2 2 2 2" />
+                  <path d="m14 12 2 2-2 2" />
+                </svg>
+                <span className="truncate">Project 1: Academic Stack</span>
+              </div>
+              <div
+                onClick={() => handleItemClick('project-2')}
+                className={navItemClass(currentView === 'project-2')}
+              >
+                {/* Folder Code Icon */}
+                <svg
+                  className={`size-4 shrink-0 transition-colors ${
+                    currentView === 'project-2' ? 'text-amber-accent' : 'text-muted-foreground'
+                  }`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
+                  <path d="m10 12-2 2 2 2" />
+                  <path d="m14 12 2 2-2 2" />
+                </svg>
+                <span>Project 2</span>
+              </div>
+            </div>
+          </div>
         </nav>
 
         {/* 5. Niche Vault Lock Ka Button */}
