@@ -319,7 +319,5 @@ export const advancedGraphs = {
           spaceDesc: '• boolean visited matrix of size N x N takes O(N^2) memory.\n• Priority queue holds at most O(N^2) cells at any time.\n• Total Space: O(N^2) auxiliary space.'
         }
       },
-      p('Alien Dictionary', 'Hard', 'Derive character order from a sorted alien dictionary.'),
-      p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
     ]
   };

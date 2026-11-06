@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Lock, Search } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export default function AppSidebar({
   currentView = 'dsa-patterns',
@@ -50,20 +50,6 @@ export default function AppSidebar({
             : 'translate-x-0'
         }`}
       >
-        {/* 1. Sabse Upar Search Bar */}
-        <div className="px-3 pt-3 shrink-0">
-          <div
-            onClick={onOpenCommand}
-            className="rounded-md bg-sidebar-accent/50 hover:bg-sidebar-accent text-muted-foreground hover:text-sidebar-accent-foreground text-sm border border-sidebar-border flex px-3 items-center justify-between h-9 cursor-pointer transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <Search className="size-4" />
-              <span>Search resources</span>
-            </div>
-            <kbd className="font-mono text-muted-foreground text-xs">⌘K</kbd>
-          </div>
-        </div>
-
         {/* Navigation Area */}
         <nav className="px-3 py-4 flex-1 overflow-y-auto space-y-5 sidebar-scroll">
           {/* 2. DSA Theory & 3. DSA Patterns */}

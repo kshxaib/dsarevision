@@ -30,10 +30,10 @@ export const patterns = [
   backtracking,
   graphs,
   advancedGraphs,
+  intervals,
+  greedy,
   dynamicProgramming1D,
   dynamicProgramming2D,
-  greedy,
-  intervals,
-  mathGeometry,
   bitManipulation,
+  mathGeometry,
 ];
