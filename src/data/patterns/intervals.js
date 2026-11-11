@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const intervals = {
     id: 'intervals',
     name: 'Intervals',
-    icon: '📐',
     problems: [
       p('Insert Interval', 'Medium', 'Insert a new interval and merge overlapping intervals.'),
       p('Merge Intervals', 'Medium', 'Merge all overlapping intervals.'),

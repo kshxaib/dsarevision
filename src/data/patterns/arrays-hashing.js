@@ -3,7 +3,74 @@ import { p } from '../helper.js';
 export const arraysHashing = {
     id: 'arrays-hashing',
     name: 'Arrays & Hashing',
-    icon: '📦',
+    cheatSheet: {
+      summary: 'Arrays and Hashing provide constant-time O(1) lookups and linear-time traversals by combining contiguous memory indexing with hash-based key-value tables.',
+      sections: [
+        {
+          title: 'Common Use Cases',
+          items: [
+            {
+              label: 'Frequency Counting',
+              text: 'Count element occurrences to solve anagrams, frequency thresholds, or character distributions.'
+            },
+            {
+              label: 'Target Complement Search',
+              text: 'Find pair values matching target sum in one pass by storing seen values in a HashMap or HashSet.'
+            },
+            {
+              label: 'Uniqueness and Duplicates',
+              text: 'Verify set membership or duplicate items instantly in average O(1) time.'
+            },
+            {
+              label: 'Prefix and Suffix Accumulation',
+              text: 'Precompute running totals or products to answer range queries without nested loops.'
+            }
+          ]
+        },
+        {
+          title: 'Key Strategies',
+          items: [
+            {
+              label: 'Direct Index Array',
+              text: 'Use fixed integer arrays like int[26] for lowercase letters to avoid HashMap hashing overhead.'
+            },
+            {
+              label: 'Hash Map with Canonical Keys',
+              text: 'Sort strings or build character frequency signatures to group equivalent items like anagrams.'
+            },
+            {
+              label: 'Prefix Sum Difference',
+              text: 'Store cumulative prefix sums in a HashMap to count subarrays summing up to target k.'
+            },
+            {
+              label: 'Bucket Sort on Frequencies',
+              text: 'Use frequency as an array index from 0 to N to extract top-K items in O(n) linear time.'
+            }
+          ]
+        },
+        {
+          title: 'How to Identify When to Apply',
+          items: [
+            {
+              label: 'Repeated Lookups',
+              text: 'You are repeatedly searching an array for an item or target difference.'
+            },
+            {
+              label: 'Nested Loop Optimization',
+              text: 'An O(n²) pair search can be reduced to O(n) by checking previous entries in a hash table.'
+            },
+            {
+              label: 'Unordered Identity Questions',
+              text: 'The problem asks about counts, frequencies, or permutations where order does not matter.'
+            },
+            {
+              label: 'Constant Time Access',
+              text: 'You need instant O(1) index access or element verification.'
+            }
+          ]
+        }
+      ]
+    },
     problems: [
       {
         id: 'contains-duplicate',

@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const binarySearch = {
     id: 'binary-search',
     name: 'Binary Search',
-    icon: '🔍',
     problems: [
       {
         id: 'binary-search-problem',

@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const slidingWindow = {
     id: 'sliding-window',
     name: 'Sliding Window',
-    icon: '🪟',
     problems: [
       {
         id: 'best-time-to-buy-and-sell-stock',

@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const trees = {
     id: 'trees',
     name: 'Trees',
-    icon: '🌲',
     problems: [
       {
         id: 'invert-binary-tree',

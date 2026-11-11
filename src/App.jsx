@@ -11,7 +11,7 @@ import VaultHub from './components/VaultHub';
 import VaultSubjectView from './components/VaultSubjectView';
 import CommandPalette from './components/CommandPalette';
 import PasswordGate from './components/PasswordGate';
-import AcademicStackProject from './components/projects/AcademicStackProject';
+import TcsSection from './components/TcsSection';
 
 function resolveInitialState() {
   const hash = window.location.hash.replace('#', '').trim();
@@ -30,6 +30,16 @@ function resolveInitialState() {
   if (hash === 'dsa-patterns' || hash === 'patterns') {
     return {
       viewMode: 'dsa-hub',
+      patternId: patterns[0]?.id || '',
+      problem: null,
+      vaultSubjectId: null,
+    };
+  }
+
+  // 2b. TCS 190 Problems
+  if (hash === 'tcs' || hash === 'tcs-190') {
+    return {
+      viewMode: 'tcs',
       patternId: patterns[0]?.id || '',
       problem: null,
       vaultSubjectId: null,
@@ -68,16 +78,6 @@ function resolveInitialState() {
         vaultSubjectId: foundSub.id,
       };
     }
-  }
-
-  // 5b. Projects
-  if (hash === 'project-1' || hash === 'project-2') {
-    return {
-      viewMode: hash,
-      patternId: patterns[0]?.id || '',
-      problem: null,
-      vaultSubjectId: null,
-    };
   }
 
   // 6. Pattern or Problem
@@ -286,6 +286,11 @@ export default function App() {
       setActiveProblem(null);
       setActiveVaultSubjectId(null);
       window.location.hash = '#dsa-patterns';
+    } else if (target === 'tcs') {
+      setViewMode('tcs');
+      setActiveProblem(null);
+      setActiveVaultSubjectId(null);
+      window.location.hash = '#tcs';
     } else if (target === 'vault') {
       setViewMode('vault');
       setActiveProblem(null);
@@ -296,11 +301,6 @@ export default function App() {
       setViewMode('vault-subject');
       setActiveVaultSubjectId(subId);
       setActiveProblem(null);
-      window.location.hash = '#' + target;
-    } else if (target === 'project-1' || target === 'project-2') {
-      setViewMode(target);
-      setActiveProblem(null);
-      setActiveVaultSubjectId(null);
       window.location.hash = '#' + target;
     } else {
       // Check if target is a pattern
@@ -356,6 +356,12 @@ export default function App() {
         setActiveVaultSubjectId(null);
         return;
       }
+      if (hash === 'tcs' || hash === 'tcs-190') {
+        setViewMode('tcs');
+        setActiveProblem(null);
+        setActiveVaultSubjectId(null);
+        return;
+      }
       if (hash === 'vault') {
         setViewMode('vault');
         setActiveProblem(null);
@@ -371,12 +377,6 @@ export default function App() {
           setActiveProblem(null);
           return;
         }
-      }
-      if (hash === 'project-1' || hash === 'project-2') {
-        setViewMode(hash);
-        setActiveProblem(null);
-        setActiveVaultSubjectId(null);
-        return;
       }
       const foundPat = patterns.find((p) => p.id === hash);
       if (foundPat) {
@@ -429,6 +429,9 @@ export default function App() {
     if (viewMode === 'dsa-hub') {
       return { breadcrumbSection: 'Workspace', breadcrumbPage: 'DSA Patterns' };
     }
+    if (viewMode === 'tcs') {
+      return { breadcrumbSection: 'Company Prep', breadcrumbPage: 'TCS 190' };
+    }
     if (viewMode === 'theory') {
       return { breadcrumbSection: 'Learning', breadcrumbPage: 'DSA Theory' };
     }
@@ -453,12 +456,6 @@ export default function App() {
         breadcrumbPage: activePattern?.name || 'Patterns',
       };
     }
-    if (viewMode === 'project-1') {
-      return { breadcrumbSection: 'Projects', breadcrumbPage: 'Project 1: Academic Stack' };
-    }
-    if (viewMode === 'project-2') {
-      return { breadcrumbSection: 'Projects', breadcrumbPage: 'Project 2' };
-    }
     return { breadcrumbSection: 'Learning', breadcrumbPage: 'Overview' };
   }, [viewMode, activeVaultSubject, activeProblem, activePattern]);
 
@@ -466,11 +463,9 @@ export default function App() {
   const sidebarCurrentView = useMemo(() => {
     if (viewMode === 'theory') return 'theory';
     if (viewMode === 'dsa-hub') return 'dsa-patterns';
+    if (viewMode === 'tcs') return 'tcs';
     if (viewMode === 'vault-subject' && activeVaultSubjectId) {
       return 'vault-' + activeVaultSubjectId;
-    }
-    if (viewMode === 'project-1' || viewMode === 'project-2') {
-      return viewMode;
     }
     if (viewMode === 'dsa') return 'dsa-patterns';
     return 'theory';
@@ -504,7 +499,7 @@ export default function App() {
           />
 
           {/* Main Layout Area */}
-          <div className="flex ml-0 lg:ml-66 flex-col flex-1 min-h-screen">
+          <div className="flex flex-col flex-1 min-h-screen">
             {/* Mobile menu button */}
             <button
               onClick={() => setSidebarOpen(true)}
@@ -518,6 +513,8 @@ export default function App() {
             <main className="px-4 sm:px-8 pt-3 sm:pt-4 pb-12 flex-1">
               {viewMode === 'theory' ? (
                 <TheoryQuestions />
+              ) : viewMode === 'tcs' ? (
+                <TcsSection />
               ) : viewMode === 'dsa-hub' ? (
                 <DsaPatternsHub
                   patterns={patterns}
@@ -551,22 +548,6 @@ export default function App() {
                   isRevised={revisedProblems.has(currentProblem.id)}
                   onToggleRevised={() => handleToggleRevised(currentProblem.id)}
                 />
-              ) : viewMode === 'project-1' ? (
-                <AcademicStackProject />
-              ) : viewMode === 'project-2' ? (
-                <div className="animate-fadeIn max-w-4xl py-6">
-                  <div className="mb-6 pb-4 border-b border-ink-border">
-                    <h1 className="text-2xl font-heading font-bold text-ink-text">
-                      Project 2
-                    </h1>
-                    <p className="text-xs text-ink-subtle mt-1 font-mono">
-                      Project Resource & Documentation
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-dashed border-ink-border bg-ink-surface/40 p-8 text-center text-sm text-ink-muted">
-                    Project 2 resources will be added here.
-                  </div>
-                </div>
               ) : (
                 <ProblemList
                   pattern={activePattern}

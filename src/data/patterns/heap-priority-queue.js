@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const heapPriorityQueue = {
     id: 'heap-priority-queue',
     name: 'Heap & Priority Queue',
-    icon: '⏫',
     problems: [
       {
         id: 'kth-largest-element-in-an-array',

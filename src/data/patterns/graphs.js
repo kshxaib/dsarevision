@@ -1,24 +1,15 @@
 import { p } from '../helper.js';
-import numIslandsTree from '@/assets/images/graph/DFS Recursion Tree for Number of Islands.png';
-import maxAreaTree from '@/assets/images/graph/DFS Recursion Tree_ Max Island Area.png';
-import cloneGraphTree from '@/assets/images/graph/BFS Clone Graph Infographic.png';
-import rottingOrangesTree from '@/assets/images/graph/Rotting Oranges BFS Step-by-Step Infographic.png';
-import islandsAndTreasureTree from '@/assets/images/graph/Multi-Source BFS_ Treasure Distances.png';
 
 export const graphs = {
     id: 'graphs',
     name: 'Graphs',
-    icon: '🕸️',
     problems: [
       {
         id: 'number-of-islands',
         title: 'Number of Islands',
         difficulty: 'Medium',
         leetcodeUrl: 'https://leetcode.com/problems/number-of-islands/description/',
-        image: {
-          url: numIslandsTree,
-          title: 'Dry Run'
-        },
+        image: null,
         definition: 'Given an m x n 2D binary grid grid which represents a map of "1"s (land) and "0"s (water), return the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.',
         examples: [
           {
@@ -33,7 +24,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** 2D Grid DFS Connected Components\n• **Grid Traversal:** Iterate through every cell `(i, j)` in the `N x M` grid. If `grid[i][j] == \'1\'` and not yet visited, an unexplored island is discovered.\n• **DFS Traversal:** Increment `count++` and trigger `dfs(i, j)` to traverse and mark the entire connected component of land as visited.\n• **Boundary and Water Check:** In `dfs`, return immediately if `(row, col)` is out of bounds, is water (`\'0\'`), or already visited.\n• **4-Directional Spread:** Mark `visited[row][col] = true`, then recursively explore up `(row - 1, col)`, down `(row + 1, col)`, left `(row, col - 1)`, and right `(row, col + 1)`.\n• **Return Value:** Once all cells are visited, return `count`.',
+          idea: 'Traverse the 2D grid. When an unvisited \'1\' is found, increment the island count and use DFS to traverse and mark all 4-directionally connected land cells.',
           code: `class Solution {
     public int numIslands(char[][] grid) {
         int n = grid.length;
@@ -74,9 +65,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Every cell is visited at most once during the nested loops and DFS.\n• 4-directional checks take O(1) time per cell.\n• Total Time: O(N * M) where N and M are grid dimensions.',
+          timeDesc: 'O(N * M) visits every cell at most once.',
           space: 'O(N * M)',
-          spaceDesc: '• boolean visited[N][M] matrix takes O(N * M) memory.\n• Recursion call stack can reach at most O(N * M) in the worst case (grid full of land).'
+          spaceDesc: 'O(N * M) for visited matrix and DFS recursion stack.'
         }
       },
       {
@@ -84,10 +75,7 @@ export const graphs = {
         title: 'Max Area of Island',
         difficulty: 'Medium',
         leetcodeUrl: 'https://leetcode.com/problems/max-area-of-island/description/',
-        image: {
-          url: maxAreaTree,
-          title: 'Dry Run'
-        },
+        image: null,
         definition: 'You are given an m x n binary matrix grid. An island is a group of 1s (representing land) connected 4-directionally (horizontal or vertical). You may assume all four edges of the grid are surrounded by water. The area of an island is the number of cells with a value 1 in the island. Return the maximum area of an island in grid. If there is no island, return 0.',
         examples: [
           {
@@ -102,7 +90,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** 2D Grid DFS Connected Component Area\n• **Grid Traversal:** Iterate through all cells `(i, j)`. When `grid[i][j] == 1` and not visited, trigger `dfs` to compute the total area of this connected island.\n• **Area Accumulation:** For each valid land cell, initialize `count = 1`, mark `visited[row][col] = true`, and recursively add the return values from all 4 neighboring directions (up, down, left, right).\n• **Base Case:** Return `0` immediately if `(row, col)` is out of bounds, is water (`0`), or has already been visited.\n• **Global Maximum:** Update `maxArea = Math.max(maxArea, area)` after exploring each island component, and return `maxArea`.',
+          idea: 'Iterate through all cells. When land 1 is found, use DFS to traverse its connected component, returning 1 plus the sum of areas from all 4 directions.',
           code: `class Solution {
     public int maxAreaOfIsland(int[][] grid) {
         if (grid == null || grid.length == 0 || grid[0].length == 0) {
@@ -149,9 +137,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Every cell is visited at most once across the nested grid iteration and DFS.\n• 4 directional checks take O(1) time each.\n• Total Time: O(N * M) where N and M are rows and columns.',
+          timeDesc: 'O(N * M) visits each cell at most once.',
           space: 'O(N * M)',
-          spaceDesc: '• boolean visited[N][M] array takes O(N * M) memory.\n• Recursion call stack depth reaches at most O(N * M) in the worst case.'
+          spaceDesc: 'O(N * M) for visited array and recursion stack.'
         }
       },
       {
@@ -159,10 +147,7 @@ export const graphs = {
         title: 'Clone Graph',
         difficulty: 'Medium',
         leetcodeUrl: 'https://leetcode.com/problems/clone-graph/description/',
-        image: {
-          url: cloneGraphTree,
-          title: 'Dry Run'
-        },
+        image: null,
         definition: 'Given a reference of a node in a connected undirected graph. Return a deep copy (clone) of the graph. Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.',
         examples: [
           {
@@ -182,7 +167,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Graph BFS Traversal and Hash Map Cloning\n• **Hash Map Mapping:** Use a hash map `HashMap<Node, Node>` to map each original node to its cloned counterpart, avoiding infinite loops in cycles and redundant node creations.\n• **BFS Queue:** Initialize a queue with the starting node. Create the root clone and put `(node, clone)` into the map.\n• **Neighbor Cloning and Wiring:** Dequeue `curr`, iterate over each `neighbor`. If not yet visited (not in map), create `neighborClone`, save to map, and push to queue. Then connect `cloned.neighbors.add(neighborClone)`.\n• **Return Deep Copy:** Return the cloned start node after the queue becomes empty.',
+          idea: 'Traverse the graph using BFS and a HashMap to map each original node to its copy, wiring cloned neighbors without infinite loops.',
           code: `class Solution {
     public Node cloneGraph(Node node) {
         if (node == null) {
@@ -218,9 +203,9 @@ export const graphs = {
     }
 }`,
           time: 'O(V + E)',
-          timeDesc: '• BFS visits every vertex V once and checks all incident edges 2E across neighbor lists.\n• Hash map lookups and node creations take O(1) average time.\n• Total Time: O(V + E) where V is vertices and E is edges.',
+          timeDesc: 'O(V + E) visits every vertex and directed edge once.',
           space: 'O(V)',
-          spaceDesc: '• Hash map stores a mapping for all V nodes.\n• BFS queue stores at most V nodes at any level.\n• Total Space: O(V) auxiliary space excluding cloned graph output.'
+          spaceDesc: 'O(V) for the hash map and queue.'
         }
       },
       {
@@ -228,10 +213,7 @@ export const graphs = {
         title: 'Rotting Oranges',
         difficulty: 'Medium',
         leetcodeUrl: 'https://leetcode.com/problems/rotting-oranges/description/',
-        image: {
-          url: rottingOrangesTree,
-          title: 'Dry Run'
-        },
+        image: null,
         definition: 'You are given an m x n grid where each cell can have one of three values: 0 representing an empty cell, 1 representing a fresh orange, or 2 representing a rotten orange. Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten. Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return -1.',
         examples: [
           {
@@ -251,7 +233,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Multi-Source BFS on 2D Grid\n• **Queue Initialization:** First count total fresh oranges and push all initially rotten oranges (`grid[i][j] == 2`) as starting sources into a FIFO queue.\n• **Level-by-Level BFS:** While the queue is not empty and fresh oranges remain (`fresh > 0`), process the current level (`size = queue.size()`). For each rotten orange, inspect all 4 adjacent cells.\n• **Rotting Spread:** If an adjacent cell has a fresh orange (`1`), convert it to rotten (`2`), decrement `fresh--`, and enqueue it for the next minute.\n• **Result Check:** After completing a level, increment `minutes++`. Once BFS finishes, return `minutes` if `fresh == 0`, otherwise return `-1` if any fresh orange remains unreachable.',
+          idea: 'Count fresh oranges and push all rotten oranges to a BFS queue. Spread rotting layer by layer each minute until all reachable fresh oranges turn rotten.',
           code: `class Solution {
     public int orangesRotting(int[][] grid) {
         int n = grid.length;
@@ -307,9 +289,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Every cell in the N x M grid is initially scanned to count fresh and rotten oranges.\n• Each orange is enqueued and dequeued in BFS at most once, with 4 directional checks taking constant time.\n• Total Time: O(N * M) where N is rows and M is columns.',
+          timeDesc: 'O(N * M) each cell processed at most once.',
           space: 'O(N * M)',
-          spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Grid is modified in place to mark visited rotten oranges without extra boolean array.\n• Total Space: O(N * M) auxiliary space for the queue.'
+          spaceDesc: 'O(N * M) queue space for BFS.'
         }
       },
       {
@@ -317,10 +299,7 @@ export const graphs = {
         title: 'Islands and Treasure',
         difficulty: 'Medium',
         leetcodeUrl: 'https://neetcode.io/problems/islands-and-treasure',
-        image: {
-          url: islandsAndTreasureTree,
-          title: 'Dry Run'
-        },
+        image: null,
         definition: 'You are given an m x n 2D grid initialized with these possible values: -1 representing a water cell or obstacle, 0 representing a treasure chest, and 2147483647 (Integer.MAX_VALUE) representing an empty land cell. Fill each empty land cell with the distance to its nearest treasure chest. If it is impossible to reach a treasure chest, it should remain 2147483647.',
         examples: [
           {
@@ -335,7 +314,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Multi-Source BFS on 2D Grid\n• **Queue Initialization:** Find all treasure chests (`grid[i][j] == 0`) and enqueue their coordinates simultaneously as starting sources for multi-source BFS.\n• **Shortest Distance Expansion:** Pop each cell `(row, col)` and check its 4 adjacent neighbors (up, down, left, right).\n• **Cell Update:** If a neighbor is valid and is an empty land cell (`grid[newRow][newCol] == Integer.MAX_VALUE`), update its distance to `grid[row][col] + 1` and push it into the queue.\n• **Optimality:** Since BFS explores layer by layer, the first time an empty land cell is reached from any chest, it is guaranteed to have the minimum shortest distance.',
+          idea: 'Enqueue all treasure chests (0) into a multi-source BFS queue, then expand level by level to compute the shortest distance to every empty land cell.',
           code: `class Solution {
     public void islandsAndTreasure(int[][] grid) {
         int n = grid.length;
@@ -373,9 +352,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Initial grid scan visits every cell to enqueue treasure chests.\n• Each land cell is visited and updated at most once via multi-source BFS.\n• Total Time: O(N * M) where N and M are grid dimensions.',
+          timeDesc: 'O(N * M) visits each cell at most once.',
           space: 'O(N * M)',
-          spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Distances are written directly into the grid in place without extra visited memory.\n• Total Space: O(N * M) auxiliary space for the queue.'
+          spaceDesc: 'O(N * M) queue space in worst case.'
         }
       },
       {
@@ -398,7 +377,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Reverse Multi-Source BFS from Ocean Borders\n• **Reverse Flow Intuition:** Instead of checking if water from every cell can reach both oceans (which is repetitive), flow water in reverse: start from ocean borders and move inland to cells with equal or greater height (`heights[newRow][newCol] >= heights[row][col]`).\n• **Two Queues and Visited Sets:** Initialize `pQueue` and `pacific[N][M]` for Pacific (top and left borders), and `aQueue` and `atlantic[N][M]` for Atlantic (bottom and right borders).\n• **Multi-Source BFS Expansion:** Run BFS independently for Pacific and Atlantic. Water can spread to a neighbor if it has not been visited and its height is greater than or equal to current height.\n• **Intersection:** Iterate through all cells `(i, j)`. If both `pacific[i][j]` and `atlantic[i][j]` are true, water from that cell can reach both oceans. Add `[i, j]` to the result list.',
+          idea: 'Run reverse multi-source BFS from ocean borders inland to cells of equal or greater height, then collect cells visited from both oceans.',
           code: `class Solution {
     public List<List<Integer>> pacificAtlantic(int[][] heights) {
         int n = heights.length;
@@ -472,9 +451,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Each cell is visited at most once per BFS for both Pacific and Atlantic oceans.\n• Intersection check loops through all cells in the N x M grid.\n• Total Time: O(N * M) where N is rows and M is columns.',
+          timeDesc: 'O(N * M) each cell visited at most twice.',
           space: 'O(N * M)',
-          spaceDesc: '• boolean matrices pacific[N][M] and atlantic[N][M] take O(N * M) memory.\n• BFS queues hold at most O(N * M) cells in the worst case.\n• Total Space: O(N * M) auxiliary space.'
+          spaceDesc: 'O(N * M) for ocean reachability matrices and queues.'
         }
       },
       {
@@ -497,7 +476,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Boundary Multi-Source BFS\n• **Boundary Invariance:** Any \'O\' connected to the 4 borders cannot be surrounded. Instead of finding surrounded cells directly, protect all boundary-connected \'O\'s.\n• **Border Seeding:** Scan the 4 outer edges (first and last row, first and last column). For any \'O\', temporarily change it to \'#\' and enqueue its coordinates.\n• **Multi-Source BFS:** Explore 4 adjacent neighbors for each dequeued cell. Any neighbor with \'O\' is connected to a border \'O\', so mark it \'#\' and push it to the queue.\n• **Final Conversion:** Scan the whole board. Convert remaining \'O\' cells to \'X\' (since they are fully surrounded), and restore \'#\' cells back to \'O\' (the safe border regions).',
+          idea: 'Run BFS from all border \'O\' cells to mark safe boundary regions with \'#\'. Then convert remaining \'O\'s to \'X\' and restore \'#\' back to \'O\'.',
           code: `class Solution {
     public void solve(char[][] board) {
         if (board == null || board.length == 0 || board[0].length == 0) {
@@ -577,9 +556,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N * M)',
-          timeDesc: '• Boundary scan and final board sweep iterate across all cells in the N x M grid.\n• Each boundary-connected cell is enqueued and processed at most once during BFS.\n• Total Time: O(N * M) where N is rows and M is columns.',
+          timeDesc: 'O(N * M) grid traversal and border BFS.',
           space: 'O(N * M)',
-          spaceDesc: '• BFS queue can hold at most all cells in the grid in the worst case.\n• Grid is modified in place using \'#\' without an auxiliary visited matrix.\n• Total Space: O(N * M) auxiliary space for the queue.'
+          spaceDesc: 'O(N * M) queue space for border BFS.'
         }
       },
       {
@@ -603,7 +582,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Topological Sort via Kahn Algorithm (BFS In-degree)\n• **Graph Representation:** Build a directed adjacency list `prerequisite -> course` and compute the in-degree for each course (number of prerequisite dependencies needed).\n• **Zero In-degree Queue:** Enqueue all courses that have an in-degree of 0 (courses with no prerequisites that can be taken immediately).\n• **Kahn BFS Traversal:** Repeatedly dequeue a completed course, increment `count++`, and decrement the in-degree of all dependent neighbor courses.\n• **Cycle Detection:** When a neighbor in-degree reaches 0, push it to the queue. If `count == numCourses`, all courses can be finished without cycles; otherwise, a cycle exists.',
+          idea: 'Use Kahn algorithm (BFS topological sort): enqueue courses with in-degree 0 and decrement dependent courses. If total processed equals numCourses, no cycle exists.',
           code: `class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
@@ -651,9 +630,9 @@ export const graphs = {
     }
 }`,
           time: 'O(V + E)',
-          timeDesc: '• Building the graph and computing in-degrees traverses all V vertices and E prerequisites.\n• Kahn BFS visits every node once and decrements each directed edge exactly once.\n• Total Time: O(V + E) where V is numCourses and E is prerequisites length.',
+          timeDesc: 'O(V + E) building graph and Kahn BFS.',
           space: 'O(V + E)',
-          spaceDesc: '• Adjacency list stores V vertices and E directed edges.\n• In-degree array and BFS queue each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
+          spaceDesc: 'O(V + E) for adjacency list, in-degree array, and queue.'
         }
       },
       {
@@ -681,7 +660,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Topological Sort via Kahn Algorithm (BFS In-degree)\n• **Directed Graph:** Build an adjacency list `prerequisite -> course` and maintain an `indegree` array representing prerequisites required for each course.\n• **Seed Queue:** Enqueue all courses with `indegree == 0` (courses with no prerequisites that can be scheduled first).\n• **Topological Ordering:** Repeatedly dequeue `curr`, append to `order[index++]`, and decrement in-degrees of its dependent neighbors. When a neighbor reaches in-degree 0, enqueue it.\n• **Cycle Validation:** After processing, if `index == numCourses`, return `order`. If `index != numCourses`, a cycle prevents taking all courses, so return an empty array `new int[]{}`.',
+          idea: 'Use Kahn algorithm to find a valid course ordering. Enqueue in-degree 0 courses and record them into the order array. Return an empty array if a cycle is detected.',
           code: `class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
@@ -736,9 +715,9 @@ export const graphs = {
     }
 }`,
           time: 'O(V + E)',
-          timeDesc: '• Constructing the graph and calculating in-degrees takes O(V + E) time.\n• Kahn BFS visits every course and decrements each prerequisite edge exactly once.\n• Total Time: O(V + E) where V is numCourses and E is prerequisites count.',
+          timeDesc: 'O(V + E) building graph and Kahn BFS.',
           space: 'O(V + E)',
-          spaceDesc: '• Adjacency list requires O(V + E) space for vertices and edges.\n• In-degree array, BFS queue, and order array each require O(V) space.\n• Total Space: O(V + E) auxiliary space.'
+          spaceDesc: 'O(V + E) for adjacency list, in-degree array, and order array.'
         }
       },
       {
@@ -761,7 +740,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Undirected Graph DFS Connected Components\n• **Graph Construction:** Build an undirected adjacency list from the given edges by adding both `u -> v` and `v -> u`.\n• **Visited Array:** Maintain a `boolean visited[]` array initialized to false to keep track of explored nodes.\n• **Component Counting:** Loop through all nodes from 0 to `n - 1`. If node `i` is unvisited, it marks the discovery of a new connected component. Increment `count++` and trigger `dfs(i)`.\n• **DFS Traversal:** In `dfs`, mark the current node as visited and recursively visit all unvisited neighbors, fully covering the component.',
+          idea: 'Build an undirected adjacency list and loop through all vertices. When an unvisited vertex is found, increment component count and traverse it completely with DFS.',
           code: `class Solution {
     public int countComponents(int n, int[][] edges) {
         List<List<Integer>> adj = new ArrayList<>(); // : O(V + E) adjacency list
@@ -801,9 +780,9 @@ export const graphs = {
     }
 }`,
           time: 'O(V + E)',
-          timeDesc: '• Building the undirected adjacency list takes O(V + E) time.\n• DFS visits each vertex once and checks each edge twice across all neighbor lists.\n• Total Time: O(V + E) where V is n and E is edges length.',
+          timeDesc: 'O(V + E) visits every vertex and edge once.',
           space: 'O(V + E)',
-          spaceDesc: '• Adjacency list requires O(V + 2E) space to store all nodes and bidirectional edges.\n• boolean visited array and recursion stack each require O(V) space in worst case.\n• Total Space: O(V + E) auxiliary space.'
+          spaceDesc: 'O(V + E) for adjacency list and visited array.'
         }
       },
       {
@@ -826,7 +805,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Graph Theory Tree Property and DFS Connectivity\n• **Tree Condition:** In graph theory, an undirected graph is a valid tree if and only if it has exactly `n - 1` edges and is fully connected with no disconnected components.\n• **Edge Count Check:** If `edges.length != n - 1`, return false immediately (fewer edges means disconnected, more edges means a cycle is guaranteed).\n• **DFS Reachability:** Build the undirected adjacency list and start DFS from node 0 to traverse all reachable nodes.\n• **Connectivity Verification:** Check the `visited` array. If every node from 0 to `n - 1` is visited, the graph is a single connected component and thus a valid tree.',
+          idea: 'A graph is a valid tree if it has exactly n - 1 edges and is fully connected. Verify edge count, then run DFS to confirm all n nodes are reachable from node 0.',
           code: `class Solution {
     public boolean validTree(int n, int[][] edges) {
         if (edges.length != n - 1) {
@@ -870,9 +849,9 @@ export const graphs = {
     }
 }`,
           time: 'O(V + E)',
-          timeDesc: '• Building the graph and scanning edges takes O(V + E) time.\n• DFS visits each node and verifies connectivity in O(V + E) where E equals V - 1.\n• Total Time: O(V + E) or simply O(V) for a valid tree structure.',
+          timeDesc: 'O(V + E) building graph and DFS traversal.',
           space: 'O(V + E)',
-          spaceDesc: '• Adjacency list requires O(V + 2E) space for nodes and undirected edges.\n• boolean visited array and recursion call stack each require O(V) memory.\n• Total Space: O(V + E) auxiliary space.'
+          spaceDesc: 'O(V + E) for adjacency list and visited array.'
         }
       },
       {
@@ -895,7 +874,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Incremental Graph Construction and DFS Cycle Detection\n• **Cycle Condition:** Before adding an undirected edge `[u, v]` to our graph, check whether a path already exists between `u` and `v`.\n• **DFS Connectivity Check:** For each edge `[u, v]`, run `dfs(adj, visited, u, v)`. If `dfs` finds that `v` is already reachable from `u`, then adding this edge would create a cycle. Since we process edges in order, this edge is the redundant connection.\n• **Incremental Edge Addition:** If no path exists between `u` and `v`, add `u <-> v` to the adjacency list and proceed to the next edge.',
+          idea: 'Process edges one by one: check with DFS if both endpoints are already connected. If yes, that edge creates a cycle and is redundant; otherwise add it to the graph.',
           code: `class Solution {
     public int[] findRedundantConnection(int[][] edges) {
         int n = edges.length;
@@ -940,9 +919,9 @@ export const graphs = {
     }
 }`,
           time: 'O(N^2)',
-          timeDesc: '• There are N edges in total.\n• For each edge, a DFS traversal is run across the current graph which takes up to O(N) time.\n• Total Time: O(N^2) where N is the number of edges and vertices.',
+          timeDesc: 'O(N²) DFS connectivity check for each edge.',
           space: 'O(N)',
-          spaceDesc: '• Adjacency list stores at most N nodes and N edges taking O(N) space.\n• Visited boolean array and DFS recursion stack each take O(N) memory.\n• Total Space: O(N) auxiliary space.'
+          spaceDesc: 'O(N) for adjacency list and visited array.'
         }
       },
       {
@@ -965,7 +944,7 @@ export const graphs = {
           }
         ],
         optimal: {
-          idea: '• **Pattern:** Shortest Path via Level-by-Level BFS\n• **Fast Lookup Set:** Put all words into a `HashSet<String>`. If `endWord` is absent from the set, return 0 immediately.\n• **BFS Queue:** Initialize a queue with `beginWord` and set `steps = 1`. Remove words from the set when enqueued to mark them as visited and prevent cycles.\n• **Word Transformation:** Dequeue words level by level. For the current word, try mutating each character from \'a\' to \'z\'. If the transformed word is present in the set, push it to the queue and remove it from the set.\n• **Target Reached:** As soon as `curr.equals(endWord)`, return `steps`. If the queue becomes empty without reaching `endWord`, return 0.',
+          idea: 'Run BFS from beginWord mutating one character at a time from \'a\' to \'z\'. If a mutation exists in the dictionary, enqueue it and remove it to find the shortest transformation sequence.',
           code: `class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Set<String> set = new HashSet<>(wordList); // : O(N * L) dictionary set
@@ -1014,10 +993,332 @@ export const graphs = {
     }
 }`,
           time: 'O(N * L^2)',
-          timeDesc: '• In the worst case, all N words in the dictionary are processed by BFS once.\n• For each word of length L, trying 26 letters and building new candidate strings takes 26 * L^2 time.\n• Total Time: O(N * L^2) where N is word count and L is length of words.',
+          timeDesc: 'O(N * L²) BFS scanning 26 mutations per character.',
           space: 'O(N * L)',
-          spaceDesc: '• HashSet stores all N words of length L taking O(N * L) memory.\n• BFS queue holds at most O(N) words taking O(N * L) space in worst case.\n• Total Space: O(N * L) auxiliary space.'
+          spaceDesc: 'O(N * L) for hash set and BFS queue.'
         }
       },
+      {
+        id: 'network-delay-time',
+        title: 'Network Delay Time',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/network-delay-time/description/',
+        image: null,
+        definition: 'You are given a network of n nodes, labeled from 1 to n. You are also given times, a list of travel times as directed edges times[i] = (ui, vi, wi), where ui is the source node, vi is the target node, and wi is the time it takes for a signal to travel from source to target. We will send a signal from a given node k. Return the minimum time it takes for all the n nodes to receive the signal. If it is impossible for all the n nodes to receive the signal, return -1.',
+        examples: [
+          {
+            input: 'times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2',
+            output: '2',
+            explanation: 'Signal starts at node 2. Reaches 1 and 3 in time 1, and reaches 4 through node 3 in time 1 + 1 = 2.'
+          },
+          {
+            input: 'times = [[1,2,1]], n = 2, k = 1',
+            output: '1',
+            explanation: 'Signal travels from 1 to 2 in 1 unit of time.'
+          },
+          {
+            input: 'times = [[1,2,1]], n = 2, k = 2',
+            output: '-1',
+            explanation: 'Signal cannot reach node 1 starting from node 2.'
+          }
+        ],
+        optimal: {
+          idea: 'Run Dijkstra algorithm with a min-heap from starting node k to find the shortest delivery time to all nodes, then return the maximum time.',
+          code: `class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // [[u] -> [v, w]]
+        List<List<int[]>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i <= n; i++) { // : O(V) 1-based indexing
+            adj.add(new ArrayList<>());
+        }
+
+        for (int edge[] : times) { // : O(E) build directed weighted edges
+            int u = edge[0];
+            int v = edge[1];
+            int wt = edge[2];
+
+            adj.get(u).add(new int[] {v, wt});
+        }
+
+        int dist[] = new int[n + 1]; // : O(V) shortest distance array
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[k] = 0;
+
+        // [distance, node]
+        PriorityQueue<int[]> pq = new PriorityQueue<>( // : min-heap ordered by distance
+            (a, b) -> a[0] - b[0]
+        );
+        pq.offer(new int[] {0, k});
+
+        while (!pq.isEmpty()) { // : Dijkstra shortest path expansion
+            int pair[] = pq.poll();
+            int currDistance = pair[0];
+            int node = pair[1];
+
+            for (int neighbor[] : adj.get(node)) { // : relax neighbor edges
+                int v = neighbor[0];
+                int wt = neighbor[1];
+
+                if (currDistance + wt < dist[v]) {
+                    dist[v] = currDistance + wt;
+                    pq.offer(new int[] {dist[v], v});
+                }
+            }
+        }
+
+        int answer = 0;
+        for (int i = 1; i <= n; i++) { // : O(V) check all nodes reachable
+            if (dist[i] == Integer.MAX_VALUE) {
+                return -1;
+            }
+
+            answer = Math.max(answer, dist[i]);
+        }
+
+        return answer;
+    }
+}`,
+          time: 'O(E log V)',
+          timeDesc: 'O(E log V) min-heap Dijkstra traversal.',
+          space: 'O(V + E)',
+          spaceDesc: 'O(V + E) for adjacency list, distances, and priority queue.'
+        }
+      },
+      {
+        id: 'cheapest-flights-within-k-stops',
+        title: 'Cheapest Flights Within K Stops',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/cheapest-flights-within-k-stops/description/',
+        image: null,
+        definition: 'There are n cities connected by some number of flights. You are given an array flights where flights[i] = [fromi, toi, pricei] indicates that there is a flight from city fromi to city toi with cost pricei. You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops. If there is no such route, return -1.',
+        examples: [
+          {
+            input: 'n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1',
+            output: '700',
+            explanation: 'The optimal path with at most 1 stop from city 0 to 3 is 0 -> 1 -> 3 with cost 100 + 600 = 700. The path 0 -> 1 -> 2 -> 3 costs 400 but requires 2 stops, which exceeds k = 1.'
+          },
+          {
+            input: 'n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 1',
+            output: '200',
+            explanation: 'The optimal path with at most 1 stop is 0 -> 1 -> 2 with cost 100 + 100 = 200.'
+          },
+          {
+            input: 'n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 0',
+            output: '500',
+            explanation: 'With 0 stops, only direct flight 0 -> 2 is allowed costing 500.'
+          }
+        ],
+        optimal: {
+          idea: 'Use BFS level-by-level tracking stops and accumulated cost, pruning paths when stops exceed k.',
+          code: `class Solution {
+    class Pair {
+        int stops;
+        int node;
+        int cost;
+
+        Pair(int stops, int node, int cost) {
+            this.stops = stops;
+            this.node = node;
+            this.cost = cost;
+        }
+    }
+
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        List<List<int[]>> adj = new ArrayList<>(); // : O(V + E) adjacency list
+        for (int i = 0; i < n; i++) { // : O(V) initialize city nodes
+            adj.add(new ArrayList<>());
+        }
+
+        for (int[] flight : flights) { // : O(E) build directed flight edges
+            int u = flight[0];
+            int v = flight[1];
+            int price = flight[2];
+
+            adj.get(u).add(new int[]{v, price});
+        }
+
+        int cost[] = new int[n]; // : O(V) minimum cost array
+        Arrays.fill(cost, Integer.MAX_VALUE);
+
+        Queue<Pair> queue = new LinkedList<>(); // : O(V) BFS queue
+        queue.offer(new Pair(0, src, 0));
+
+        cost[src] = 0;
+
+        while (!queue.isEmpty()) { // : level-by-level BFS constrained by stops
+            Pair curr = queue.poll();
+            int stops = curr.stops;
+            int node = curr.node;
+            int currCost = curr.cost;
+
+            if (stops > k) {
+                break;
+            }
+
+            for (int neighbor[] : adj.get(node)) { // : explore outgoing flights
+                int v = neighbor[0];
+                int price = neighbor[1];
+
+                if (currCost + price < cost[v]) {
+                    cost[v] = currCost + price;
+                    queue.offer(new Pair(stops + 1, v, cost[v]));
+                }
+            }
+        }
+
+        return cost[dst] == Integer.MAX_VALUE ? -1 : cost[dst];
+    }
+}`,
+          time: 'O(K * E)',
+          timeDesc: 'O(K * E) traversing up to K + 1 levels of flights.',
+          space: 'O(V + E)',
+          spaceDesc: 'O(V + E) for adjacency list, costs, and queue.'
+        }
+      },
+      {
+        id: 'min-cost-to-connect-all-points',
+        title: 'Min Cost to Connect All Points',
+        difficulty: 'Medium',
+        leetcodeUrl: 'https://leetcode.com/problems/min-cost-to-connect-all-points/description/',
+        image: null,
+        definition: 'You are given an array points representing integer coordinates of some points on a 2D-plane, where points[i] = [xi, yi]. The cost of connecting two points [xi, yi] and [xj, yj] is the manhattan distance between them: |xi - xj| + |yi - yj|, where |val| denotes the absolute value of val. Return the minimum cost to make all points connected. All points are connected if there is exactly one simple path between any two points.',
+        examples: [
+          {
+            input: 'points = [[0,0],[2,2],[3,10],[5,2],[7,0]]',
+            output: '20',
+            explanation: 'Connect points to form a minimum spanning tree: (0,0)-(2,2) cost 4, (2,2)-(5,2) cost 3, (5,2)-(7,0) cost 4, (3,10)-(5,2) cost 9. Total cost = 4 + 3 + 4 + 9 = 20.'
+          },
+          {
+            input: 'points = [[3,12],[-2,5],[-4,1]]',
+            output: '18',
+            explanation: 'Connect (-4,1)-(-2,5) cost 6 and (-2,5)-(3,12) cost 12. Total cost = 18.'
+          }
+        ],
+        optimal: {
+          idea: 'Use Prim algorithm with a min-heap to greedily add the closest unvisited point using Manhattan distance until an MST is formed.',
+          code: `class Solution {
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length;
+
+        int sum = 0;
+        boolean visited[] = new boolean[n]; // : O(V) visited array
+        int connected = 0;
+
+        // [weight, node]
+        PriorityQueue<int[]> pq = new PriorityQueue<>( // : min-heap ordered by edge weight
+            (a, b) -> a[0] - b[0]
+        );
+
+        pq.offer(new int[] {0, 0});
+
+        while (!pq.isEmpty()) { // : Prim algorithm MST expansion
+            int curr[] = pq.poll();
+            int wt = curr[0];
+            int node = curr[1];
+
+            if (visited[node]) {
+                continue;
+            }
+
+            visited[node] = true;
+            sum += wt;
+            connected++;
+
+            if (connected == n) {
+                break;
+            }
+
+            for (int neighbor = 0; neighbor < n; neighbor++) { // : O(V) compute Manhattan distance to all neighbors
+                if (!visited[neighbor]) {
+                    int edgeWt = Math.abs(points[node][0] - points[neighbor][0]) + Math.abs(points[node][1] - points[neighbor][1]);
+                    pq.offer(new int[] {edgeWt, neighbor});
+                }
+            }
+        }
+
+        return sum;
+    }
+}`,
+          time: 'O(V^2 log V)',
+          timeDesc: 'O(V² log V) computing distances and pushing to min-heap.',
+          space: 'O(V^2)',
+          spaceDesc: 'O(V²) for priority queue edges and visited array.'
+        }
+      },
+      {
+        id: 'swim-in-rising-water',
+        title: 'Swim in Rising Water',
+        difficulty: 'Hard',
+        leetcodeUrl: 'https://leetcode.com/problems/swim-in-rising-water/description/',
+        image: null,
+        definition: 'You are given an n x n integer matrix grid where each cell (i, j) has elevation grid[i][j]. The rain starts to fall at time t = 0. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares is at most t. You can swim infinite distances in zero time. You must stay within the boundaries of the grid during your swim. Return the least time until you can reach the bottom right square (n - 1, n - 1) starting from the top left square (0, 0).',
+        examples: [
+          {
+            input: 'grid = [[0,2],[1,3]]',
+            output: '3',
+            explanation: 'At time 0, you are in (0,0). You cannot swim to any neighbor until t = 1, then t = 2, and finally at t = 3 the water rises enough to reach (1,1).'
+          },
+          {
+            input: 'grid = [\n  [0,1,2,3,4],\n  [24,23,22,21,5],\n  [12,13,14,15,16],\n  [11,17,18,19,20],\n  [10,9,8,7,6]\n]',
+            output: '16',
+            explanation: 'The optimal path follows the perimeter to reach (4,4) at time 16.'
+          }
+        ],
+        optimal: {
+          idea: 'Run Dijkstra on the grid with a min-heap to minimize the maximum cell elevation encountered along the path from (0, 0) to (n - 1, n - 1).',
+          code: `class Solution {
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+
+        boolean visited[][] = new boolean[n][n]; // : O(N^2) visited matrix
+
+        // [maximum time so far, row, col]
+        PriorityQueue<int[]> pq = new PriorityQueue<>( // : min-heap ordered by elevation
+            (a, b) -> a[0] - b[0]
+        );
+
+        pq.offer(new int[] {grid[0][0], 0, 0});
+
+        int[] dRow = {-1, 1, 0, 0};
+        int[] dCol = {0, 0, -1, 1};
+
+        while (!pq.isEmpty()) { // : Dijkstra minimax expansion
+            int curr[] = pq.poll();
+            int time = curr[0];
+            int row = curr[1];
+            int col = curr[2];
+
+            if (visited[row][col]) {
+                continue;
+            }
+
+            visited[row][col] = true;
+
+            if (row == n - 1 && col == n - 1) {
+                return time;
+            }
+
+            for (int i = 0; i < 4; i++) { // : 4-directional neighbor exploration
+                int newRow = row + dRow[i];
+                int newCol = col + dCol[i];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < n && !visited[newRow][newCol]) {
+                    int newTime = Math.max(time, grid[newRow][newCol]);
+                    pq.offer(new int[]{newTime, newRow, newCol});
+                }
+            }
+        }
+
+        return -1;
+    }
+}`,
+          time: 'O(N^2 log N)',
+          timeDesc: 'O(N² log N) pushing grid cells into min-heap.',
+          space: 'O(N^2)',
+          spaceDesc: 'O(N²) for visited matrix and priority queue.'
+        }
+      },
+      p('Alien Dictionary', 'Hard', 'Derive character order from a sorted alien dictionary.'),
+      p('Reconstruct Itinerary', 'Hard', 'Reconstruct a travel itinerary from flight tickets (Eulerian path).'),
     ]
   };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Lock } from 'lucide-react';
+import { Lock, ChevronRight } from 'lucide-react';
 
 export default function AppSidebar({
   currentView = 'dsa-patterns',
@@ -10,6 +10,7 @@ export default function AppSidebar({
   onClose,
 }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -17,6 +18,8 @@ export default function AppSidebar({
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  const isDrawerOpen = isMobile ? isOpen : isHovered;
 
   const handleItemClick = (target) => {
     if (onNavigate) onNavigate(target);
@@ -40,16 +43,49 @@ export default function AppSidebar({
         />
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`bg-sidebar text-sidebar-foreground border-y-sidebar-border border-r border-r-sidebar-border border-l-sidebar-border flex fixed z-50 inset-y-0 left-0 flex-col w-66 transition-transform duration-200 ${
+      {/* Desktop subtle non-blocking backdrop when hovered */}
+      {!isMobile && (
+        <div
+          className={`fixed inset-0 bg-black/25 backdrop-blur-[1px] z-40 pointer-events-none transition-opacity duration-200 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      )}
+
+      {/* Hover Drawer Container (desktop) / Slide Drawer (mobile) */}
+      <div
+        onMouseEnter={() => !isMobile && setIsHovered(true)}
+        onMouseLeave={() => !isMobile && setIsHovered(false)}
+        className={`fixed inset-y-0 left-0 z-50 ${
           isMobile
             ? isOpen
-              ? 'translate-x-0 shadow-2xl'
-              : '-translate-x-full'
-            : 'translate-x-0'
+              ? 'w-66'
+              : 'w-0 pointer-events-none'
+            : isHovered
+            ? 'w-66'
+            : 'w-5'
         }`}
       >
+        {/* Subtle left-edge handle tab when desktop drawer is closed */}
+        {!isMobile && (
+          <div
+            className={`fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center justify-center w-4 h-16 rounded-r-lg bg-sidebar/90 border border-l-0 border-sidebar-border text-muted-foreground shadow-md transition-opacity duration-200 ${
+              isHovered ? 'opacity-0 pointer-events-none' : 'opacity-80 hover:opacity-100'
+            }`}
+            aria-hidden="true"
+          >
+            <ChevronRight className="size-3.5 text-amber-accent" />
+          </div>
+        )}
+
+        {/* Sidebar Drawer */}
+        <aside
+          className={`bg-sidebar text-sidebar-foreground border-y-sidebar-border border-r border-r-sidebar-border border-l-sidebar-border flex fixed z-50 inset-y-0 left-0 flex-col w-66 transition-transform duration-200 ease-out ${
+            isDrawerOpen
+              ? 'translate-x-0 shadow-2xl pointer-events-auto'
+              : '-translate-x-full pointer-events-none'
+          }`}
+        >
         {/* Navigation Area */}
         <nav className="px-3 py-4 flex-1 overflow-y-auto space-y-5 sidebar-scroll">
           {/* 2. DSA Theory & 3. DSA Patterns */}
@@ -103,6 +139,30 @@ export default function AppSidebar({
                 <path d="M9 6h5a4 4 0 0 1 4 4v5" />
               </svg>
               <span>DSA Patterns</span>
+            </div>
+            <div
+              onClick={() => handleItemClick('tcs')}
+              className={navItemClass(currentView === 'tcs')}
+            >
+              <svg
+                className={`size-4 shrink-0 transition-colors ${
+                  currentView === 'tcs' ? 'text-amber-accent' : 'text-muted-foreground'
+                }`}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                <path d="M9 14l2 2 4-4" />
+              </svg>
+              <span className="flex-1">TCS 190</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                190
+              </span>
             </div>
           </div>
 
@@ -234,59 +294,6 @@ export default function AppSidebar({
               </div>
             </div>
           </div>
-
-          {/* 5. Projects Section */}
-          <div>
-            <p className="font-medium text-muted-foreground text-xs tracking-wider px-2 pb-2">
-              PROJECTS
-            </p>
-            <div className="text-sidebar-foreground/80 text-sm flex flex-col gap-1">
-              <div
-                onClick={() => handleItemClick('project-1')}
-                className={navItemClass(currentView === 'project-1')}
-              >
-                {/* Folder Code Icon */}
-                <svg
-                  className={`size-4 shrink-0 transition-colors ${
-                    currentView === 'project-1' ? 'text-amber-accent' : 'text-muted-foreground'
-                  }`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
-                  <path d="m10 12-2 2 2 2" />
-                  <path d="m14 12 2 2-2 2" />
-                </svg>
-                <span className="truncate">Project 1: Academic Stack</span>
-              </div>
-              <div
-                onClick={() => handleItemClick('project-2')}
-                className={navItemClass(currentView === 'project-2')}
-              >
-                {/* Folder Code Icon */}
-                <svg
-                  className={`size-4 shrink-0 transition-colors ${
-                    currentView === 'project-2' ? 'text-amber-accent' : 'text-muted-foreground'
-                  }`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z" />
-                  <path d="m10 12-2 2 2 2" />
-                  <path d="m14 12 2 2-2 2" />
-                </svg>
-                <span>Project 2</span>
-              </div>
-            </div>
-          </div>
         </nav>
 
         {/* 5. Niche Vault Lock Ka Button */}
@@ -301,7 +308,8 @@ export default function AppSidebar({
             </button>
           </div>
         )}
-      </aside>
+        </aside>
+      </div>
     </>
   );
 }

@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const tries = {
   id: 'tries',
   name: 'Tries',
-  icon: '🔤',
   problems: [
     {
       id: 'implement-trie-prefix-tree',

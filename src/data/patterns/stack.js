@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const stack = {
     id: 'stack',
     name: 'Stack',
-    icon: '📚',
     problems: [
       {
         id: 'valid-parentheses',

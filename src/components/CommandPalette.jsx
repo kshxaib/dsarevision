@@ -140,6 +140,14 @@ export default function CommandPalette({
         icon: GitBranch,
       },
       {
+        id: 'tcs-190',
+        type: 'module',
+        moduleType: 'tcs',
+        title: 'TCS 190 Problems',
+        subtitle: '190 questions across 17 patterns',
+        icon: Table2,
+      },
+      {
         id: 'dsa-theory',
         type: 'module',
         moduleType: 'theory',
@@ -324,6 +332,8 @@ export default function CommandPalette({
       recordRecentSearch(item.title);
       if (item.moduleType === 'dsa') {
         window.location.hash = '#dsa-patterns';
+      } else if (item.moduleType === 'tcs') {
+        window.location.hash = '#tcs';
       } else if (item.moduleType === 'theory') {
         onSelectTheory();
       } else if (item.moduleType === 'vault') {

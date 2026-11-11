@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const mathGeometry = {
     id: 'math-geometry',
     name: 'Math & Geometry',
-    icon: '📐',
     problems: [
       p('Rotate Image', 'Medium', 'Rotate an n×n matrix 90 degrees clockwise in-place.'),
       p('Spiral Matrix', 'Medium', 'Return all elements of a matrix in spiral order.'),

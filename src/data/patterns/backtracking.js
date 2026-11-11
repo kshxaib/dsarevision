@@ -1,29 +1,15 @@
 import { p } from '../helper.js';
-import subsetsTree from '@/assets/images/backtracking/Recursion Tree_ Generating All Subsets.png';
-import combinationSumTree from '@/assets/images/backtracking/Combination Sum Recursion Tree.png';
-import combinationSum2Tree from '@/assets/images/backtracking/Colorful Combination Sum II Recursion Tree.png';
-import permutationsTree from '@/assets/images/backtracking/Colorful Permutation Recursion Tree.png';
-import subsets2Tree from '@/assets/images/backtracking/Colorful Subsets Recursion Tree Infographic.png';
-import phoneTree from '@/assets/images/backtracking/Phone Number Recursion Tree Infographic.png';
-import parenthesesTree from '@/assets/images/backtracking/Colorful Parentheses Recursion Tree Infographic.png';
-import palindromeTree from '@/assets/images/backtracking/Palindrome Partitioning Recursion Tree.png';
-import wordSearchTree from '@/assets/images/backtracking/Word Search Recursion Tree Infographic.png';
-import nQueensTree from '@/assets/images/backtracking/N-Queens Recursion Tree Diagram.png';
 
 export const backtracking = {
   id: 'backtracking',
   name: 'Backtracking',
-  icon: '🔙',
   problems: [
     {
       id: 'subsets',
       title: 'Subsets',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/subsets/description/',
-      image: {
-        url: subsetsTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
       examples: [
         {
@@ -75,10 +61,7 @@ export const backtracking = {
       title: 'Combination Sum',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/combination-sum/description/',
-      image: {
-        url: combinationSumTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order. The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.',
       examples: [
         {
@@ -142,10 +125,7 @@ export const backtracking = {
       title: 'Combination Sum II',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/combination-sum-ii/description/',
-      image: {
-        url: combinationSum2Tree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination. The solution set must not contain duplicate combinations.',
       examples: [
         {
@@ -206,10 +186,7 @@ export const backtracking = {
       title: 'Permutations',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/permutations/description/',
-      image: {
-        url: permutationsTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.',
       examples: [
         {
@@ -272,10 +249,7 @@ export const backtracking = {
       title: 'Subsets II',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/subsets-ii/description/',
-      image: {
-        url: subsets2Tree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given an integer array nums that may contain duplicates, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
       examples: [
         {
@@ -325,10 +299,7 @@ export const backtracking = {
       title: 'Letter Combinations of a Phone Number',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/',
-      image: {
-        url: phoneTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order. A mapping of digits to letters is just like on telephone buttons.',
       examples: [
         {
@@ -388,10 +359,7 @@ export const backtracking = {
       title: 'Generate Parentheses',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/generate-parentheses/description/',
-      image: {
-        url: parenthesesTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.',
       examples: [
         {
@@ -440,10 +408,7 @@ export const backtracking = {
       title: 'Palindrome Partitioning',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/palindrome-partitioning/description/',
-      image: {
-        url: palindromeTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.',
       examples: [
         {
@@ -507,10 +472,7 @@ export const backtracking = {
       title: 'Word Search',
       difficulty: 'Medium',
       leetcodeUrl: 'https://leetcode.com/problems/word-search/description/',
-      image: {
-        url: wordSearchTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.',
       examples: [
         {
@@ -583,10 +545,7 @@ export const backtracking = {
       title: 'N Queens',
       difficulty: 'Hard',
       leetcodeUrl: 'https://leetcode.com/problems/n-queens/description/',
-      image: {
-        url: nQueensTree,
-        title: 'Dry Run'
-      },
+      image: null,
       definition: 'The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other. Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order. Each solution contains a distinct board configuration of the n-queens placement, where "Q" and "." both indicate a queen and an empty space, respectively.',
       examples: [
         {

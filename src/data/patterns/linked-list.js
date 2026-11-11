@@ -3,7 +3,6 @@ import { p } from '../helper.js';
 export const linkedList = {
     id: 'linked-list',
     name: 'Linked List',
-    icon: '🔗',
     problems: [
       {
         id: 'reverse-linked-list',

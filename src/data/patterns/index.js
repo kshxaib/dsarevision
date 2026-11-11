@@ -1,3 +1,4 @@
+import { sorting } from './sorting.js';
 import { arraysHashing } from './arrays-hashing.js';
 import { twoPointers } from './two-pointers.js';
 import { slidingWindow } from './sliding-window.js';
@@ -9,15 +10,14 @@ import { tries } from './tries.js';
 import { heapPriorityQueue } from './heap-priority-queue.js';
 import { backtracking } from './backtracking.js';
 import { graphs } from './graphs.js';
-import { advancedGraphs } from './advanced-graphs.js';
-import { dynamicProgramming1D } from './1d-dynamic-programming.js';
-import { dynamicProgramming2D } from './2d-dynamic-programming.js';
+import { dynamicProgramming } from './dynamic-programming.js';
 import { greedy } from './greedy.js';
 import { intervals } from './intervals.js';
 import { mathGeometry } from './math-geometry.js';
 import { bitManipulation } from './bit-manipulation.js';
 
 export const patterns = [
+  sorting,
   arraysHashing,
   twoPointers,
   slidingWindow,
@@ -29,11 +29,9 @@ export const patterns = [
   heapPriorityQueue,
   backtracking,
   graphs,
-  advancedGraphs,
-  intervals,
+  dynamicProgramming,
   greedy,
-  dynamicProgramming1D,
-  dynamicProgramming2D,
-  bitManipulation,
+  intervals,
   mathGeometry,
+  bitManipulation,
 ];

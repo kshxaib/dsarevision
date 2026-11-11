@@ -3,7 +3,70 @@ import { p } from '../helper.js';
 export const twoPointers = {
     id: 'two-pointers',
     name: 'Two Pointers',
-    icon: '👆',
+    cheatSheet: {
+      summary: 'The Two Pointers pattern is an efficient technique to iterate through data structures using two references to solve problems in linear O(n) time.',
+      sections: [
+        {
+          title: 'Common Use Cases',
+          items: [
+            {
+              label: 'Sorted Arrays',
+              text: 'Best for target sum problems, merging lists, or finding intersections.'
+            },
+            {
+              label: 'Strings',
+              text: 'Ideal for checking palindromes or reversing content.'
+            },
+            {
+              label: 'Linked Lists',
+              text: 'Essential for finding the middle element or detecting cycles using different speeds.'
+            },
+            {
+              label: 'Partitioning',
+              text: 'Useful for separating elements (such as Dutch National Flag problem) based on conditions.'
+            }
+          ]
+        },
+        {
+          title: 'Key Pointer Strategies',
+          items: [
+            {
+              label: 'Opposite Directions',
+              text: 'One pointer starts at the beginning (left), the other at the end (right). They converge toward the middle.'
+            },
+            {
+              label: 'Same Direction (Variable Speed)',
+              text: 'One slow pointer moves one step at a time, while a fast pointer moves two or more steps at a time.'
+            },
+            {
+              label: 'Same Direction (Same Speed)',
+              text: 'Both pointers move forward, often to compare elements between two different lists or to maintain a specific window.'
+            }
+          ]
+        },
+        {
+          title: 'How to Identify When to Apply',
+          items: [
+            {
+              label: 'Sorted Input',
+              text: 'The input data is already sorted.'
+            },
+            {
+              label: 'Nested Loop Optimization',
+              text: 'You are tempted to use a nested loop O(n²); two pointers can often optimize this to linear O(n) time.'
+            },
+            {
+              label: 'Moving or Shrinking Window',
+              text: 'You need to define a moving or shrinking window of operation.'
+            },
+            {
+              label: 'Element Comparisons',
+              text: 'You need to perform comparisons between elements or combine two data sets.'
+            }
+          ]
+        }
+      ]
+    },
     problems: [
       {
         id: 'valid-palindrome',
