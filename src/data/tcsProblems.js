@@ -5,7 +5,7 @@ export const tcsPatterns = [
     "name": "Sorting Algorithms",
     "problems": [
       {
-        "seq": 15,
+        "seq": 1,
         "title": "Sort Colors",
         "difficulty": "Medium",
         "frequency": 73.6,
@@ -13,7 +13,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Sorting, Quicksort, Bubble Sort"
       },
       {
-        "seq": 57,
+        "seq": 2,
         "title": "Squares of a Sorted Array",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -21,7 +21,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Sorting"
       },
       {
-        "seq": 62,
+        "seq": 3,
         "title": "Sort an Array",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -29,7 +29,7 @@ export const tcsPatterns = [
         "topics": "Array, Divide and Conquer, Sorting, Heap (Priority Queue), Merge Sort, Bucket Sort, Radix Sort, Counting Sort"
       },
       {
-        "seq": 83,
+        "seq": 4,
         "title": "Maximum Product of Three Numbers",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -37,7 +37,7 @@ export const tcsPatterns = [
         "topics": "Array, Math, Sorting"
       },
       {
-        "seq": 90,
+        "seq": 5,
         "title": "Minimum Moves to Equal Array Elements II",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -45,7 +45,7 @@ export const tcsPatterns = [
         "topics": "Array, Math, Sorting"
       },
       {
-        "seq": 92,
+        "seq": 6,
         "title": "Third Maximum Number",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -53,7 +53,7 @@ export const tcsPatterns = [
         "topics": "Array, Sorting"
       },
       {
-        "seq": 154,
+        "seq": 7,
         "title": "How Many Numbers Are Smaller Than the Current Number",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -61,7 +61,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Sorting, Counting Sort"
       },
       {
-        "seq": 167,
+        "seq": 8,
         "title": "Maximum Product of Two Elements in an Array",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -75,7 +75,7 @@ export const tcsPatterns = [
     "name": "Arrays & Hashing",
     "problems": [
       {
-        "seq": 1,
+        "seq": 9,
         "title": "Two Sum",
         "difficulty": "Easy",
         "frequency": 100,
@@ -83,7 +83,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table"
       },
       {
-        "seq": 8,
+        "seq": 10,
         "title": "Majority Element",
         "difficulty": "Easy",
         "frequency": 77.2,
@@ -115,7 +115,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Prefix Sum"
       },
       {
-        "seq": 17,
+        "seq": 14,
         "title": "Contains Duplicate",
         "difficulty": "Easy",
         "frequency": 71.7,
@@ -123,7 +123,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Sorting"
       },
       {
-        "seq": 30,
+        "seq": 15,
         "title": "Check if Array Is Sorted and Rotated",
         "difficulty": "Easy",
         "frequency": 64.4,
@@ -131,7 +131,7 @@ export const tcsPatterns = [
         "topics": "Array"
       },
       {
-        "seq": 44,
+        "seq": 16,
         "title": "Length of Last Word",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -139,7 +139,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 54,
+        "seq": 17,
         "title": "Duplicate Emails",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -147,7 +147,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 56,
+        "seq": 18,
         "title": "Employees Earning More Than Their Managers",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -155,7 +155,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 61,
+        "seq": 19,
         "title": "First Unique Character in a String",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -163,7 +163,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, String, Queue, Counting"
       },
       {
-        "seq": 65,
+        "seq": 20,
         "title": "Group Anagrams",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -171,7 +171,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, String, Sorting"
       },
       {
-        "seq": 70,
+        "seq": 21,
         "title": "Product Sales Analysis I",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -179,7 +179,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 71,
+        "seq": 22,
         "title": "Product of Array Except Self",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -187,7 +187,7 @@ export const tcsPatterns = [
         "topics": "Array, Prefix Sum"
       },
       {
-        "seq": 76,
+        "seq": 23,
         "title": "Article Views I",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -195,7 +195,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 95,
+        "seq": 24,
         "title": "Range Sum Query - Immutable",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -203,7 +203,7 @@ export const tcsPatterns = [
         "topics": "Array, Design, Prefix Sum"
       },
       {
-        "seq": 101,
+        "seq": 25,
         "title": "String to Integer (atoi)",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -211,7 +211,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 108,
+        "seq": 26,
         "title": "Employee Bonus",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -219,7 +219,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 109,
+        "seq": 27,
         "title": "Longest Consecutive Sequence",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -227,7 +227,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Union-Find"
       },
       {
-        "seq": 113,
+        "seq": 28,
         "title": "Recyclable and Low Fat Products",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -235,7 +235,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 120,
+        "seq": 29,
         "title": "First Missing Positive",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -243,7 +243,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table"
       },
       {
-        "seq": 122,
+        "seq": 30,
         "title": "Running Sum of 1d Array",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -251,7 +251,7 @@ export const tcsPatterns = [
         "topics": "Array, Prefix Sum"
       },
       {
-        "seq": 123,
+        "seq": 31,
         "title": "Replace Employee ID With The Unique Identifier",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -259,7 +259,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 127,
+        "seq": 32,
         "title": "Repeated Substring Pattern",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -267,7 +267,7 @@ export const tcsPatterns = [
         "topics": "String, String Matching, Z Algorithm, Knuth–Morris–Pratt Algorithm"
       },
       {
-        "seq": 131,
+        "seq": 33,
         "title": "Return Length of Arguments Passed",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -275,7 +275,7 @@ export const tcsPatterns = [
         "topics": ""
       },
       {
-        "seq": 133,
+        "seq": 34,
         "title": "Find the Original Typed String I",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -283,7 +283,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 137,
+        "seq": 35,
         "title": "Valid Word",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -291,7 +291,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 140,
+        "seq": 36,
         "title": "Longest Balanced Substring II",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -299,7 +299,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, String, Prefix Sum"
       },
       {
-        "seq": 143,
+        "seq": 37,
         "title": "Max Consecutive Ones",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -307,7 +307,7 @@ export const tcsPatterns = [
         "topics": "Array"
       },
       {
-        "seq": 144,
+        "seq": 38,
         "title": "Zigzag Conversion",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -315,7 +315,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 145,
+        "seq": 39,
         "title": "Teemo Attacking",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -323,7 +323,7 @@ export const tcsPatterns = [
         "topics": "Array, Simulation"
       },
       {
-        "seq": 151,
+        "seq": 40,
         "title": "Continuous Subarray Sum",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -331,7 +331,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Math, Prefix Sum, Pigeonhole Principle"
       },
       {
-        "seq": 152,
+        "seq": 41,
         "title": "Department Highest Salary",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -339,7 +339,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 159,
+        "seq": 42,
         "title": "Find All Numbers Disappeared in an Array",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -347,7 +347,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table"
       },
       {
-        "seq": 163,
+        "seq": 43,
         "title": "Managers with at Least 5 Direct Reports",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -355,7 +355,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 166,
+        "seq": 44,
         "title": "Customer Who Visited but Did Not Make Any Transactions",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -363,7 +363,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 168,
+        "seq": 45,
         "title": "Count and Say",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -371,7 +371,7 @@ export const tcsPatterns = [
         "topics": "String"
       },
       {
-        "seq": 170,
+        "seq": 46,
         "title": "Find Pivot Index",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -379,7 +379,7 @@ export const tcsPatterns = [
         "topics": "Array, Prefix Sum"
       },
       {
-        "seq": 174,
+        "seq": 47,
         "title": "Top K Frequent Elements",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -387,7 +387,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Divide and Conquer, Sorting, Heap (Priority Queue), Bucket Sort, Counting, Quickselect"
       },
       {
-        "seq": 177,
+        "seq": 48,
         "title": "Combine Two Tables",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -395,7 +395,7 @@ export const tcsPatterns = [
         "topics": "Database"
       },
       {
-        "seq": 179,
+        "seq": 49,
         "title": "Detect Capital",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -409,7 +409,7 @@ export const tcsPatterns = [
     "name": "Two Pointers",
     "problems": [
       {
-        "seq": 2,
+        "seq": 50,
         "title": "Longest Palindromic Substring",
         "difficulty": "Medium",
         "frequency": 93.8,
@@ -417,7 +417,7 @@ export const tcsPatterns = [
         "topics": "Two Pointers, String, Dynamic Programming, Manacher"
       },
       {
-        "seq": 5,
+        "seq": 51,
         "title": "Move Zeroes",
         "difficulty": "Easy",
         "frequency": 86.4,
@@ -425,7 +425,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers"
       },
       {
-        "seq": 9,
+        "seq": 52,
         "title": "Find the Index of the First Occurrence in a String",
         "difficulty": "Easy",
         "frequency": 75.5,
@@ -433,7 +433,7 @@ export const tcsPatterns = [
         "topics": "Two Pointers, String, String Matching, Z Algorithm, Knuth–Morris–Pratt Algorithm, Boyer–Moore String-Search Algorithm"
       },
       {
-        "seq": 14,
+        "seq": 53,
         "title": "3Sum",
         "difficulty": "Medium",
         "frequency": 73.6,
@@ -441,7 +441,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Sorting"
       },
       {
-        "seq": 19,
+        "seq": 54,
         "title": "Remove Duplicates from Sorted Array",
         "difficulty": "Easy",
         "frequency": 69.5,
@@ -449,7 +449,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers"
       },
       {
-        "seq": 23,
+        "seq": 55,
         "title": "Merge Sorted Array",
         "difficulty": "Easy",
         "frequency": 67.1,
@@ -457,7 +457,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Sorting"
       },
       {
-        "seq": 25,
+        "seq": 56,
         "title": "Valid Palindrome",
         "difficulty": "Easy",
         "frequency": 67.1,
@@ -465,7 +465,7 @@ export const tcsPatterns = [
         "topics": "Two Pointers, String"
       },
       {
-        "seq": 26,
+        "seq": 57,
         "title": "Container With Most Water",
         "difficulty": "Medium",
         "frequency": 64.4,
@@ -473,7 +473,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Greedy"
       },
       {
-        "seq": 28,
+        "seq": 58,
         "title": "Rotate Array",
         "difficulty": "Medium",
         "frequency": 64.4,
@@ -481,7 +481,7 @@ export const tcsPatterns = [
         "topics": "Array, Math, Two Pointers"
       },
       {
-        "seq": 29,
+        "seq": 59,
         "title": "Reverse String",
         "difficulty": "Easy",
         "frequency": 64.4,
@@ -489,7 +489,7 @@ export const tcsPatterns = [
         "topics": "Two Pointers, String"
       },
       {
-        "seq": 50,
+        "seq": 60,
         "title": "Next Permutation",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -497,7 +497,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers"
       },
       {
-        "seq": 63,
+        "seq": 61,
         "title": "4Sum",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -505,7 +505,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Sorting"
       },
       {
-        "seq": 73,
+        "seq": 62,
         "title": "Remove Element",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -513,7 +513,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers"
       },
       {
-        "seq": 107,
+        "seq": 63,
         "title": "Reverse Words in a String",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -521,7 +521,7 @@ export const tcsPatterns = [
         "topics": "Two Pointers, String"
       },
       {
-        "seq": 148,
+        "seq": 64,
         "title": "String Compression",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -535,7 +535,7 @@ export const tcsPatterns = [
     "name": "Sliding Window",
     "problems": [
       {
-        "seq": 18,
+        "seq": 65,
         "title": "Longest Substring Without Repeating Characters",
         "difficulty": "Medium",
         "frequency": 69.5,
@@ -543,7 +543,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, String, Sliding Window"
       },
       {
-        "seq": 38,
+        "seq": 66,
         "title": "Contains Duplicate II",
         "difficulty": "Easy",
         "frequency": 57.8,
@@ -551,7 +551,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Sliding Window"
       },
       {
-        "seq": 68,
+        "seq": 67,
         "title": "Maximum Average Subarray I",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -559,7 +559,7 @@ export const tcsPatterns = [
         "topics": "Array, Sliding Window"
       },
       {
-        "seq": 88,
+        "seq": 68,
         "title": "Longest Subarray of 1's After Deleting One Element",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -567,7 +567,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Sliding Window"
       },
       {
-        "seq": 111,
+        "seq": 69,
         "title": "Sliding Window Maximum",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -575,7 +575,7 @@ export const tcsPatterns = [
         "topics": "Array, Queue, Sliding Window, Heap (Priority Queue), Monotonic Queue, Range Minimum/Maximum Query"
       },
       {
-        "seq": 116,
+        "seq": 70,
         "title": "Maximum Sum of Distinct Subarrays With Length K",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -583,7 +583,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Sliding Window"
       },
       {
-        "seq": 129,
+        "seq": 71,
         "title": "Minimum Size Subarray Sum",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -591,7 +591,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Sliding Window, Prefix Sum"
       },
       {
-        "seq": 150,
+        "seq": 72,
         "title": "Subarray Product Less Than K",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -599,7 +599,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Sliding Window, Prefix Sum"
       },
       {
-        "seq": 164,
+        "seq": 73,
         "title": "Maximum Number of Vowels in a Substring of Given Length",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -607,7 +607,7 @@ export const tcsPatterns = [
         "topics": "String, Sliding Window"
       },
       {
-        "seq": 169,
+        "seq": 74,
         "title": "Minimum Number of Operations to Make Array Continuous",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -615,7 +615,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Binary Search, Sliding Window"
       },
       {
-        "seq": 176,
+        "seq": 75,
         "title": "Find All Anagrams in a String",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -629,7 +629,7 @@ export const tcsPatterns = [
     "name": "Stack",
     "problems": [
       {
-        "seq": 10,
+        "seq": 76,
         "title": "Valid Parentheses",
         "difficulty": "Easy",
         "frequency": 73.6,
@@ -637,7 +637,7 @@ export const tcsPatterns = [
         "topics": "String, Stack, Bracket Sequences"
       },
       {
-        "seq": 43,
+        "seq": 77,
         "title": "Trapping Rain Water",
         "difficulty": "Hard",
         "frequency": 53.7,
@@ -645,7 +645,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Dynamic Programming, Stack, Monotonic Stack"
       },
       {
-        "seq": 67,
+        "seq": 78,
         "title": "Min Stack",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -653,7 +653,7 @@ export const tcsPatterns = [
         "topics": "Stack, Design"
       },
       {
-        "seq": 119,
+        "seq": 79,
         "title": "Remove All Occurrences of a Substring",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -661,7 +661,7 @@ export const tcsPatterns = [
         "topics": "String, Stack, Simulation"
       },
       {
-        "seq": 124,
+        "seq": 80,
         "title": "Maximum Nesting Depth of the Parentheses",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -669,7 +669,7 @@ export const tcsPatterns = [
         "topics": "String, Stack, Bracket Sequences"
       },
       {
-        "seq": 165,
+        "seq": 81,
         "title": "Next Greater Element II",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -677,7 +677,7 @@ export const tcsPatterns = [
         "topics": "Array, Stack, Monotonic Stack"
       },
       {
-        "seq": 171,
+        "seq": 82,
         "title": "Daily Temperatures",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -685,7 +685,7 @@ export const tcsPatterns = [
         "topics": "Array, Stack, Monotonic Stack"
       },
       {
-        "seq": 172,
+        "seq": 83,
         "title": "Next Greater Element I",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -693,7 +693,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Stack, Monotonic Stack"
       },
       {
-        "seq": 173,
+        "seq": 84,
         "title": "Decode String",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -701,7 +701,7 @@ export const tcsPatterns = [
         "topics": "String, Stack, Recursion"
       },
       {
-        "seq": 184,
+        "seq": 85,
         "title": "Asteroid Collision",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -709,7 +709,7 @@ export const tcsPatterns = [
         "topics": "Array, Stack, Simulation"
       },
       {
-        "seq": 188,
+        "seq": 86,
         "title": "Largest Rectangle in Histogram",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -723,7 +723,7 @@ export const tcsPatterns = [
     "name": "Binary Search",
     "problems": [
       {
-        "seq": 32,
+        "seq": 87,
         "title": "Median of Two Sorted Arrays",
         "difficulty": "Hard",
         "frequency": 64.4,
@@ -731,7 +731,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Divide and Conquer"
       },
       {
-        "seq": 34,
+        "seq": 88,
         "title": "Search in Rotated Sorted Array",
         "difficulty": "Medium",
         "frequency": 61.4,
@@ -739,7 +739,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 35,
+        "seq": 89,
         "title": "Find First and Last Position of Element in Sorted Array",
         "difficulty": "Medium",
         "frequency": 57.8,
@@ -747,7 +747,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 47,
+        "seq": 90,
         "title": "Sqrt(x)",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -755,7 +755,7 @@ export const tcsPatterns = [
         "topics": "Math, Binary Search, Newton's Method"
       },
       {
-        "seq": 53,
+        "seq": 91,
         "title": "Peak Index in a Mountain Array",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -763,7 +763,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Ternary Search"
       },
       {
-        "seq": 69,
+        "seq": 92,
         "title": "Search in Rotated Sorted Array II",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -771,7 +771,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 72,
+        "seq": 93,
         "title": "Single Element in a Sorted Array",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -779,7 +779,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 79,
+        "seq": 94,
         "title": "Find the Duplicate Number",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -787,7 +787,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Binary Search, Bit Manipulation, Pigeonhole Principle, Floyd's Cycle Finding Algorithm"
       },
       {
-        "seq": 80,
+        "seq": 95,
         "title": "Search Insert Position",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -795,7 +795,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 89,
+        "seq": 96,
         "title": "Koko Eating Bananas",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -803,7 +803,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 100,
+        "seq": 97,
         "title": "Two Sum II - Input Array Is Sorted",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -811,7 +811,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Binary Search"
       },
       {
-        "seq": 114,
+        "seq": 98,
         "title": "K-diff Pairs in an Array",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -819,7 +819,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Two Pointers, Binary Search, Sorting"
       },
       {
-        "seq": 118,
+        "seq": 99,
         "title": "Count the Number of Fair Pairs",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -827,7 +827,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Binary Search, Sorting"
       },
       {
-        "seq": 138,
+        "seq": 100,
         "title": "Binary Search",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -835,7 +835,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 153,
+        "seq": 101,
         "title": "Find Smallest Letter Greater Than Target",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -843,7 +843,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search"
       },
       {
-        "seq": 162,
+        "seq": 102,
         "title": "Intersection of Two Arrays II",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -851,7 +851,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Two Pointers, Binary Search, Sorting"
       },
       {
-        "seq": 178,
+        "seq": 103,
         "title": "Search a 2D Matrix",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -859,7 +859,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Matrix"
       },
       {
-        "seq": 185,
+        "seq": 104,
         "title": "Find Minimum in Rotated Sorted Array",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -873,7 +873,7 @@ export const tcsPatterns = [
     "name": "Linked List",
     "problems": [
       {
-        "seq": 42,
+        "seq": 105,
         "title": "Add Two Numbers",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -881,7 +881,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Math, Recursion"
       },
       {
-        "seq": 51,
+        "seq": 106,
         "title": "Middle of the Linked List",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -889,7 +889,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Two Pointers"
       },
       {
-        "seq": 52,
+        "seq": 107,
         "title": "Remove Nth Node From End of List",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -897,7 +897,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Two Pointers"
       },
       {
-        "seq": 84,
+        "seq": 108,
         "title": "Merge k Sorted Lists",
         "difficulty": "Hard",
         "frequency": 42.2,
@@ -905,7 +905,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Divide and Conquer, Heap (Priority Queue), Merge Sort, Tournament Sort"
       },
       {
-        "seq": 102,
+        "seq": 109,
         "title": "Linked List Cycle",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -913,7 +913,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Linked List, Two Pointers, Floyd's Cycle Finding Algorithm"
       },
       {
-        "seq": 106,
+        "seq": 110,
         "title": "Reverse Linked List",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -921,7 +921,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Recursion"
       },
       {
-        "seq": 125,
+        "seq": 111,
         "title": "Linked List Cycle II",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -929,7 +929,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Linked List, Two Pointers, Floyd's Cycle Finding Algorithm"
       },
       {
-        "seq": 126,
+        "seq": 112,
         "title": "LRU Cache",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -937,7 +937,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Linked List, Design, Doubly-Linked List"
       },
       {
-        "seq": 128,
+        "seq": 113,
         "title": "Convert Sorted List to Binary Search Tree",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -945,7 +945,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Divide and Conquer, Tree, Binary Search Tree, Binary Tree"
       },
       {
-        "seq": 134,
+        "seq": 114,
         "title": "Delete the Middle Node of a Linked List",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -953,7 +953,7 @@ export const tcsPatterns = [
         "topics": "Linked List, Two Pointers"
       },
       {
-        "seq": 136,
+        "seq": 115,
         "title": "Odd Even Linked List",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -961,7 +961,7 @@ export const tcsPatterns = [
         "topics": "Linked List"
       },
       {
-        "seq": 139,
+        "seq": 116,
         "title": "Remove Duplicates from Sorted List",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -969,7 +969,7 @@ export const tcsPatterns = [
         "topics": "Linked List"
       },
       {
-        "seq": 180,
+        "seq": 117,
         "title": "Remove Linked List Elements",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -983,7 +983,7 @@ export const tcsPatterns = [
     "name": "Trees",
     "problems": [
       {
-        "seq": 85,
+        "seq": 118,
         "title": "Serialize and Deserialize Binary Tree",
         "difficulty": "Hard",
         "frequency": 42.2,
@@ -991,7 +991,7 @@ export const tcsPatterns = [
         "topics": "String, Tree, Depth-First Search, Breadth-First Search, Design, Binary Tree"
       },
       {
-        "seq": 112,
+        "seq": 119,
         "title": "Diameter of Binary Tree",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -999,7 +999,7 @@ export const tcsPatterns = [
         "topics": "Tree, Depth-First Search, Binary Tree, DP on Trees"
       },
       {
-        "seq": 117,
+        "seq": 120,
         "title": "Binary Tree Maximum Path Sum",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1007,7 +1007,7 @@ export const tcsPatterns = [
         "topics": "Dynamic Programming, Tree, Depth-First Search, Binary Tree, DP on Trees"
       },
       {
-        "seq": 146,
+        "seq": 121,
         "title": "Binary Tree Inorder Traversal",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1015,7 +1015,7 @@ export const tcsPatterns = [
         "topics": "Stack, Tree, Depth-First Search, Binary Tree"
       },
       {
-        "seq": 161,
+        "seq": 122,
         "title": "Kth Smallest Element in a BST",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1023,7 +1023,7 @@ export const tcsPatterns = [
         "topics": "Tree, Depth-First Search, Binary Search Tree, Binary Tree"
       },
       {
-        "seq": 190,
+        "seq": 123,
         "title": "Sum Root to Leaf Numbers",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1037,7 +1037,7 @@ export const tcsPatterns = [
     "name": "Tries",
     "problems": [
       {
-        "seq": 16,
+        "seq": 124,
         "title": "Longest Common Prefix",
         "difficulty": "Easy",
         "frequency": 71.7,
@@ -1051,7 +1051,7 @@ export const tcsPatterns = [
     "name": "Heap & Priority Queue",
     "problems": [
       {
-        "seq": 21,
+        "seq": 125,
         "title": "Task Scheduler",
         "difficulty": "Medium",
         "frequency": 69.5,
@@ -1059,7 +1059,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Greedy, Sorting, Heap (Priority Queue), Counting"
       },
       {
-        "seq": 121,
+        "seq": 126,
         "title": "Find Subsequence of Length K With the Largest Sum",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1073,7 +1073,7 @@ export const tcsPatterns = [
     "name": "Backtracking",
     "problems": [
       {
-        "seq": 55,
+        "seq": 127,
         "title": "Letter Combinations of a Phone Number",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -1081,7 +1081,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, String, Backtracking"
       },
       {
-        "seq": 74,
+        "seq": 128,
         "title": "Generate Parentheses",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1089,7 +1089,7 @@ export const tcsPatterns = [
         "topics": "String, Dynamic Programming, Backtracking, Bracket Sequences"
       },
       {
-        "seq": 75,
+        "seq": 129,
         "title": "Subsets",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1097,7 +1097,7 @@ export const tcsPatterns = [
         "topics": "Array, Backtracking, Bit Manipulation"
       },
       {
-        "seq": 78,
+        "seq": 130,
         "title": "N-Queens",
         "difficulty": "Hard",
         "frequency": 42.2,
@@ -1105,7 +1105,7 @@ export const tcsPatterns = [
         "topics": "Array, Backtracking, Algorithm X"
       },
       {
-        "seq": 96,
+        "seq": 131,
         "title": "Permutations",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1113,7 +1113,7 @@ export const tcsPatterns = [
         "topics": "Array, Backtracking"
       },
       {
-        "seq": 103,
+        "seq": 132,
         "title": "Subsets II",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1127,7 +1127,7 @@ export const tcsPatterns = [
     "name": "Graphs",
     "problems": [
       {
-        "seq": 160,
+        "seq": 133,
         "title": "Rotting Oranges",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1135,7 +1135,7 @@ export const tcsPatterns = [
         "topics": "Array, Breadth-First Search, Matrix"
       },
       {
-        "seq": 189,
+        "seq": 134,
         "title": "Word Ladder",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1149,7 +1149,7 @@ export const tcsPatterns = [
     "name": "Dynamic Programming",
     "problems": [
       {
-        "seq": 4,
+        "seq": 135,
         "title": "Maximum Subarray",
         "difficulty": "Medium",
         "frequency": 88.5,
@@ -1157,7 +1157,7 @@ export const tcsPatterns = [
         "topics": "Array, Divide and Conquer, Dynamic Programming"
       },
       {
-        "seq": 6,
+        "seq": 136,
         "title": "Best Time to Buy and Sell Stock",
         "difficulty": "Easy",
         "frequency": 78.7,
@@ -1165,7 +1165,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming"
       },
       {
-        "seq": 24,
+        "seq": 137,
         "title": "Maximum Product Subarray",
         "difficulty": "Medium",
         "frequency": 67.1,
@@ -1173,7 +1173,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming"
       },
       {
-        "seq": 33,
+        "seq": 138,
         "title": "Climbing Stairs",
         "difficulty": "Easy",
         "frequency": 61.4,
@@ -1181,7 +1181,7 @@ export const tcsPatterns = [
         "topics": "Math, Dynamic Programming, Memoization"
       },
       {
-        "seq": 37,
+        "seq": 139,
         "title": "Fibonacci Number",
         "difficulty": "Easy",
         "frequency": 57.8,
@@ -1189,7 +1189,7 @@ export const tcsPatterns = [
         "topics": "Math, Dynamic Programming, Recursion, Memoization"
       },
       {
-        "seq": 39,
+        "seq": 140,
         "title": "Smallest Sufficient Team",
         "difficulty": "Hard",
         "frequency": 57.8,
@@ -1197,7 +1197,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Bit Manipulation, Bitmask"
       },
       {
-        "seq": 41,
+        "seq": 141,
         "title": "Burst Balloons",
         "difficulty": "Hard",
         "frequency": 57.8,
@@ -1205,7 +1205,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming"
       },
       {
-        "seq": 45,
+        "seq": 142,
         "title": "Unique Paths",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -1213,7 +1213,7 @@ export const tcsPatterns = [
         "topics": "Math, Dynamic Programming, Combinatorics"
       },
       {
-        "seq": 49,
+        "seq": 143,
         "title": "Pascal's Triangle",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -1221,7 +1221,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming"
       },
       {
-        "seq": 66,
+        "seq": 144,
         "title": "Tallest Billboard",
         "difficulty": "Hard",
         "frequency": 48.7,
@@ -1229,7 +1229,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Meet in the Middle, Knapsack Problem, 0-1 Knapsack"
       },
       {
-        "seq": 82,
+        "seq": 145,
         "title": "Partition Equal Subset Sum",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1237,7 +1237,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Knapsack Problem, 0-1 Knapsack"
       },
       {
-        "seq": 87,
+        "seq": 146,
         "title": "House Robber",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1245,7 +1245,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming"
       },
       {
-        "seq": 91,
+        "seq": 147,
         "title": "Best Time to Buy and Sell Stock II",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1253,7 +1253,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Greedy"
       },
       {
-        "seq": 94,
+        "seq": 148,
         "title": "Regular Expression Matching",
         "difficulty": "Hard",
         "frequency": 42.2,
@@ -1261,7 +1261,7 @@ export const tcsPatterns = [
         "topics": "String, Dynamic Programming, Recursion"
       },
       {
-        "seq": 97,
+        "seq": 149,
         "title": "Longest Palindromic Subsequence",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1269,7 +1269,7 @@ export const tcsPatterns = [
         "topics": "String, Dynamic Programming"
       },
       {
-        "seq": 104,
+        "seq": 150,
         "title": "Longest Increasing Subsequence",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1277,7 +1277,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Dynamic Programming, Longest Increasing Subsequence"
       },
       {
-        "seq": 115,
+        "seq": 151,
         "title": "Jump Game II",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1285,7 +1285,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Greedy"
       },
       {
-        "seq": 132,
+        "seq": 152,
         "title": "Maximal Rectangle",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1293,7 +1293,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Stack, Matrix, Monotonic Stack"
       },
       {
-        "seq": 135,
+        "seq": 153,
         "title": "Maximum Number of Events That Can Be Attended II",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1301,7 +1301,7 @@ export const tcsPatterns = [
         "topics": "Array, Binary Search, Dynamic Programming, Sorting"
       },
       {
-        "seq": 142,
+        "seq": 154,
         "title": "Longest Common Subsequence",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1309,7 +1309,7 @@ export const tcsPatterns = [
         "topics": "String, Dynamic Programming, Longest Common Subsequence"
       },
       {
-        "seq": 175,
+        "seq": 155,
         "title": "Distinct Subsequences",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1323,7 +1323,7 @@ export const tcsPatterns = [
     "name": "Greedy",
     "problems": [
       {
-        "seq": 59,
+        "seq": 156,
         "title": "Jump Game",
         "difficulty": "Medium",
         "frequency": 48.7,
@@ -1331,7 +1331,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Greedy"
       },
       {
-        "seq": 98,
+        "seq": 157,
         "title": "Assign Cookies",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -1339,7 +1339,7 @@ export const tcsPatterns = [
         "topics": "Array, Two Pointers, Greedy, Sorting, Quicksort"
       },
       {
-        "seq": 183,
+        "seq": 158,
         "title": "Lemonade Change",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1353,7 +1353,7 @@ export const tcsPatterns = [
     "name": "Intervals",
     "problems": [
       {
-        "seq": 40,
+        "seq": 159,
         "title": "Merge Intervals",
         "difficulty": "Medium",
         "frequency": 57.8,
@@ -1361,7 +1361,7 @@ export const tcsPatterns = [
         "topics": "Array, Sorting, Quicksort"
       },
       {
-        "seq": 99,
+        "seq": 160,
         "title": "Non-overlapping Intervals",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1369,7 +1369,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Greedy, Sorting"
       },
       {
-        "seq": 156,
+        "seq": 161,
         "title": "Insert Interval",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1383,7 +1383,7 @@ export const tcsPatterns = [
     "name": "Math & Geometry",
     "problems": [
       {
-        "seq": 3,
+        "seq": 162,
         "title": "Palindrome Number",
         "difficulty": "Easy",
         "frequency": 93.8,
@@ -1391,7 +1391,7 @@ export const tcsPatterns = [
         "topics": "Math"
       },
       {
-        "seq": 20,
+        "seq": 163,
         "title": "Zigzag Grid Traversal With Skip",
         "difficulty": "Easy",
         "frequency": 69.5,
@@ -1399,7 +1399,7 @@ export const tcsPatterns = [
         "topics": "Array, Matrix, Simulation"
       },
       {
-        "seq": 22,
+        "seq": 164,
         "title": "Reverse Integer",
         "difficulty": "Medium",
         "frequency": 67.1,
@@ -1407,7 +1407,7 @@ export const tcsPatterns = [
         "topics": "Math"
       },
       {
-        "seq": 27,
+        "seq": 165,
         "title": "Spiral Matrix",
         "difficulty": "Medium",
         "frequency": 64.4,
@@ -1415,7 +1415,7 @@ export const tcsPatterns = [
         "topics": "Array, Matrix, Simulation"
       },
       {
-        "seq": 31,
+        "seq": 166,
         "title": "Pow(x, n)",
         "difficulty": "Medium",
         "frequency": 64.4,
@@ -1423,7 +1423,7 @@ export const tcsPatterns = [
         "topics": "Math, Recursion"
       },
       {
-        "seq": 36,
+        "seq": 167,
         "title": "Plus One",
         "difficulty": "Easy",
         "frequency": 57.8,
@@ -1431,7 +1431,7 @@ export const tcsPatterns = [
         "topics": "Array, Math"
       },
       {
-        "seq": 58,
+        "seq": 168,
         "title": "Roman to Integer",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -1439,7 +1439,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Math, String"
       },
       {
-        "seq": 60,
+        "seq": 169,
         "title": "Happy Number",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -1447,7 +1447,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Math, Two Pointers, Floyd's Cycle Finding Algorithm"
       },
       {
-        "seq": 64,
+        "seq": 170,
         "title": "Missing Number",
         "difficulty": "Easy",
         "frequency": 48.7,
@@ -1455,7 +1455,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Math, Binary Search, Bit Manipulation, Sorting"
       },
       {
-        "seq": 77,
+        "seq": 171,
         "title": "Fizz Buzz",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -1463,7 +1463,7 @@ export const tcsPatterns = [
         "topics": "Math, String, Simulation"
       },
       {
-        "seq": 81,
+        "seq": 172,
         "title": "Set Matrix Zeroes",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1471,7 +1471,7 @@ export const tcsPatterns = [
         "topics": "Array, Hash Table, Matrix"
       },
       {
-        "seq": 86,
+        "seq": 173,
         "title": "Ugly Number",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -1479,7 +1479,7 @@ export const tcsPatterns = [
         "topics": "Math"
       },
       {
-        "seq": 93,
+        "seq": 174,
         "title": "Count Primes",
         "difficulty": "Medium",
         "frequency": 42.2,
@@ -1487,7 +1487,7 @@ export const tcsPatterns = [
         "topics": "Array, Math, Enumeration, Number Theory, Primality Test, Sieve Theory, Prime Number Sieve"
       },
       {
-        "seq": 105,
+        "seq": 175,
         "title": "Toeplitz Matrix",
         "difficulty": "Easy",
         "frequency": 42.2,
@@ -1495,7 +1495,7 @@ export const tcsPatterns = [
         "topics": "Array, Matrix"
       },
       {
-        "seq": 110,
+        "seq": 176,
         "title": "Integer to English Words",
         "difficulty": "Hard",
         "frequency": 33.3,
@@ -1503,7 +1503,7 @@ export const tcsPatterns = [
         "topics": "Math, String, Recursion"
       },
       {
-        "seq": 130,
+        "seq": 177,
         "title": "Water Bottles",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1511,7 +1511,7 @@ export const tcsPatterns = [
         "topics": "Math, Simulation"
       },
       {
-        "seq": 147,
+        "seq": 178,
         "title": "Smallest Integer Divisible by K",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1519,7 +1519,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Math, Pigeonhole Principle"
       },
       {
-        "seq": 149,
+        "seq": 179,
         "title": "Integer to Roman",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1527,7 +1527,7 @@ export const tcsPatterns = [
         "topics": "Hash Table, Math, String"
       },
       {
-        "seq": 155,
+        "seq": 180,
         "title": "Reshape the Matrix",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1535,7 +1535,7 @@ export const tcsPatterns = [
         "topics": "Array, Matrix, Simulation"
       },
       {
-        "seq": 157,
+        "seq": 181,
         "title": "Bulb Switcher",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1543,7 +1543,7 @@ export const tcsPatterns = [
         "topics": "Math, Brainteaser"
       },
       {
-        "seq": 158,
+        "seq": 182,
         "title": "Spiral Matrix II",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1551,7 +1551,7 @@ export const tcsPatterns = [
         "topics": "Array, Matrix, Simulation"
       },
       {
-        "seq": 181,
+        "seq": 183,
         "title": "Find the Winner of the Circular Game",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1559,7 +1559,7 @@ export const tcsPatterns = [
         "topics": "Array, Math, Recursion, Queue, Simulation"
       },
       {
-        "seq": 182,
+        "seq": 184,
         "title": "Power of Three",
         "difficulty": "Easy",
         "frequency": 33.3,
@@ -1567,7 +1567,7 @@ export const tcsPatterns = [
         "topics": "Math, Recursion"
       },
       {
-        "seq": 186,
+        "seq": 185,
         "title": "Factorial Trailing Zeroes",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1575,7 +1575,7 @@ export const tcsPatterns = [
         "topics": "Math"
       },
       {
-        "seq": 187,
+        "seq": 186,
         "title": "Rotate Image",
         "difficulty": "Medium",
         "frequency": 33.3,
@@ -1589,7 +1589,7 @@ export const tcsPatterns = [
     "name": "Bit Manipulation",
     "problems": [
       {
-        "seq": 7,
+        "seq": 187,
         "title": "Single Number",
         "difficulty": "Easy",
         "frequency": 78.7,
@@ -1597,7 +1597,7 @@ export const tcsPatterns = [
         "topics": "Array, Bit Manipulation"
       },
       {
-        "seq": 46,
+        "seq": 188,
         "title": "Add Binary",
         "difficulty": "Easy",
         "frequency": 53.7,
@@ -1605,7 +1605,7 @@ export const tcsPatterns = [
         "topics": "Math, String, Bit Manipulation, Simulation"
       },
       {
-        "seq": 48,
+        "seq": 189,
         "title": "Bitwise ORs of Subarrays",
         "difficulty": "Medium",
         "frequency": 53.7,
@@ -1613,7 +1613,7 @@ export const tcsPatterns = [
         "topics": "Array, Dynamic Programming, Bit Manipulation"
       },
       {
-        "seq": 141,
+        "seq": 190,
         "title": "Power of Two",
         "difficulty": "Easy",
         "frequency": 33.3,

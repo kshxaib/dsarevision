@@ -3,6 +3,66 @@ import { p } from '../helper.js';
 export const slidingWindow = {
     id: 'sliding-window',
     name: 'Sliding Window',
+    cheatSheet: {
+      summary: 'The Sliding Window pattern optimizes problems over contiguous subarrays or substrings, replacing nested O(n²) loops with a linear O(n) scan by maintaining a running window.',
+      sections: [
+        {
+          title: 'When to Use (Cues)',
+          items: [
+            {
+              label: 'Linear Data Structures',
+              text: 'Arrays, strings, or sequences where elements are contiguous (subarrays or substrings).'
+            },
+            {
+              label: 'Optimization Goals',
+              text: 'Finding a maximum or minimum sum, average, count, or window length.'
+            },
+            {
+              label: 'Condition & State Tracking',
+              text: 'Counting distinct elements, avoiding duplicates, or meeting a target sum or constraint.'
+            },
+            {
+              label: 'Avoiding Brute Force',
+              text: 'Replaces nested loops O(n²) with a single scan across the structure in linear O(n) time.'
+            }
+          ]
+        },
+        {
+          title: 'Window Types & Strategies',
+          items: [
+            {
+              label: 'Fixed-Size Window',
+              text: 'Window length stays constant at K; slide by adding incoming element and removing outgoing element (e.g. Max Sum, Average, or Vowels of Size K).'
+            },
+            {
+              label: 'Variable-Size Window',
+              text: 'Window expands (right++) to explore elements and shrinks (left++) dynamically when a condition breaks (e.g. Longest Substring, Min Size Subarray).'
+            },
+            {
+              label: 'Expansion vs Shrink Logic',
+              text: 'Expand right to include elements; shrink left as soon as a constraint is violated or to search for the minimal valid window.'
+            }
+          ]
+        },
+        {
+          title: 'Core Components & Helpers',
+          items: [
+            {
+              label: 'Two Pointers',
+              text: 'left (shrinks or resets window start) and right (expands window forward).'
+            },
+            {
+              label: 'State Trackers',
+              text: 'Running sum, frequency map, hash set, or min/max queues to verify whether the current window is valid.'
+            },
+            {
+              label: 'Result Tracker',
+              text: 'Variable tracking the best answer (max/min value or length) across the entire scan.'
+            }
+          ]
+        }
+      ]
+    },
     problems: [
       {
         id: 'best-time-to-buy-and-sell-stock',
