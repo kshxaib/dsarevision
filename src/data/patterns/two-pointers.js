@@ -4,6 +4,7 @@ export const twoPointers = {
     id: 'two-pointers',
     name: 'Two Pointers',
     cheatSheet: {
+      videoUrl: 'https://www.youtube.com/watch?v=MQmUVokbTrs',
       summary: 'The Two Pointers pattern is an efficient technique to iterate through data structures using two references to solve problems in linear O(n) time.',
       sections: [
         {

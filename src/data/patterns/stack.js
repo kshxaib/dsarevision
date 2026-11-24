@@ -3,6 +3,67 @@ import { p } from '../helper.js';
 export const stack = {
     id: 'stack',
     name: 'Stack',
+    cheatSheet: {
+      videoUrl: 'https://www.youtube.com/watch?v=mcOXqqX6D54',
+      summary: 'The Stack pattern utilizes the Last-In, First-Out (LIFO) principle and monotonic ordering to efficiently solve matching, state tracking, and next-greater/smaller element problems in linear time.',
+      sections: [
+        {
+          title: 'Core Stack Basics',
+          items: [
+            {
+              label: 'LIFO Principle',
+              text: 'Last-In, First-Out—like a stack of cafeteria plates where the top plate is washed first.'
+            },
+            {
+              label: 'Key Operations',
+              text: 'Push adds to the top, Pop removes and returns the top, and Peek views the top without removing it.'
+            }
+          ]
+        },
+        {
+          title: 'Core Stack Patterns & Problems',
+          items: [
+            {
+              label: 'Valid Parentheses',
+              text: 'Push opening brackets ((, {, [); on a closing bracket, match and pop the top. Valid only if every closing bracket matches and the stack is empty at the end.'
+            },
+            {
+              label: 'Min Stack',
+              text: 'Use an auxiliary stack to track running minimums in O(1) time (at O(n) extra space). Push to the min stack when a new value is smaller/equal to the current min; pop from the min stack when popping that min.'
+            },
+            {
+              label: 'Implement Queue Using Stacks',
+              text: 'Use an input stack for enqueue and an output stack for dequeue/peek. Transfer from input to output only when the output stack is empty to preserve FIFO order.'
+            },
+            {
+              label: 'General Applications',
+              text: 'Expression evaluation, compiler syntax/bracket parsing, and undo/redo history tracking.'
+            }
+          ]
+        },
+        {
+          title: 'Monotonic Stacks & Advanced Problems',
+          items: [
+            {
+              label: 'Monotonic Stack Intuition',
+              text: 'Maintain elements in strictly/non-strictly increasing or decreasing order by popping elements that violate the condition as you scan.'
+            },
+            {
+              label: 'Next Greater Element',
+              text: 'Traverse from right to left using a stack that keeps candidates in increasing order; pop smaller elements and take the top as the next greater element (or -1 if empty).'
+            },
+            {
+              label: 'Daily Temperatures',
+              text: 'Same pattern as Next Greater Element, but store indices instead of values so you can compute day counts via index differences.'
+            },
+            {
+              label: 'Trapping Rain Water',
+              text: 'For each position i, trapped water is min(maxLeft[i], maxRight[i]) - height[i] (when positive), using left/right scans or monotonic stack/next-greater-style bounds.'
+            }
+          ]
+        }
+      ]
+    },
     problems: [
       {
         id: 'valid-parentheses',

@@ -4,6 +4,7 @@ export const slidingWindow = {
     id: 'sliding-window',
     name: 'Sliding Window',
     cheatSheet: {
+      videoUrl: 'https://www.youtube.com/watch?v=tk38CTSAYsg',
       summary: 'The Sliding Window pattern optimizes problems over contiguous subarrays or substrings, replacing nested O(n²) loops with a linear O(n) scan by maintaining a running window.',
       sections: [
         {

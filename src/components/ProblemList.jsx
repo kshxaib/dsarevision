@@ -47,6 +47,32 @@ export default function ProblemList({
               <span className="text-sm font-heading font-semibold text-ink-text">
                 Cheat Sheet
               </span>
+              {cheatSheet.videoUrl && (
+                <a
+                  href={cheatSheet.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center justify-center p-1 rounded hover:bg-ink-elevated transition-colors opacity-90 hover:opacity-100 shrink-0"
+                  title="Watch on YouTube"
+                >
+                  <svg
+                    className="w-7 h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
+                      fill="#FF0000"
+                    />
+                    <path
+                      d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                      fill="#FFFFFF"
+                    />
+                  </svg>
+                </a>
+              )}
             </div>
 
             <div className="flex items-center gap-1 text-xs text-ink-subtle shrink-0">
